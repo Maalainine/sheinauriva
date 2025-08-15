@@ -117,15 +117,15 @@ export default function Navbar() {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Image
-                          src="/images/LOGO.png"
-                          alt="JustOriginale"
+                          src="/images/SaadLogo.jpeg"
+                          alt="Saad Logo"
                           fill
                           className="object-contain"
                           priority
                         />
                       </Link>
                       <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent tracking-tight">
-                        JustOriginale
+                        SafSaf
                       </span>
                     </div>
                   </SheetTitle>
@@ -172,14 +172,14 @@ export default function Navbar() {
               >
                 <Image
                   src="/images/LOGO.png"
-                  alt="JustOriginale"
+                  alt="Safsaf"
                   fill
                   className="object-contain"
                   priority
                 />
               </Link>
               <span className="text-2xl font-bold hidden sm:block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent tracking-tight">
-                JustOriginale
+                SafSaf
               </span>
             </div>
           </div>

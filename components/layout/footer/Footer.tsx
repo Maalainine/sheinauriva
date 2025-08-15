@@ -15,20 +15,20 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand Info */}
         <div className="md:col-span-2">
-          <TypographyH1 className="text-2xl font-bold mb-2">justoriginale</TypographyH1>
+          <TypographyH1 className="text-2xl font-bold mb-2">SafSaf</TypographyH1>
           <TypographyP className="text-sm text-muted-foreground max-w-md">
             Curated selection of premium, authentic products. Quality you can trust.
           </TypographyP>
           
           {/* Social Links */}
           <div className="flex space-x-4 mt-4">
-            <Link href="https://twitter.com/justoriginale" target="_blank" aria-label="Twitter">
+            <Link href="https://twitter.com/SafSaf" target="_blank" aria-label="Twitter">
               <IconBrandTwitter className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
-            <Link href="https://facebook.com/justoriginale" target="_blank" aria-label="Facebook">
+            <Link href="https://facebook.com/SafSaf" target="_blank" aria-label="Facebook">
               <IconBrandFacebook className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
-            <Link href="https://instagram.com/justoriginale" target="_blank" aria-label="Instagram">
+            <Link href="https://instagram.com/SafSaf" target="_blank" aria-label="Instagram">
               <IconBrandInstagram className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
           </div>
@@ -55,7 +55,7 @@ export default function Footer() {
       <Separator className="my-6" />
 
       <div className="text-center text-muted-foreground text-xs">
-        &copy; {new Date().getFullYear()} justoriginale. All rights reserved.
+        &copy; {new Date().getFullYear()} SafSaf. All rights reserved.
         <div className="mt-1">
           Developed by <span className="font-medium">CosmoCode</span>
         </div>
