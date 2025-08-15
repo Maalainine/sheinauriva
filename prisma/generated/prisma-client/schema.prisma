@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String            @id @default(uuid())
+  email             String            @unique
+  name              String?
+  password          String
+  role              UserRole          @default(CLIENT)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  createdById       String?
+  orders            Order[]
+  shippingAddresses ShippingAddress[]
+  createdBy         User?             @relation("AdminCreator", fields: [createdById], references: [id])
+  createdAdmins     User[]            @relation("AdminCreator")
+  analytics         UserAnalytics?
+  wishlist          Product[]         @relation("Wishlist")
+
+  @@index([email])
+}
+
+model ShippingAddress {
+  id         String   @id @default(uuid())
+  userId     String
+  address1   String
+  address2   String?
+  city       String
+  state      String
+  postalCode String
+  country    String
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model UserAnalytics {
+  id          String    @id @default(uuid())
+  userId      String    @unique
+  totalSpent  Decimal   @db.Decimal(10, 2)
+  ordersCount Int
+  lastLogin   DateTime?
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Brand {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  logoUrl     String?
+  website     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@index([name])
+}
+
+model Category {
+  id          String          @id @default(uuid())
+  name        String          @unique
+  subtitle    String?         @db.VarChar(255)
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  images      CategoryImage[]
+  products    Product[]
+  tags        Tag[]           @relation("CategoryTags")
+}
+
+model Tag {
+  id         String     @id @default(uuid())
+  name       String     @unique
+  categories Category[] @relation("CategoryTags")
+  products   Product[]  @relation("ProductTags")
+}
+
+model Product {
+  id             String               @id @default(uuid())
+  name           String
+  description    String?
+  price          Decimal              @db.Decimal(10, 2)
+  stock          Int                  @default(0)
+  categoryId     String
+  primaryImageId String?              @unique
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  brandId        String?
+  orderItems     OrderItem[]
+  brand          Brand?               @relation(fields: [brandId], references: [id])
+  category       Category             @relation(fields: [categoryId], references: [id])
+  primaryImage   ProductImage?        @relation("PrimaryProductImage", fields: [primaryImageId], references: [id])
+  images         ProductImage[]
+  variants       ProductVariant[]
+  variantTypes   ProductVariantType[]
+  tags           Tag[]                @relation("ProductTags")
+  wishlistedBy   User[]               @relation("Wishlist")
+
+  @@index([name])
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([primaryImageId])
+}
+
+model ProductVariant {
+  id         String         @id @default(uuid())
+  productId  String
+  sku        String?        @unique
+  price      Decimal?       @db.Decimal(10, 2)
+  stock      Int            @default(0)
+  isDefault  Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  orderItems OrderItem[]
+  images     ProductImage[] @relation("VariantImages")
+  product    Product        @relation(fields: [productId], references: [id])
+  values     VariantValue[]
+
+  @@index([productId])
+  @@index([sku])
+}
+
+model ProductVariantType {
+  id          String         @id @default(uuid())
+  name        String
+  description String?
+  productId   String
+  isRequired  Boolean        @default(true)
+  order       Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  product     Product        @relation(fields: [productId], references: [id])
+  values      VariantValue[]
+
+  @@unique([productId, name])
+  @@index([productId])
+}
+
+model VariantValue {
+  id               String             @id @default(uuid())
+  value            String
+  displayName      String?
+  variantTypeId    String
+  productVariantId String
+  hexColor         String?
+  imageId          String?
+  order            Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  image            ProductImage?      @relation("VariantValueImage", fields: [imageId], references: [id])
+  productVariant   ProductVariant     @relation(fields: [productVariantId], references: [id])
+  variantType      ProductVariantType @relation(fields: [variantTypeId], references: [id])
+
+  @@index([variantTypeId])
+  @@index([productVariantId])
+  @@index([variantTypeId, value])
+}
+
+model ProductImage {
+  id                String          @id @default(uuid())
+  productId         String
+  url               String
+  alt               String
+  width             Int
+  height            Int
+  type              String
+  mimeType          String
+  size              Int
+  variantId         String?
+  primaryForProduct Product?        @relation("PrimaryProductImage")
+  product           Product         @relation(fields: [productId], references: [id])
+  variant           ProductVariant? @relation("VariantImages", fields: [variantId], references: [id])
+  variantValues     VariantValue[]  @relation("VariantValueImage")
+
+  @@index([productId])
+  @@index([variantId])
+}
+
+model CategoryImage {
+  id         String   @id @default(uuid())
+  categoryId String
+  url        String
+  alt        String
+  width      Int
+  height     Int
+  type       String
+  mimeType   String
+  size       Int
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  userId          String?
+  status          String      @default("PENDING_CONFIRMATION")
+  total           Decimal     @db.Decimal(10, 2)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  customerEmail   String
+  customerName    String
+  customerPhone   String
+  notes           String?
+  shippingAddress String
+  shippingCity    String
+  shippingCost    Decimal     @db.Decimal(10, 2)
+  isGuestOrder    Boolean     @default(false)
+  user            User?       @relation(fields: [userId], references: [id])
+  orderItems      OrderItem[]
+
+  @@index([isGuestOrder])
+  @@index([userId])
+  @@index([status])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id               String          @id @default(uuid())
+  orderId          String
+  productId        String
+  productVariantId String?
+  quantity         Int
+  price            Decimal         @db.Decimal(10, 2)
+  variantDetails   Json?
+  order            Order           @relation(fields: [orderId], references: [id])
+  product          Product         @relation(fields: [productId], references: [id])
+  variant          ProductVariant? @relation(fields: [productVariantId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([productVariantId])
+}
+
+model Settings {
+  id           String   @id @default("main")
+  siteTitle    String
+  siteLogo     String
+  contactEmail String
+  themeUrl     String
+  updatedAt    DateTime @updatedAt
+}
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}

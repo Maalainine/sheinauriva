@@ -1,0 +1,23 @@
+{
+  "customer": {
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "+212612345678",
+    "address": "123 Test Street",
+    "city": "Casablanca"
+  },
+  "items": [
+    {
+      "productId": "9e9f3728-c1dc-4c9e-a73b-d5790b15d6b4",
+      "name": "Test Product",
+      "quantity": 1,
+      "price": 100
+    }
+  ],
+  "shipping": {
+    "address": "123 Test Street",
+    "city": "Casablanca",
+    "cost": 50
+  },
+  "notes": "Test order from API"
+}
