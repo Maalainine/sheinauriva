@@ -117,9 +117,10 @@ export default function Navbar() {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Image
-                          src="/images/SaadLogo.jpeg"
-                          alt="Saad Logo"
-                          fill
+                          src="/images/SaadLogo.png"
+                          alt="SafSaf"
+                          width={100}
+                          height={100}
                           className="object-contain"
                           priority
                         />
@@ -167,19 +168,19 @@ export default function Navbar() {
             <div className="flex items-center gap-1">
               <Link 
                 href="/" 
-                className="h-10 w-10 relative hover:opacity-90 transition-opacity flex-shrink-0"
+                className="relative hover:opacity-90 transition-opacity flex-shrink-0"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Image
-                  src="/images/LOGO.png"
-                  alt="Safsaf"
-                  fill
-                  className="object-contain"
+                  src="/images/SaadLogo.png"
+                  alt="SafSaf"
+                  width={100}
+                  height={100}
                   priority
                 />
               </Link>
               <span className="text-2xl font-bold hidden sm:block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent tracking-tight">
-                SafSaf
+                
               </span>
             </div>
           </div>

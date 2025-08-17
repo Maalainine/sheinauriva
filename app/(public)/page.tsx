@@ -30,6 +30,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CategoryCard } from "@/components/category/card/CategoryCard";
+import { BrandLogos } from "@/components/ui/brand-logos";
 
 interface ProductImage {
   id: string;
@@ -167,7 +168,7 @@ export default function Home() {
             const errorText = await productsRes.text();
             console.error("API Error Response:", errorText);
             throw new Error(
-              `Failed to fetch products: ${productsRes.status} ${productsRes.statusText}`,
+              `Failed to fetch products: ${productsRes.status} ${productsRes.statusText}`
             );
           }
 
@@ -211,13 +212,13 @@ export default function Home() {
                 stock = product.variants.reduce(
                   (
                     sum: number,
-                    variant: { stock?: number; price?: number | string },
+                    variant: { stock?: number; price?: number | string }
                   ) => {
                     const variantStock =
                       typeof variant.stock === "number" ? variant.stock : 0;
                     return sum + variantStock;
                   },
-                  0,
+                  0
                 );
               } else {
                 // Use product-level stock if no variants
@@ -259,7 +260,7 @@ export default function Home() {
                 hasVariants: (product.variants?.length || 0) > 0,
                 variantCount: product.variants?.length || 0,
               };
-            },
+            }
           );
 
           console.log("Formatted products:", formattedProducts);
@@ -280,7 +281,7 @@ export default function Home() {
             const errorText = await categoriesRes.text();
             console.error("Categories API error:", errorText);
             throw new Error(
-              `Failed to fetch categories: ${categoriesRes.status} ${categoriesRes.statusText}`,
+              `Failed to fetch categories: ${categoriesRes.status} ${categoriesRes.statusText}`
             );
           }
 
@@ -315,25 +316,26 @@ export default function Home() {
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
       <section className="relative h-[500px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50 z-10 flex items-center">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 text-foreground">
-            <TypographyH1 className="mb-4">Discover Your Style</TypographyH1>
-            <TypographyH4 className="font-light mb-8 max-w-2xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary/50 z-10 flex items-center">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <TypographyH1 className="mb-4 text-secondary">
+              Discover Your Style
+            </TypographyH1>
+            <TypographyH4 className="mb-8 max-w-2xl text-secondary">
               Explore our latest collection of premium products designed for
               you.
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                className="bg-primary text-background hover:bg-primary/50"
-              >
-                Shop Now
-              </Button>
+              <Link href="/products">
+                <Button size="lg" className="hover:bg-primary/90">
+                  Shop Now
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
         <Image
-          src="/images/hero-banner.jpg"
+          src="/images/Hero-banner01.png"
           alt="Fashion Collection"
           fill
           className="object-cover"
@@ -341,8 +343,11 @@ export default function Home() {
         />
       </section>
 
+      {/* Brand Logos Section */}
+      <BrandLogos />
+
       {/* Features Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 border-t">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -369,7 +374,7 @@ export default function Home() {
             ].map((feature, index) => (
               <Card key={index}>
                 <CardHeader className="flex flex-col items-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center">
                     <feature.icon className="h-6 w-6 text-primary" />
                   </div>
 
@@ -387,7 +392,7 @@ export default function Home() {
       </section>
 
       {/* New Arrivals Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <TypographyH2>New Arrivals</TypographyH2>
@@ -446,7 +451,7 @@ export default function Home() {
 
       {/* Categories Section - Only render when mounted */}
       {mounted && (
-        <section className="py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
               <TypographyH2>Shop by Category</TypographyH2>
@@ -463,7 +468,7 @@ export default function Home() {
                 {[...Array(5)].map((_, i) => (
                   <div
                     key={i}
-                    className="bg-white rounded-lg overflow-hidden shadow-sm"
+                    className="rounded-lg overflow-hidden shadow-sm"
                   >
                     <Skeleton className="aspect-square w-full" />
                     <div className="p-4">
