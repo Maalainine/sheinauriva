@@ -2,6 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -47,20 +48,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { MOROCCAN_CITIES, DEFAULT_CITY } from "@/lib/cities";
+import { COUNTRIES, getCitiesByCountry, DEFAULT_CITY } from "@/lib/locations";
 
 const steps = ["Information", "Confirmation"];
 
 // Form validation schema
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  phone: z.string().regex(/^\+212[5-7][0-9]{8}$/, {
-    message: "Please enter a valid Moroccan phone number (e.g., +212612345678)",
-  }),
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }), // contactName
+  phone: z.string().min(6, { message: "Please enter a valid phone number" }), // contactPhone
   email: z.string().email({ message: "Please enter a valid email" }).optional().or(z.literal('')), // optional email
   address: z.string().min(5, { message: "Please enter a valid address" }), // shippingLine1
+  country: z.string().min(2, { message: "Please select a country" }), // shippingCountry
   city: z.string().min(1, { message: "Please select a city" }), // shippingCity
-  country: z.string().min(2, { message: "Please enter a country" }).default('Morocco'), // shippingCountry
   notes: z.string().optional(),
 });
 
@@ -78,22 +77,34 @@ export default function CheckoutPage() {
       email: '',
       phone: '+212',
       address: '',
-      city: DEFAULT_CITY,
-      country: 'Morocco',
+      country: 'MA', // Default to Morocco
+      city: '',
       notes: '',
     },
   });
+
+  // Watch country and city values
+  const selectedCountry = form.watch("country") || 'MA';
+  const selectedCity = form.watch("city") || '';
+  
+  // Get cities for the selected country
+  const cities = getCitiesByCountry(selectedCountry);
+  
+  // Update city field when country changes
+  const handleCountryChange = (value: string) => {
+    form.setValue('country', value);
+    form.setValue('city', ''); // Reset city when country changes
+  };
 
   // Calculate totals
   const subtotal = cart.reduce(
     (sum: number, item: CartItem) => sum + Number(item.price) * item.quantity,
     0
   );
-  const selectedCity = form.watch("city") || DEFAULT_CITY;
-  const cityData = MOROCCAN_CITIES.find(
-    (city) => city.name === selectedCity
-  ) || { shippingPrice: 50 };
-  const shipping = cart.length > 0 ? cityData.shippingPrice : 0;
+  
+  // Get shipping price for selected city
+  const selectedCityData = cities.find(city => city.name === selectedCity);
+  const shipping = cart.length > 0 ? (selectedCityData?.shippingPrice || 0) : 0;
   const total = subtotal + shipping;
 
   const onSubmit = async (data: FormValues) => {
@@ -104,15 +115,20 @@ export default function CheckoutPage() {
       setIsSubmitting(true);
 
       // Show loading toast
+      // Get country name from code
+      const countryName = COUNTRIES.find(c => c.code === data.country)?.name || 'Morocco';
+      
       // Prepare order data
       const orderData = {
         customer: {
           name: data.name,
           email: data.email || '',
           phone: data.phone,
-          address: data.address,
-          city: data.city,
-          country: data.country || 'Morocco',
+          // Include full address with city and country
+          address: `${data.address}, ${data.city}, ${countryName}`,
+          // Include city and country separately for the API
+          city: data.city ? `${data.city}, ${countryName}` : '',
+          country: countryName,
           zipCode: '', // not collected in form, so default to empty string
           notes: data.notes || '',
         },
@@ -177,7 +193,7 @@ export default function CheckoutPage() {
         })}\n\n` +
         `👤 *CUSTOMER*\n` +
         `${data.name} | ${data.phone}\n` +
-        `${data.address}, ${data.city}\n\n` +
+        `${data.address}, ${orderData.customer.city}\n\n` +
         `🛒 *ITEMS (${cart.reduce((sum, item) => sum + item.quantity, 0)})*\n` +
         `${cart.map(item => `• ${item.quantity}x ${item.name} (${Number(item.price).toFixed(2)} MAD)`).join('\n')}\n\n` +
         `💰 *TOTAL: ${orderTotal} MAD*\n` +
@@ -328,23 +344,59 @@ export default function CheckoutPage() {
 
                     <FormField
                       control={form.control}
+                      name="country"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Country</FormLabel>
+                          <Select
+                            onValueChange={(value) => {
+                              handleCountryChange(value);
+                              field.onChange(value);
+                            }}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select your country" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {COUNTRIES.map((country) => (
+                                <SelectItem key={country.code} value={country.code}>
+                                  {country.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
                       name="city"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>City</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={!selectedCountry}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select your city" />
+                                <SelectValue placeholder={
+                                  selectedCountry 
+                                    ? "Select your city" 
+                                    : "Please select a country first"
+                                } />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {MOROCCAN_CITIES.map((city) => (
+                              {cities.map((city) => (
                                 <SelectItem key={city.name} value={city.name}>
-                                  {city.name} - {city.shippingPrice} MAD
+                                  {city.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -471,10 +523,12 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">
-                    Shipping to {selectedCity}
+                    {selectedCity 
+                      ? `Shipping to ${selectedCity}` 
+                      : 'Select a city to calculate shipping'}
                   </span>
                   <span className="font-medium">
-                    {shipping.toFixed(2)} MAD
+                    {shipping > 0 ? `${shipping.toFixed(2)} MAD` : '—'}
                   </span>
                 </div>
                 <Separator className="my-2" />
@@ -545,17 +599,15 @@ export default function CheckoutPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button
-              onClick={() => {
-                setStep(1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              variant="outline"
-              className="w-full"
-            >
-              <Package className="mr-2 h-4 w-4" />
-              Continue Shopping
-            </Button>
+            <Link href="/products" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+              >
+                <Package className="mr-2 h-4 w-4" />
+                Continue Shopping
+              </Button>
+            </Link>
             <p className="text-sm text-muted-foreground text-center">
               Need help? Contact us at support@sheinauriva.com
             </p>

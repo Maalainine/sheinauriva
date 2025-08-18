@@ -319,11 +319,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary/50 z-10 flex items-center">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <TypographyH1 className="mb-4 text-secondary">
-              Discover Your Style
+              Your Beauty, Elevated
             </TypographyH1>
             <TypographyH4 className="mb-8 max-w-2xl text-secondary">
-              Explore our latest collection of premium products designed for
-              you.
+              Discover premier global beauty brands — intuitively selected for
+              your radiant glow.
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/products">
@@ -466,10 +466,7 @@ export default function Home() {
             {isLoading ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 {[...Array(5)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-lg overflow-hidden shadow-sm"
-                  >
+                  <div key={i} className="rounded-lg overflow-hidden shadow-sm">
                     <Skeleton className="aspect-square w-full" />
                     <div className="p-4">
                       <Skeleton className="h-5 w-3/4 mb-2" />

@@ -264,7 +264,12 @@ export default function CartDrawer({
               </div>
             </div>
 
-            <Button asChild size="lg" className="mt-4">
+            <Button 
+              asChild 
+              size="lg" 
+              className="mt-4"
+              onClick={() => onOpenChange(false)}
+            >
               <Link href="/checkout">Place Order</Link>
             </Button>
 

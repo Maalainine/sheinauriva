@@ -63,7 +63,7 @@ export function BrandLogos() {
   }, []);
 
   return (
-    <section className="w-full overflow-hidden py-2">
+    <section className="w-full overflow-hidden">
       <div className="relative w-full overflow-hidden" ref={containerRef}>
         <div
           ref={scrollRef}

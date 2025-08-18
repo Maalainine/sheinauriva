@@ -27,8 +27,7 @@ export default function Footer() {
             />
           </Link>
           <TypographyP className="text-sm text-muted-foreground max-w-md">
-            Curated selection of premium, authentic products. Quality you can
-            trust.
+            Discover premier global beauty brands.
           </TypographyP>
 
           {/* Social Links */}
