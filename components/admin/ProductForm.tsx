@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { VariantEditor } from "@/components/admin/VariantEditor";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 // Types matching ProductFormData from API
 export interface ProductVariantForm {
@@ -52,8 +53,11 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   variantTypes,
   onSuccess,
 }) => {
-  const [form, setForm] = useState<ProductFormData>(
-    initialData || {
+  const [form, setForm] = useState<ProductFormData & { _imagesText?: string }>(
+    initialData ? {
+      ...initialData,
+      _imagesText: initialData.images?.join('\n') || ''
+    } : {
       name: "",
       description: "",
       categoryId: categories[0]?.id || "",
@@ -63,6 +67,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       featured: false,
       onSale: false,
       images: [],
+      _imagesText: "",
       tagIds: [],
       variants: [],
       allowedOptions: [],
@@ -71,12 +76,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   // Handlers
-  // Handles input and textarea changes only
+  // Handles input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  // Handles rich text editor changes
+  const handleRichTextChange = (value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      description: value,
     }));
   };
 
@@ -98,12 +111,21 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   // Handle multiple image URLs (comma or newline separated)
   const handleImagesInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
+    // Store the raw value for the textarea
+    const textareaValue = value;
+    
     // Split on comma or newline, trim whitespace, filter empty
     const images = value
       .split(/[,\n]/)
       .map((url) => url.trim())
       .filter((url) => url.length > 0);
-    setForm((prev) => ({ ...prev, images }));
+      
+    setForm((prev) => ({ 
+      ...prev, 
+      images,
+      // Store the raw textarea value in a separate field to maintain newlines
+      _imagesText: textareaValue 
+    }));
   };
 
   const handleTagChange = (tagId: string) => {
@@ -158,9 +180,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             <Label htmlFor="name">Name</Label>
             <Input name="name" value={form.name} onChange={handleInputChange} required />
           </div>
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <Textarea name="description" value={form.description} onChange={handleInputChange} />
+          <div className="space-y-2">
+            <Label>Description</Label>
+            <RichTextEditor
+              value={form.description || ''}
+              onChange={handleRichTextChange}
+              placeholder="Enter product description..."
+              className="min-h-[200px]"
+            />
           </div>
           <div>
             <Label htmlFor="categoryId">Category</Label>
@@ -210,9 +237,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             <Label>Images (URLs)</Label>
             <Textarea
               name="images"
-              value={form.images?.join("\n") || ""}
+              value={form._imagesText || ""}
               onChange={handleImagesInput}
               placeholder="Paste one or more image URLs, separated by newlines or commas"
+              className="min-h-[100px]"
             />
             <p className="text-xs text-muted-foreground mt-1">One image URL per line or comma separated. The first image will be used as the primary image.</p>
           </div>

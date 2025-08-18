@@ -46,6 +46,20 @@ export default function Navbar() {
   // Set client-side state and handle scroll effect
   useEffect(() => {
     setIsClient(true);
+    
+    // Initialize cart count from localStorage if available
+    const stored = localStorage.getItem("cart");
+    if (stored) {
+      try {
+        const items = JSON.parse(stored);
+        const count = Array.isArray(items)
+          ? items.reduce((sum, item) => sum + (item.quantity || 1), 0)
+          : 0;
+        setCartCount(count);
+      } catch (e) {
+        console.error("Error parsing cart from storage:", e);
+      }
+    }
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -57,6 +71,7 @@ export default function Navbar() {
 
   // Update cart count when cart changes
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setCartCount(count);
   }, [cart]);
@@ -236,18 +251,18 @@ export default function Navbar() {
             </Button>*/}
 
             {/* Cart */}
-            <div className="flex">
+            <div className="flex items-center">
               <Button
                 variant="ghost"
                 size="icon"
                 className="relative group"
                 onClick={() => setCartOpen(true)}
-                aria-label={`Shopping cart (${cartCount} items)`}
+                aria-label={isClient ? `Shopping cart (${cartCount} items)` : 'Shopping cart'}
               >
                 <IconShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                {cartCount > 0 && (
+                {isClient && cartCount > 0 && (
                   <motion.span
-                    key={cartCount}
+                    key={`cart-count-${cartCount}`}
                     initial={{ scale: 1.2, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 500, damping: 20 }}
@@ -257,7 +272,7 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Button>
-              <Label className="pl-2">Cart</Label>
+              {isClient && <Label className="pl-2">Cart</Label>}
             </div>
           </div>
         </div>

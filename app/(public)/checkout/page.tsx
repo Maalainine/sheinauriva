@@ -278,167 +278,194 @@ export default function CheckoutPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Your full name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  <div className="space-y-4">
+                    {/* Personal Information */}
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Personal Information</h4>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Full Name</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="Your full name" 
+                                  {...field} 
+                                  className="h-9 text-sm"
+                                />
+                              </FormControl>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="your@email.com"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Phone</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">
+                                    +212
+                                  </span>
+                                  <Input
+                                    className="pl-12 h-9 text-sm"
+                                    placeholder="612345678"
+                                    {...field}
+                                    onChange={(e) => {
+                                      const value = e.target.value
+                                        .replace(/\D/g, "")
+                                        .slice(0, 9);
+                                      field.onChange(`+212${value}`);
+                                    }}
+                                    value={field.value?.replace("+212", "") || ""}
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
 
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                                +212
-                              </span>
-                              <Input
-                                className="pl-14"
-                                placeholder="612345678"
-                                {...field}
-                                onChange={(e) => {
-                                  // Only allow numbers and limit to 9 digits after +212
-                                  const value = e.target.value
-                                    .replace(/\D/g, "")
-                                    .slice(0, 9);
-                                  field.onChange(`+212${value}`);
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem className="md:col-span-2">
+                              <FormLabel className="text-xs">Email (Optional)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="email"
+                                  placeholder="your@email.com"
+                                  className="h-9 text-sm"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Shipping Information */}
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium">Shipping Information</h4>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <FormField
+                          control={form.control}
+                          name="country"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-xs">Country</FormLabel>
+                              <Select
+                                onValueChange={(value) => {
+                                  handleCountryChange(value);
+                                  field.onChange(value);
                                 }}
-                                value={field.value?.replace("+212", "") || ""}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="h-9 text-sm w-full">
+                                    <SelectValue placeholder="Select country" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {COUNTRIES.map((country) => (
+                                    <SelectItem key={country.code} value={country.code} className="text-sm">
+                                      {country.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="text-xs">City</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                                disabled={!selectedCountry}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="h-9 text-sm w-full">
+                                    <SelectValue 
+                                      placeholder={
+                                        selectedCountry 
+                                          ? "Select city" 
+                                          : "Select country first"
+                                      } 
+                                    />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {cities.map((city) => (
+                                    <SelectItem key={city.name} value={city.name} className="text-sm">
+                                      {city.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="address"
+                          render={({ field }) => (
+                            <FormItem className="md:col-span-2">
+                              <FormLabel className="text-xs">Full Address</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Street, Building, Apartment"
+                                  className="h-9 text-sm"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator className="my-4" />
+
+                    {/* Order Notes */}
+                    <div>
+                      <FormField
+                        control={form.control}
+                        name="notes"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-xs">Order Notes (Optional)</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Special instructions for delivery"
+                                className="h-9 text-sm"
+                                {...field}
                               />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="country"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Country</FormLabel>
-                          <Select
-                            onValueChange={(value) => {
-                              handleCountryChange(value);
-                              field.onChange(value);
-                            }}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select your country" />
-                              </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
-                              {COUNTRIES.map((country) => (
-                                <SelectItem key={country.code} value={country.code}>
-                                  {country.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>City</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            disabled={!selectedCountry}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder={
-                                  selectedCountry 
-                                    ? "Select your city" 
-                                    : "Please select a country first"
-                                } />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {cities.map((city) => (
-                                <SelectItem key={city.name} value={city.name}>
-                                  {city.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Full Address</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Street, Building, Apartment"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="notes"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Order Notes (Optional)</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Special instructions for delivery"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage className="text-xs" />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
                 </CardContent>
                 <CardFooter className="border-t pt-6">
