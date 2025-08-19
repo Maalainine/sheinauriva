@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   Search as SearchIcon,
   Filter,
@@ -15,13 +15,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import ProductCard from "@/components/product/card/ProductCard";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -116,23 +113,11 @@ function FilterSection({
   defaultOpen?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  const [searchQuery, setSearchQuery] = useState("");
   const hasSelection = selected.length > 0;
 
-  // Filter options based on search query
-  const filteredOptions = useMemo(() => {
-    if (!searchQuery) return options;
-    const query = searchQuery.toLowerCase();
-    return options.filter((option: FilterOption) =>
-      option.name.toLowerCase().includes(query)
-    );
-  }, [options, searchQuery]);
-
-  // Clear search when section is closed
+  // No search functionality in filter sections
   useEffect(() => {
-    if (!isOpen) {
-      setSearchQuery("");
-    }
+    // No operation needed
   }, [isOpen]);
 
   return (
@@ -167,24 +152,10 @@ function FilterSection({
             className="overflow-hidden"
           >
             <div className="space-y-3 pt-1">
-              {/* Search input for filter options */}
-              {options.length > 5 && (
-                <div className="relative">
-                  <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder={`Search ${title.toLowerCase()}...`}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-md border border-border bg-background py-2 pl-9 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
-                  />
-                </div>
-              )}
-
               <div className="max-h-60 overflow-y-auto pr-2 -mr-2">
-                {filteredOptions.length > 0 ? (
+                {options.length > 0 ? (
                   <div className="space-y-2">
-                    {filteredOptions.map((option) => (
+                    {options.map((option) => (
                       <div
                         key={option.id}
                         className={cn(
@@ -327,6 +298,10 @@ export default function ProductListContent() {
   const initialTag = searchParams?.get("tagId") || "";
   const initialSort = searchParams?.get("sort") || "createdAt-desc";
 
+  // State for mobile filters dialog
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  // State for filters
   const [filters, setFilters] = useState<FilterState>({
     categories: initialCategory ? [initialCategory] : [],
     brands: initialBrand ? [initialBrand] : [],
@@ -335,8 +310,8 @@ export default function ProductListContent() {
     isMobileFiltersOpen: false,
   });
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  // Get search query from URL
+  const searchQueryParam = searchParams?.get("search") || "";
 
   // Set isClient to true after mount to avoid hydration issues
   useEffect(() => {
@@ -417,57 +392,60 @@ export default function ProductListContent() {
     }
   }, [searchParams]);
 
-  // Fetch products with filters
+  // Fetch products when filters or search query changes
   const fetchProducts = useCallback(async () => {
+    if (!isClient) return;
+    
     setLoading(true);
     try {
+      // Build query parameters
       const params = new URLSearchParams();
-
-      // Add filters to params if they exist (single-select, as integers)
-      if (filters.categories?.[0])
-        params.set("categoryId", String(Number(filters.categories[0])));
-      if (filters.brands?.[0])
-        params.set("brandId", String(Number(filters.brands[0])));
-      if (filters.tags?.[0])
-        params.set("tagId", String(Number(filters.tags[0])));
-
-      // Add sorting
-      const [sortField, sortOrder] = filters.sortBy.split('-');
-      params.set("sortBy", sortField);
-      params.set("sortOrder", sortOrder || 'desc');
-
-      params.set("skip", skip.toString());
-      params.set("take", PAGE_SIZE.toString());
-
-      const url = `/api/public/products?${params.toString()}`;
-      console.log('Fetching products from:', url);
       
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        let errorMessage = `Failed to fetch products: ${response.status} ${response.statusText}`;
-        try {
-          const errorData = await response.json();
-          errorMessage += ` - ${JSON.stringify(errorData)}`;
-        } catch (e) {
-          // Ignore JSON parse error
-        }
-        console.error('API Error:', errorMessage);
-        throw new Error(errorMessage);
+      // Only apply category/brand/tag filters if not searching
+      if (filters.categories.length > 0) {
+        params.append("categoryId", filters.categories[0]);
       }
+      
+      if (filters.brands.length > 0) {
+        params.append("brandId", filters.brands[0]);
+      }
+      
+      if (filters.tags.length > 0) {
+        params.append("tagId", filters.tags[0]);
+      }
+      
+      // Add sorting
+      const [sortField, sortOrder] = filters.sortBy.split("-");
+      params.append("sortBy", sortField);
+      params.append("sortOrder", sortOrder);
+      
+      // Add pagination
+      params.append("skip", skip.toString());
+      params.append("take", PAGE_SIZE.toString());
+      
+      const response = await fetch(`/api/public/products?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      
       const data: ApiResponse = await response.json();
-
-      setProducts((prev) =>
-        skip === 0 ? data.products : [...prev, ...data.products]
-      );
+      setProducts(data.products);
       setTotal(data.total);
+      
+      // Update URL to reflect current search/filters
+      const newParams = new URLSearchParams(params.toString());
+      const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+      window.history.replaceState({}, '', newUrl);
+      
     } catch (error) {
       console.error("Error fetching products:", error);
+      // Handle error (e.g., show toast)
     } finally {
       setLoading(false);
       setInitialLoad(false);
     }
-  }, [filters, skip]);
+  }, [filters, skip, isClient]);
 
   // Debounced fetch function
   useEffect(() => {
@@ -517,13 +495,13 @@ export default function ProductListContent() {
 
   // Clear all filters
   const clearAllFilters = () => {
-    setFilters((prev) => ({
-      ...prev,
+    setFilters({
       categories: [],
       brands: [],
       tags: [],
-      sortBy: "newest",
-    }));
+      sortBy: "createdAt-desc",
+      isMobileFiltersOpen: false,
+    });
     setSkip(0);
   };
 
@@ -534,8 +512,12 @@ export default function ProductListContent() {
     (filters.tags.length > 0 ? 1 : 0) +
     (filters.sortBy !== "newest" ? 1 : 0);
 
+  // Toggle mobile filters
+  const toggleMobileFilters = () => {
+    setMobileFiltersOpen((prev) => !prev);
+  };
+
   // Mobile filters dialog with improved state management
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [localFilters, setLocalFilters] = useState<FilterState>(filters);
 
   // Update local filters when filters prop changes
@@ -575,21 +557,10 @@ export default function ProductListContent() {
     setSkip(0);
   };
 
-  // Handle search submission
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      const params = new URLSearchParams();
-      params.set("q", searchQuery.trim());
-      router.push(`/search?${params.toString()}`);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary/5 to-primary/10 py-12 md:py-16 mb-8">
-        <div className="container mx-auto px-4">
+      <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 md:py-8 mb-6">
           <motion.h1
             className="text-3xl md:text-4xl font-bold mb-4 text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -599,7 +570,7 @@ export default function ProductListContent() {
             Our Products
           </motion.h1>
           <motion.p
-            className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-8"
+            className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -607,42 +578,7 @@ export default function ProductListContent() {
             Discover our wide range of high-quality products
           </motion.p>
 
-          {/* Search Bar */}
-          <motion.div
-            className="max-w-2xl mx-auto relative"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <form onSubmit={handleSearch}>
-              <div className="relative">
-                <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  className={cn(
-                    "pl-10 pr-10 py-6 text-base w-full rounded-full shadow-sm",
-                    isSearchFocused ? "ring-2 ring-primary" : ""
-                  )}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setIsSearchFocused(false)}
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    aria-label="Clear search"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                )}
-              </div>
-            </form>
-          </motion.div>
-        </div>
+          {/* Search is now only available in the navbar */}
       </div>
 
       <div className="container mx-auto px-4 pb-16">
@@ -711,9 +647,7 @@ export default function ProductListContent() {
               variant="outline"
               size="sm"
               className="md:hidden gap-2 flex-1"
-              onClick={() =>
-                setFilters((prev) => ({ ...prev, isMobileFiltersOpen: true }))
-              }
+              onClick={() => setMobileFiltersOpen(true)}
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span>Filters</span>
@@ -767,7 +701,7 @@ export default function ProductListContent() {
 
                 {/* Scrollable Content */}
                 <ScrollArea className="flex-1 px-4 py-2">
-                  <div className="space-y-6 py-2">
+                  <div className="space-y-2 py-2">
                     {/* Categories */}
                     <FilterSection
                       title="Categories"
@@ -779,8 +713,6 @@ export default function ProductListContent() {
                       defaultOpen={localFilters.categories.length > 0}
                     />
 
-                    <Separator />
-
                     {/* Brands */}
                     <FilterSection
                       title="Brands"
@@ -789,8 +721,6 @@ export default function ProductListContent() {
                       onToggle={(id) => handleLocalFilterChange("brands", id)}
                       defaultOpen={localFilters.brands.length > 0}
                     />
-
-                    <Separator />
 
                     {/* Tags */}
                     <FilterSection
@@ -825,9 +755,9 @@ export default function ProductListContent() {
         <div className="flex flex-col lg:flex-row gap-6 w-full">
           {/* Desktop Filters */}
           <aside className="hidden lg:block w-72 shrink-0">
-            <div className="sticky top-6 space-y-6">
+            <div className="sticky top-16 space-y-6">
               {/* Filters Header */}
-              <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+              <div className="rounded-lg bg-muted/30 p-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">
                     Filters
@@ -888,7 +818,7 @@ export default function ProductListContent() {
               </div>
 
               {/* Filter Sections */}
-              <div className="space-y-6 rounded-lg bg-card p-4 shadow-sm">
+              <div className="rounded-lg bg-card p-4 shadow-sm">
                 <FilterSection
                   title="Categories"
                   options={filterOptions.categories}
@@ -914,7 +844,7 @@ export default function ProductListContent() {
                 />
 
                 {/* Results Count */}
-                <div className="pt-2 text-center">
+                <div className="text-center">
                   <p className="text-sm text-muted-foreground">
                     Showing{" "}
                     <span className="font-medium text-foreground">
@@ -989,7 +919,7 @@ export default function ProductListContent() {
             {/* Product Grid */}
             <div className="mt-4">
               {loading && products.length === 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {Array.from({ length: 8 }).map((_, i) => (
                     <ProductCardSkeleton key={i} />
                   ))}
@@ -1002,7 +932,7 @@ export default function ProductListContent() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
                   >
                     {products.map((product) => {
                       // Handle images format (string[] or { url, alt? }[])

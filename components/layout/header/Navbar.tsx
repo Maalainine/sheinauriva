@@ -8,6 +8,7 @@ import {
   IconMenu2,
   IconX,
   IconUser,
+  IconSearch,
 } from "@tabler/icons-react";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { useCart } from "@/context/CartContext";
@@ -24,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
+import { SearchBar } from "@/components/SearchBar";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -118,6 +120,17 @@ export default function Navbar() {
         <div className="container flex items-center justify-between px-4 mx-auto">
           {/* Mobile menu button */}
           <div className="flex items-center lg:hidden space-x-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <IconSearch className="h-5 w-5" />
+                  <span className="sr-only">Search</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="top" className="pt-16">
+                <SearchBar variant="expanded" />
+              </SheetContent>
+            </Sheet>
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -207,6 +220,10 @@ export default function Navbar() {
           </div>
 
           {/* Desktop navigation */}
+          <div className="hidden lg:flex items-center space-x-1 flex-1 max-w-2xl mx-4">
+            <SearchBar />
+          </div>
+          
           <div className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => (
               <Link
