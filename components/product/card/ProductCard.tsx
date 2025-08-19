@@ -70,30 +70,34 @@ const ProductCard = ({
   // Normalize images to { url: string, alt?: string }[] for consistent rendering
   const normalizedImages = useMemo(() => {
     if (!images || !Array.isArray(images)) return [];
-    return images.map(img => {
-      if (typeof img === 'string') {
-        return { url: img, alt: '' };
-      }
-      return { 
-        url: img?.url || '', 
-        alt: img?.alt || '' 
-      };
-    }).filter(img => img.url); // Filter out any invalid entries
+    return images
+      .map((img) => {
+        if (typeof img === "string") {
+          return { url: img, alt: "" };
+        }
+        return {
+          url: img?.url || "",
+          alt: img?.alt || "",
+        };
+      })
+      .filter((img) => img.url); // Filter out any invalid entries
   }, [images]) as { url: string; alt?: string }[];
 
   // Stock: sum of variant stock if variants exist, else rawStock
-  const stock = Array.isArray(variants) && variants.length > 0
-    ? variants.reduce((sum, v) => sum + (v.stock || 0), 0)
-    : rawStock;
+  const stock =
+    Array.isArray(variants) && variants.length > 0
+      ? variants.reduce((sum, v) => sum + (v.stock || 0), 0)
+      : rawStock;
 
   // Price: min variant price if variants exist, else rawPrice
-  const price = Array.isArray(variants) && variants.length > 0
-    ? Math.min(...variants.map(v => v.price || 0))
-    : rawPrice;
+  const price =
+    Array.isArray(variants) && variants.length > 0
+      ? Math.min(...variants.map((v) => v.price || 0))
+      : rawPrice;
 
   // For legacy/compatibility, always show originalPrice if provided
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== "production") {
     console.log(`[ProductCard Debug] ${name}`, {
       id,
       hasVariants,
@@ -101,51 +105,52 @@ const ProductCard = ({
       stock,
       images: images?.length || 0,
       tags: tags?.length || 0,
-      brand: brand?.name || 'none'
+      brand: brand?.name || "none",
     });
   }
-  
+
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = useCart();
   // Check if product has a single variant (can add to cart directly)
   const hasSingleVariant = hasVariants && variantCount === 1;
   const hasMultipleVariants = hasVariants && variantCount > 1;
-  
+
   // Check if device is touch-enabled
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-  
+
   // Detect touch device on component mount
   useEffect(() => {
-    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
-  
-  if (process.env.NODE_ENV !== 'production') {
+
+  if (process.env.NODE_ENV !== "production") {
     console.log(`[ProductCard Debug] ${name} - Variant State`, {
       hasSingleVariant,
       hasMultipleVariants,
-      shouldShowBadge: hasSingleVariant || hasMultipleVariants
+      shouldShowBadge: hasSingleVariant || hasMultipleVariants,
     });
   }
-  
+
   // Fallback icon component
   const IconFallback = useMemo(() => {
     const lower = name.toLowerCase();
-    if (lower.includes("lip") || lower.includes("makeup")) return IconMicrophone;
+    if (lower.includes("lip") || lower.includes("makeup"))
+      return IconMicrophone;
     if (lower.includes("shirt")) return IconShirt;
     return IconPhoto;
   }, [name]);
-  
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (stock <= 0) {
       toast.error(`Sorry, ${name} is out of stock`);
       return;
     }
-    
-    const mainImage = normalizedImages[0]?.url || '';
+
+    const mainImage = normalizedImages[0]?.url || "";
     addItem({
       id,
       name,
@@ -153,7 +158,7 @@ const ProductCard = ({
       image: mainImage,
       quantity: 1,
     });
-    
+
     toast.success(`${name} added to cart`);
   };
 
@@ -162,7 +167,7 @@ const ProductCard = ({
     const safePrice = Number(price) || 0;
     const safeOriginalPrice = Number(originalPrice) || 0;
     const mainPrice = `${safePrice.toFixed(2)} MAD`;
-    
+
     if (safeOriginalPrice > 0 && safeOriginalPrice > safePrice) {
       return (
         <span className="flex items-baseline gap-2">
@@ -188,22 +193,32 @@ const ProductCard = ({
         )}
         {/* Variant badges */}
         {hasMultipleVariants ? (
-          <Badge variant="outline" className="bg-background/90 backdrop-blur-sm">
+          <Badge
+            variant="outline"
+            className="bg-background/90 backdrop-blur-sm"
+          >
             <span className="text-primary">{variantCount} Options</span>
           </Badge>
         ) : hasSingleVariant ? (
-          <Badge variant="outline" className="bg-background/90 backdrop-blur-sm">
+          <Badge
+            variant="outline"
+            className="bg-background/90 backdrop-blur-sm"
+          >
             <span className="text-primary">Single Option</span>
           </Badge>
         ) : null}
       </div>
-      
+
       {/* Product Image Section */}
       <div className="relative aspect-square bg-muted/20 overflow-hidden">
         {!imgError && normalizedImages[0]?.url ? (
           <Image
             src={normalizedImages[0].url}
-            alt={"alt" in normalizedImages[0] && normalizedImages[0].alt ? normalizedImages[0].alt : name}
+            alt={
+              "alt" in normalizedImages[0] && normalizedImages[0].alt
+                ? normalizedImages[0].alt
+                : name
+            }
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             onError={() => setImgError(true)}
@@ -216,9 +231,11 @@ const ProductCard = ({
         )}
 
         {/* Action Buttons - Always visible on mobile, hover on desktop */}
-        <div 
+        <div
           className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent ${
-            isTouchDevice || isHovered ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'
+            isTouchDevice || isHovered
+              ? "opacity-100"
+              : "opacity-0 md:group-hover:opacity-100"
           } transition-opacity duration-300 flex items-end p-4`}
           onMouseEnter={() => !isTouchDevice && setIsHovered(true)}
           onMouseLeave={() => !isTouchDevice && setIsHovered(false)}
@@ -238,14 +255,16 @@ const ProductCard = ({
                   variant="default"
                   size="sm"
                   className={`flex-1 transition-all duration-300 ${
-                    isTouchDevice || isHovered ? 'translate-y-0' : 'translate-y-2 md:group-hover:translate-y-0'
+                    isTouchDevice || isHovered
+                      ? "translate-y-0"
+                      : "translate-y-2 md:group-hover:translate-y-0"
                   } gap-2 h-9`}
                   onClick={handleAddToCart}
                   disabled={stock < 1}
                 >
                   <IconShoppingCart className="h-4 w-4" />
                   <span className="whitespace-nowrap">
-                    {stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                    {stock > 0 ? "Add to Cart" : "Out of Stock"}
                   </span>
                 </Button>
                 <Button
@@ -253,11 +272,13 @@ const ProductCard = ({
                   variant="secondary"
                   size="sm"
                   className={`transition-all duration-300 ${
-                    isTouchDevice || isHovered ? 'translate-y-0' : 'translate-y-2 md:group-hover:translate-y-0'
+                    isTouchDevice || isHovered
+                      ? "translate-y-0"
+                      : "translate-y-2 md:group-hover:translate-y-0"
                   } h-9 px-3 flex-shrink-0`}
                 >
-                  <Link 
-                    href={`/products/${id}`} 
+                  <Link
+                    href={`/products/${id}`}
                     className="flex items-center gap-1.5"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -273,11 +294,13 @@ const ProductCard = ({
                 variant="secondary"
                 size="sm"
                 className={`w-full transition-all duration-300 ${
-                  isTouchDevice || isHovered ? 'translate-y-0' : 'translate-y-2 md:group-hover:translate-y-0'
+                  isTouchDevice || isHovered
+                    ? "translate-y-0"
+                    : "translate-y-2 md:group-hover:translate-y-0"
                 } h-9 px-3`}
               >
-                <Link 
-                  href={`/products/${id}`} 
+                <Link
+                  href={`/products/${id}`}
                   className="flex items-center justify-center gap-1.5"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -291,35 +314,29 @@ const ProductCard = ({
       </div>
 
       {/* Product Info Section */}
-      <CardHeader className="px-4">
+      <CardHeader className="px-4 flex justify-between">
         {/* Product Name and Brand logo */}
         <div className="flex items-center justify-between">
-          <CardTitle className="line-clamp-1 flex-1 min-w-0">
+          <CardTitle className="line-clamp-2 flex-1 min-w-0">
             <TypographyH3>{name}</TypographyH3>
           </CardTitle>
+        </div>
 
+        {/* Product Price and Brand name */}
+        <div className="flex flex-col gap-2.5 w-full">
           {brand?.logoUrl && (
-            <div className="h-4 w-4 relative flex items-center justify-center flex-shrink-0">
+            <div className="pt-2 flex justify-end">
               <Image
                 src={brand.logoUrl}
                 alt={brand.name}
-                width={16}
-                height={16}
+                width={50}
+                height={50}
                 className="object-contain"
               />
             </div>
           )}
-        </div>
 
-        {/* Product Price and Brand name */}
-        <div className="flex items-center justify-between">
-          {brand && (
-            <span className="text-muted-foreground">
-              <TypographyP>{brand.name}</TypographyP>
-            </span>
-          )}
-
-          <div>
+          <div className="flex justify-end">
             <TypographyLarge>{formattedPrice}</TypographyLarge>
           </div>
         </div>
@@ -327,7 +344,10 @@ const ProductCard = ({
 
       <CardContent className="flex flex-col px-4 gap-2 pb-2">
         <CardDescription className="line-clamp-2">
-          <TypographyP>{description}</TypographyP>
+          <TypographyP>
+            {description?.split(/[.!?]+/)[0] || ""}
+            {description?.match(/[.!?]/) ? "." : ""}
+          </TypographyP>
         </CardDescription>
 
         {/* Spacer to push stock info to bottom */}
@@ -362,8 +382,8 @@ const ProductCard = ({
               stock === 0
                 ? "text-destructive-foreground"
                 : stock < 10
-                ? "text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900"
-                : "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900"
+                  ? "text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900"
+                  : "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900"
             }
           >
             {stock === 0 ? "Out of stock" : `${stock} available`}

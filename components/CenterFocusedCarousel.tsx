@@ -204,7 +204,7 @@ export function CenterFocusedCarousel({
           {React.Children.map(children, (child, index) => (
             <div
               key={index}
-className="absolute will-change-transform pointer-events-auto"
+              className="absolute will-change-transform pointer-events-auto"
               style={{
                 ...getItemStyle(index),
                 width: cardWidth,
@@ -216,14 +216,14 @@ className="absolute will-change-transform pointer-events-auto"
           ))}
         </div>
 
-        {/* Navigation Buttons */}
+        {/* Navigation Buttons - Hidden on mobile (sm breakpoint and below) */}
         {children.length > 1 && (
           <>
             <Button
               onClick={goToPrevious}
               variant="outline"
               size="icon"
-              className="absolute left-0 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full flex items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
+              className="hidden md:flex absolute left-0 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Previous"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -233,7 +233,7 @@ className="absolute will-change-transform pointer-events-auto"
               onClick={goToNext}
               variant="outline"
               size="icon"
-              className="absolute right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full flex items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
+              className="hidden md:flex absolute right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Next"
             >
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
