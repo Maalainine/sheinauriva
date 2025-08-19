@@ -341,7 +341,7 @@ const ProductCard = ({
         </div>
       </CardHeader>
 
-      <CardContent className="flex flex-col px-4 gap-2 pb-2">
+      <CardContent className="flex flex-col px-4 gap-2 pb-0.5">
         <CardDescription className="line-clamp-2">
           <TypographyP>
             {description?.split(/[.!?]+/)[0] || ""}
@@ -368,7 +368,7 @@ const ProductCard = ({
       </CardContent>
 
       {/* Stock Status Footer */}
-      <CardFooter className="border-t [.border-t]:p-4 w-full flex items-center justify-between">
+      <CardFooter className="border-t [.border-t]:px-4 [.border-t]:py-2 w-full flex items-center justify-between">
         <span className="text-muted-foreground">
           {hasVariants ? "Availability" : "Stock"}
         </span>
