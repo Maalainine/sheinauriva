@@ -343,10 +343,17 @@ const ProductCard = ({
 
       <CardContent className="flex flex-col px-4 gap-2 pb-0.5">
         <CardDescription className="line-clamp-2">
-          <TypographyP>
-            {description?.split(/[.!?]+/)[0] || ""}
-            {description?.match(/[.!?]/) ? "." : ""}
-          </TypographyP>
+          <TypographyP 
+            className="whitespace-pre-line"
+            dangerouslySetInnerHTML={{ 
+              __html: description 
+                ? description.replace(/<[^>]*>?/gm, '') // Remove HTML tags
+                           .replace(/&[a-z]+;/g, '')     // Remove HTML entities
+                           .split(/[.!?]+/)[0] + 
+                  (description.match(/[.!?]/) ? '.' : '')
+                : ''
+            }} 
+          />
         </CardDescription>
 
         {/* Spacer to push stock info to bottom */}
