@@ -24,7 +24,6 @@ import { useCart } from "@/context/CartContext";
 import {
   TypographyP,
   TypographyLarge,
-  TypographyH3,
 } from "@/components/ui/typography";
 
 export type ProductCardProps = {
@@ -318,26 +317,26 @@ const ProductCard = ({
         {/* Product Name and Brand logo */}
         <div className="flex items-center justify-between">
           <CardTitle className="line-clamp-2 flex-1 min-w-0">
-            <TypographyH3>{name}</TypographyH3>
+            <TypographyLarge>{name}</TypographyLarge>
           </CardTitle>
         </div>
 
         {/* Product Price and Brand name */}
-        <div className="flex flex-col gap-2.5 w-full">
+        <div className="flex flex-col gap-1.5 w-full">
           {brand?.logoUrl && (
             <div className="pt-2 flex justify-end">
               <Image
                 src={brand.logoUrl}
                 alt={brand.name}
-                width={50}
-                height={50}
+                width={40}
+                height={40}
                 className="object-contain"
               />
             </div>
           )}
 
           <div className="flex justify-end">
-            <TypographyLarge>{formattedPrice}</TypographyLarge>
+            <TypographyP>{formattedPrice}</TypographyP>
           </div>
         </div>
       </CardHeader>
