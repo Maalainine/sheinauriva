@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { TypographyH1, TypographyH3, TypographyP } from "@/components/ui/typography";
+import {
+  TypographyH1,
+  TypographyH3,
+  TypographyP,
+} from "@/components/ui/typography";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,7 +29,10 @@ export default function Footer() {
               className="object-contain border-4 border-primary"
               priority
             />
-            <TypographyH1 className="flex"><TypographyH1 className="text-primary/70">Just</TypographyH1>Originale</TypographyH1>
+            <TypographyH1 className="flex">
+              <TypographyH1 className="text-primary/70">Just</TypographyH1>
+              Originale
+            </TypographyH1>
           </Link>
           <TypographyP className="text-sm text-muted-foreground max-w-md">
             Discover premier global beauty brands.
@@ -74,7 +81,7 @@ export default function Footer() {
             </Button>
           </form>
           <p className="text-xs text-muted-foreground mt-2">
-            Get the latest updates on new products and offers.
+            Because Excellence Knows No Borders
           </p>
         </div>
       </div>

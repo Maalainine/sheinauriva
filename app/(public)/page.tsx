@@ -319,11 +319,10 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary/50 z-10 flex items-center">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <TypographyH1 className="mb-4 text-secondary">
-              Your Beauty, Elevated
+              Where the World’s Icons Find Their Home{" "}
             </TypographyH1>
             <TypographyH4 className="mb-8 max-w-2xl text-secondary">
-              Discover premier global beauty brands — intuitively selected for
-              your radiant glow.
+              Curated Collections of Global Luxury, Delivered to Your Doorstep
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/products">
@@ -335,7 +334,7 @@ export default function Home() {
           </div>
         </div>
         <Image
-          src="/images/Hero-banner01.png"
+          src="/images/Banner03.png"
           alt="Fashion Collection"
           fill
           className="object-cover"
