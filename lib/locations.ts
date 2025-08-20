@@ -54,7 +54,7 @@ export const COUNTRIES = [
       { name: 'Merzouga', shippingPrice: 50 },
     ]
   },
-  {
+  /*{
     name: 'Mauritania',
     code: 'MR',
     cities: [
@@ -69,7 +69,7 @@ export const COUNTRIES = [
       { name: 'Aïoun', shippingPrice: 140 },
       { name: 'Tidjikja', shippingPrice: 145 }
     ]
-  }
+  }*/
 ] as const;
 
 // Default city (first city of the first country)

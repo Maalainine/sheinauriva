@@ -42,10 +42,10 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-medium">Email</h3>
                 <a 
-                  href="mailto:contact@safsaf.com" 
+                  href="mailto:contact@JustOriginale.com" 
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  contact@safsaf.com
+                  contact@JustOriginale.com
                 </a>
               </div>
             </div>
@@ -57,10 +57,10 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-medium">Phone</h3>
                 <a 
-                  href="tel:+212658815796" 
+                  href="tel:+212610454716" 
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  +212 6 58 81 57 96
+                  +212 6 10 45 47 16
                 </a>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function ContactPage() {
               <div>
                 <h3 className="font-medium">Location</h3>
                 <p className="text-muted-foreground">
-                  Dakhla, Morocco
+                  Casablanca, Morocco
                 </p>
               </div>
             </div>

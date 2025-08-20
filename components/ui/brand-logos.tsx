@@ -5,15 +5,16 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const BRAND_IMAGES = [
-  "/images/brands/avon.png",
-  "/images/brands/covergirl.png",
-  "/images/brands/clinique.png",
-  "/images/brands/loreal.png",
-  "/images/brands/maybelline.png",
-  "/images/brands/oriflame.png",
-  "/images/brands/urban-decay-cosmetics.png",
-  "/images/brands/mac-cosmetics.png",
-  // Add more brand logos as needed
+  "/images/brands/adidas-seeklogo.png",
+  "/images/brands/bershka-seeklogo.png",
+  "/images/brands/gucci-seeklogo.png",
+  "/images/brands/hermes-seeklogo.png",
+  "/images/brands/lc-waikiki-seeklogo.png",
+  "/images/brands/nike-seeklogo.png",
+  "/images/brands/pull-bear-seeklogo.png",
+  "/images/brands/puma-seeklogo.png",
+  "/images/brands/the-north-face-seeklogo.png",
+  "/images/brands/zara-seeklogo.png"
 ];
 
 // Duplicate the array to create a seamless loop
@@ -77,7 +78,7 @@ export function BrandLogos() {
             <div
               key={`${index}-${src}`}
               className={cn(
-                "flex h-16 w-32 shrink-0 items-center justify-center",
+                "flex h-auto w-32 my-4 shrink-0 items-center justify-center",
                 "transition-opacity duration-300 hover:opacity-100",
                 "opacity-60 hover:opacity-100"
               )}
@@ -85,9 +86,9 @@ export function BrandLogos() {
               <Image
                 src={src}
                 alt="Brand logo"
-                width={120}
-                height={60}
-                className="h-auto w-full max-w-[120px] object-contain"
+                width={100}
+                height={100}
+                className="h-auto max-w-[120px] object-contain"
                 onError={(e) => {
                   // Fallback to a placeholder if image fails to load
                   const target = e.target as HTMLImageElement;

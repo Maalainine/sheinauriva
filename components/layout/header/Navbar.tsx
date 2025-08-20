@@ -23,6 +23,7 @@ import { useCart } from "@/context/CartContext";
 
 // Utils
 import { cn } from "@/lib/utils";
+import { TypographyH1, TypographyH2, TypographyH3, TypographyLarge } from "@/components/ui/typography";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -130,33 +131,30 @@ export default function Navbar() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] sm:w-[350px] p-0">
-                <SheetHeader className="border-b p-4 text-left">
+                <SheetHeader className="border-b py-2 pl-6   text-left">
                   <SheetTitle className="text-xl font-bold tracking-tight">
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-2">
                       <Link
                         href="/"
-                        className="flex items-center relative"
+                        className="border-2 border-primary flex items-center relative"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Image
-                          src="/images/SaadLogo.png"
-                          alt="SafSaf"
-                          width={80}
-                          height={80}
+                          src="/images/JO-removebg.png"
+                          alt="JO"
+                          width={30}
+                          height={30}
                           className="object-contain"
                           priority
                         />
                       </Link>
+                      <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
+
                     </div>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="h-full flex flex-col">
                   <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                    {/* Mobile Search in Menu */}
-                    <div className="mb-6 p-2 bg-muted/30 rounded-lg">
-                      <SearchBar variant="expanded" />
-                    </div>
-
                     {navLinks.map((link) => (
                       <Link
                         key={link.href}
@@ -181,13 +179,13 @@ export default function Navbar() {
             <div className="flex-1 flex justify-center">
               <Link
                 href="/"
-                className="relative hover:opacity-90 transition-opacity flex-shrink-0"
+                className="border-2 border-primary relative hover:opacity-90 transition-opacity flex-shrink-0"
               >
                 <Image
-                  src="/images/SaadLogo.png"
-                  alt="SafSaf"
-                  width={80}
-                  height={80}
+                  src="/images/JO-removebg.png"
+                  alt="JO"
+                  width={30}
+                  height={30}
                   priority
                   className="object-contain"
                 />
@@ -242,19 +240,20 @@ export default function Navbar() {
           {/* Desktop Layout */}
           <div className="hidden lg:flex items-center justify-between w-full">
             {/* Logo */}
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 items-center">
               <Link
                 href="/"
                 className="relative hover:opacity-90 transition-opacity flex items-center gap-2"
               >
                 <Image
-                  src="/images/SaadLogo.png"
-                  alt="SafSaf"
-                  width={100}
-                  height={100}
+                  src="/images/JO-removebg.png"
+                  alt="JO"
+                  width={30}
+                  height={30}
                   priority
-                  className="object-contain"
+                  className="border-2 border-primary object-contain"
                 />
+                <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
               </Link>
             </div>
 
