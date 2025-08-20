@@ -131,11 +131,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const handleTagChange = (tagId: string) => {
     setForm((prev) => {
       const tagIds = prev.tagIds || [];
+      // Ensure we're comparing strings by converting both to string
+      const tagIdStr = String(tagId);
       return {
         ...prev,
-        tagIds: tagIds.includes(tagId)
-          ? tagIds.filter((id) => id !== tagId)
-          : [...tagIds, tagId],
+        tagIds: tagIds.some(id => String(id) === tagIdStr)
+          ? tagIds.filter((id) => String(id) !== tagIdStr)
+          : [...tagIds, tagIdStr],
       };
     });
   };
@@ -251,7 +253,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 <Button
                   type="button"
                   key={tag.id}
-                  variant={form.tagIds?.includes(tag.id) ? "default" : "outline"}
+                  variant={form.tagIds?.some(id => String(id) === String(tag.id)) ? "default" : "outline"}
                   className="rounded-full px-3 py-1 text-xs"
                   onClick={() => handleTagChange(tag.id)}
                 >

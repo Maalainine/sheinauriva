@@ -49,8 +49,11 @@ console.log("EditPage id from params:", id);
           images: Array.isArray(product.images)
             ? product.images
             : [],
-          tagIds: Array.isArray(product.tags)
-            ? product.tags.map((t: any) => String(t.id))
+          // Ensure tagIds are always an array of strings
+          tagIds: Array.isArray(product.tags) && product.tags.length > 0
+            ? product.tags
+                .filter((t: any) => t?.id != null) // Filter out any undefined/null tags
+                .map((t: any) => String(t.id)) // Convert all IDs to strings
             : [],
           variants: Array.isArray(product.variants)
             ? product.variants.map((v: any) => ({
