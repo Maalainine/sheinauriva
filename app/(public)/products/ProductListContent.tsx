@@ -3,19 +3,18 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
-  Search as SearchIcon,
-  Filter,
+  Search,
   X,
   SlidersHorizontal,
   Loader2,
   ChevronDown,
   ChevronUp,
-  Check,
   ArrowLeft,
 } from "lucide-react";
-import Image from "next/image";
+import { IconX, IconSearch, IconSortAscendingShapes} from '@tabler/icons-react';
 import ProductCard from "@/components/product/card/ProductCard";
 import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -300,6 +299,7 @@ export default function ProductListContent() {
 
   // State for mobile filters dialog
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [mobileSortOpen, setMobileSortOpen] = useState(false);
 
   // State for filters
   const [filters, setFilters] = useState<FilterState>({
@@ -395,49 +395,48 @@ export default function ProductListContent() {
   // Fetch products when filters or search query changes
   const fetchProducts = useCallback(async () => {
     if (!isClient) return;
-    
+
     setLoading(true);
     try {
       // Build query parameters
       const params = new URLSearchParams();
-      
+
       // Only apply category/brand/tag filters if not searching
       if (filters.categories.length > 0) {
         params.append("categoryId", filters.categories[0]);
       }
-      
+
       if (filters.brands.length > 0) {
         params.append("brandId", filters.brands[0]);
       }
-      
+
       if (filters.tags.length > 0) {
         params.append("tagId", filters.tags[0]);
       }
-      
+
       // Add sorting
       const [sortField, sortOrder] = filters.sortBy.split("-");
       params.append("sortBy", sortField);
       params.append("sortOrder", sortOrder);
-      
+
       // Add pagination
       params.append("skip", skip.toString());
       params.append("take", PAGE_SIZE.toString());
-      
+
       const response = await fetch(`/api/public/products?${params.toString()}`);
-      
+
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
-      
+
       const data: ApiResponse = await response.json();
       setProducts(data.products);
       setTotal(data.total);
-      
+
       // Update URL to reflect current search/filters
       const newParams = new URLSearchParams(params.toString());
       const newUrl = `${window.location.pathname}?${newParams.toString()}`;
-      window.history.replaceState({}, '', newUrl);
-      
+      window.history.replaceState({}, "", newUrl);
     } catch (error) {
       console.error("Error fetching products:", error);
       // Handle error (e.g., show toast)
@@ -561,24 +560,24 @@ export default function ProductListContent() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 md:py-8 mb-6">
-          <motion.h1
-            className="text-3xl md:text-4xl font-bold mb-4 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Our Products
-          </motion.h1>
-          <motion.p
-            className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Discover our wide range of high-quality products
-          </motion.p>
+        <motion.h1
+          className="text-3xl md:text-4xl font-bold mb-4 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Our Products
+        </motion.h1>
+        <motion.p
+          className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          Discover our wide range of high-quality products
+        </motion.p>
 
-          {/* Search is now only available in the navbar */}
+        {/* Search is now only available in the navbar */}
       </div>
 
       <div className="container mx-auto px-4 pb-16">
@@ -615,31 +614,51 @@ export default function ProductListContent() {
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <div className="hidden md:block w-56">
-              <Select
-                value={filters.sortBy}
-                onValueChange={(value) => {
-                  setFilters((prev) => ({ ...prev, sortBy: value }));
-                  setSkip(0);
-                }}
+            {/* Sort Button - Mobile Drawer, Desktop Dropdown */}
+            <div className="w-full flex-1">
+              {/* Mobile: Button that triggers drawer */}
+              <Button
+                variant="outline"
+                size="sm"
+                className="lg:hidden gap-2 w-full"
+                onClick={() => setMobileSortOpen(true)}
               >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  {SORT_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <IconSortAscendingShapes className="h-4 w-4" />
+                <span>
+                  {SORT_OPTIONS.find(
+                    (option) => option.value === filters.sortBy
+                  )?.label || "Sort by"}
+                </span>
+              </Button>
+
+              {/* Desktop: Regular Select dropdown */}
+              <div className="hidden lg:block w-full">
+                <Select
+                  value={filters.sortBy}
+                  onValueChange={(value) => {
+                    setFilters((prev) => ({ ...prev, sortBy: value }));
+                    setSkip(0);
+                  }}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
+            {/* Filter Button - Always triggers drawer */}
             <Button
               variant="outline"
               size="sm"
-              className="lg:hidden gap-2 flex-1"
+              className="lg:hidden gap-2 flex-1 w-full"
               onClick={() => setMobileFiltersOpen(true)}
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -739,6 +758,37 @@ export default function ProductListContent() {
                     Apply Filters
                   </Button>
                 </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          {/* Mobile Sort Drawer */}
+          <Sheet open={mobileSortOpen} onOpenChange={setMobileSortOpen}>
+            <SheetContent side="bottom" className="pb-6 overflow-y-auto">
+              <SheetHeader className="border-b">
+                <SheetTitle>Sort By</SheetTitle>
+              </SheetHeader>
+              <div className="space-y-2">
+                {SORT_OPTIONS.map((option) => (
+                  <Button
+                    key={option.value}
+                    variant={filters.sortBy === option.value ? "default" : "ghost"}
+                    className="w-full justify-start"
+                    onClick={() => {
+                      setFilters(prev => ({
+                        ...prev,
+                        sortBy: option.value
+                      }));
+                      setSkip(0);
+                      setMobileSortOpen(false);
+                    }}
+                  >
+                    {option.label}
+                    {filters.sortBy === option.value && (
+                      <Check className="ml-auto h-4 w-4" />
+                    )}
+                  </Button>
+                ))}
               </div>
             </SheetContent>
           </Sheet>
