@@ -1,31 +1,28 @@
 "use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  IconShoppingCart,
-  IconMenu2,
-  IconX,
-  IconUser,
-  IconSearch,
-} from "@tabler/icons-react";
-import CartDrawer from "@/components/cart/CartDrawer";
-import { useCart } from "@/context/CartContext";
-import { cn } from "@/lib/utils";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { motion } from "framer-motion";
+
+// UI Components
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
-import { SearchBar } from "@/components/SearchBar";
+
+// Icons
+import { IconShoppingCart, IconMenu2, IconSearch, IconX } from "@tabler/icons-react";
+
+// Components
+import CartDrawer from "@/components/cart/CartDrawer";
+import SearchBar from "@/components/SearchBar";
+
+// Hooks
+import { useCart } from "@/context/CartContext";
+
+// Utils
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -48,7 +45,7 @@ export default function Navbar() {
   // Set client-side state and handle scroll effect
   useEffect(() => {
     setIsClient(true);
-    
+
     // Initialize cart count from localStorage if available
     const stored = localStorage.getItem("cart");
     if (stored) {
@@ -73,7 +70,7 @@ export default function Navbar() {
 
   // Update cart count when cart changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setCartCount(count);
   }, [cart]);
@@ -118,19 +115,9 @@ export default function Navbar() {
         )}
       >
         <div className="container flex items-center justify-between px-4 mx-auto">
-          {/* Mobile menu button */}
-          <div className="flex items-center lg:hidden space-x-2">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <IconSearch className="h-5 w-5" />
-                  <span className="sr-only">Search</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="top" className="pt-16">
-                <SearchBar variant="expanded" />
-              </SheetContent>
-            </Sheet>
+          {/* Mobile Layout */}
+          <div className="flex lg:hidden items-center justify-between w-full">
+            {/* Left side - Menu */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button
@@ -139,11 +126,7 @@ export default function Navbar() {
                   aria-label="Toggle menu"
                   className="text-foreground/80 hover:bg-transparent hover:text-foreground"
                 >
-                  {mobileMenuOpen ? (
-                    <IconX className="h-5 w-5" />
-                  ) : (
-                    <IconMenu2 className="h-5 w-5" />
-                  )}
+                  <IconMenu2 className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] sm:w-[350px] p-0">
@@ -158,8 +141,8 @@ export default function Navbar() {
                         <Image
                           src="/images/SaadLogo.png"
                           alt="SafSaf"
-                          width={100}
-                          height={100}
+                          width={80}
+                          height={80}
                           className="object-contain"
                           priority
                         />
@@ -169,6 +152,11 @@ export default function Navbar() {
                 </SheetHeader>
                 <div className="h-full flex flex-col">
                   <div className="flex-1 overflow-y-auto p-4 space-y-1">
+                    {/* Mobile Search in Menu */}
+                    <div className="mb-6 p-2 bg-muted/30 rounded-lg">
+                      <SearchBar variant="expanded" />
+                    </div>
+
                     {navLinks.map((link) => (
                       <Link
                         key={link.href}
@@ -179,102 +167,61 @@ export default function Navbar() {
                             ? "bg-primary/10 text-primary"
                             : "text-foreground/90 hover:bg-accent"
                         )}
+                        onClick={() => setMobileMenuOpen(false)}
                       >
                         {link.label}
                       </Link>
                     ))}
-
-                    {/*<div className="pt-4 mt-4 border-t border-border/40">
-                      <Link 
-                        href="/account" 
-                        className="flex items-center px-3 py-3 rounded-lg text-base font-medium text-foreground/90 hover:bg-accent"
-                      >
-                        <IconUser className="h-5 w-5 mr-2" />
-                        My Account
-                      </Link>
-                    </div>*/}
                   </div>
                 </div>
               </SheetContent>
             </Sheet>
-          </div>
 
-          {/* Logo */}
-          <div className="flex-1 lg:flex-none">
-            <div className="flex items-center gap-1">
+            {/* Center - Logo */}
+            <div className="flex-1 flex justify-center">
               <Link
                 href="/"
                 className="relative hover:opacity-90 transition-opacity flex-shrink-0"
-                onClick={() => setMobileMenuOpen(false)}
               >
                 <Image
                   src="/images/SaadLogo.png"
                   alt="SafSaf"
-                  width={100}
-                  height={100}
+                  width={80}
+                  height={80}
                   priority
+                  className="object-contain"
                 />
               </Link>
-              <span className="text-2xl font-bold hidden sm:block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent tracking-tight"></span>
             </div>
-          </div>
 
-          {/* Desktop navigation */}
-          <div className="hidden lg:flex items-center space-x-1 flex-1 max-w-2xl mx-4">
-            <SearchBar />
-          </div>
-          
-          <div className="hidden lg:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
-                  pathname === link.href
-                    ? "text-primary bg-primary/10"
-                    : "text-foreground/80 hover:text-primary hover:bg-muted/50"
-                )}
-              >
-                {link.label}
-                {pathname === link.href && (
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
-                    layoutId="activeNav"
-                    transition={{
-                      type: "spring",
-                      stiffness: 380,
-                      damping: 30,
-                    }}
-                  />
-                )}
-              </Link>
-            ))}
-          </div>
+            {/* Right side - Search & Cart */}
+            <div className="flex items-center gap-1">
+              {/* Mobile Search Toggle */}
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <IconSearch className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className="p-0">
+                  <SheetHeader className="px-4 pt-2.5 pb-0">
+                    <SheetTitle className="text-lg font-semibold">Search</SheetTitle>
+                  </SheetHeader>
+                  <SearchBar className="p-4 border-t" variant="expanded" autoFocus />
+                </SheetContent>
+              </Sheet>
 
-          {/* Cart and User Actions */}
-          <div className="flex items-center justify-end gap-2 lg:gap-4 flex-1 lg:flex-none">
-            {/* Account */}
-            {/*<Button
-              variant="ghost"
-              size="icon"
-              aria-label="Account"
-              className="hidden lg:flex text-foreground/80 hover:bg-transparent hover:text-foreground"
-              asChild
-            >
-              <Link href="/account">
-                <IconUser className="h-5 w-5" />
-              </Link>
-            </Button>*/}
-
-            {/* Cart */}
-            <div className="flex items-center">
+              {/* Cart */}
               <Button
                 variant="ghost"
                 size="icon"
                 className="relative group"
                 onClick={() => setCartOpen(true)}
-                aria-label={isClient ? `Shopping cart (${cartCount} items)` : 'Shopping cart'}
+                aria-label={
+                  isClient
+                    ? `Shopping cart (${cartCount} items)`
+                    : "Shopping cart"
+                }
               >
                 <IconShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
                 {isClient && cartCount > 0 && (
@@ -289,7 +236,84 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Button>
-              {isClient && <Label className="pl-2">Cart</Label>}
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex items-center justify-between w-full">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link
+                href="/"
+                className="relative hover:opacity-90 transition-opacity flex items-center gap-2"
+              >
+                <Image
+                  src="/images/SaadLogo.png"
+                  alt="SafSaf"
+                  width={100}
+                  height={100}
+                  priority
+                  className="object-contain"
+                />
+              </Link>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex items-center space-x-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
+                    pathname === link.href
+                      ? "text-primary bg-primary/10"
+                      : "text-foreground/80 hover:text-primary hover:bg-muted/50"
+                  )}
+                >
+                  {link.label}
+                  {pathname === link.href && (
+                    <motion.span
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary"
+                      layoutId="activeNav"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-2">
+            <SearchBar />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group"
+                onClick={() => setCartOpen(true)}
+                aria-label={
+                  isClient
+                    ? `Shopping cart (${cartCount} items)`
+                    : "Shopping cart"
+                }
+              >
+                <IconShoppingCart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                {isClient && cartCount > 0 && (
+                  <motion.span
+                    key={`cart-count-${cartCount}`}
+                    initial={{ scale: 1.2, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                    className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                  >
+                    {cartCount > 9 ? "9+" : cartCount}
+                  </motion.span>
+                )}
+              </Button>
             </div>
           </div>
         </div>
