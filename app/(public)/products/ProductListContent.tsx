@@ -612,13 +612,6 @@ export default function ProductListContent() {
                 <span>All Products</span>
               )}
             </h1>
-            <p className="text-muted-foreground">
-              {total} {total === 1 ? "product" : "products"} found
-              {filters.categories.length > 0 &&
-                ` in ${filterOptions.categories.find((c) => c.id === filters.categories[0])?.name || "category"}`}
-              {filters.brands.length > 0 &&
-                ` from ${filterOptions.brands.find((b) => b.id === filters.brands[0])?.name || "brand"}`}
-            </p>
           </div>
 
           <div className="flex items-center gap-2 w-full md:w-auto">
@@ -646,7 +639,7 @@ export default function ProductListContent() {
             <Button
               variant="outline"
               size="sm"
-              className="md:hidden gap-2 flex-1"
+              className="lg:hidden gap-2 flex-1"
               onClick={() => setMobileFiltersOpen(true)}
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -862,12 +855,6 @@ export default function ProductListContent() {
             {/* Active filters for desktop */}
             <div className="hidden lg:block mb-6">
               <div className="flex flex-wrap items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <span className="text-sm text-muted-foreground mr-2">
-                    Filters:
-                  </span>
-                )}
-
                 {filters.categories.map((id) => {
                   const category = filterOptions.categories.find(
                     (c) => c.id === id
@@ -902,17 +889,6 @@ export default function ProductListContent() {
                     />
                   ) : null;
                 })}
-
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearAllFilters}
-                    className="h-7 text-xs text-primary hover:bg-transparent hover:text-primary/80"
-                  >
-                    Clear all
-                  </Button>
-                )}
               </div>
             </div>
 
@@ -1024,14 +1000,6 @@ export default function ProductListContent() {
                     Try adjusting your search or filter to find what you're
                     looking for.
                   </p>
-                  <Button
-                    variant="outline"
-                    onClick={clearAllFilters}
-                    className="inline-flex items-center gap-1.5"
-                  >
-                    <X className="h-4 w-4" />
-                    <span>Clear all filters</span>
-                  </Button>
                 </div>
               )}
 
