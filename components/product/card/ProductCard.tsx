@@ -181,7 +181,7 @@ const ProductCard = ({
   }, [price, originalPrice]);
 
   return (
-    <Card className="aspect-6/10 gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
+    <Card className=" gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
       {/* Product Badges */}
       <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
         {/* Sale badge */}
@@ -313,7 +313,7 @@ const ProductCard = ({
       </div>
 
       {/* Product Info Section */}
-      <CardHeader className="px-4 flex justify-between">
+      <CardHeader className="flex-1 px-4 flex justify-between">
         {/* Product Name and Brand logo */}
         <div className="flex items-center justify-between">
           <CardTitle className="line-clamp-2 flex-1 min-w-0">
@@ -375,7 +375,7 @@ const ProductCard = ({
       </CardContent>
 
       {/* Stock Status Footer */}
-      <CardFooter className="border-t [.border-t]:px-4 [.border-t]:py-2 w-full flex items-center justify-between">
+      <CardFooter className="flex-1 border-t [.border-t]:px-4 [.border-t]:py-2 w-full flex items-center justify-between">
         <span className="text-muted-foreground">
           {hasVariants ? "Availability" : "Stock"}
         </span>
