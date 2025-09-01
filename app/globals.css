@@ -188,3 +188,69 @@
     letter-spacing: var(--tracking-normal);
   }
 }
+
+/* RTL Support */
+[dir="rtl"] {
+  /* Text alignment */
+  text-align: right;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* Margin and Padding */
+[dir="rtl"] .ml-auto {
+  margin-right: auto;
+  margin-left: unset;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-left: auto;
+  margin-right: unset;
+}
+
+[dir="rtl"] .pl-4 {
+  padding-right: 1rem;
+  padding-left: unset;
+}
+
+[dir="rtl"] .pr-4 {
+  padding-left: 1rem;
+  padding-right: unset;
+}
+
+/* Flexbox */
+[dir="rtl"] .justify-start {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+  justify-content: flex-start;
+}
+
+/* Borders */
+[dir="rtl"] .border-l {
+  border-right-width: 1px;
+  border-left-width: 0;
+}
+
+[dir="rtl"] .border-r {
+  border-left-width: 1px;
+  border-right-width: 0;
+}
+
+/* Transforms for icons */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Dropdown positioning */
+[dir="rtl"] [data-radix-popper-content-wrapper] {
+  left: unset !important;
+  right: var(--radix-popper-anchor-width);
+}

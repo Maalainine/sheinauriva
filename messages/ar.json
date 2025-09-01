@@ -1,0 +1,406 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "close": "إغلاق",
+    "open": "فتح",
+    "yes": "نعم",
+    "no": "لا",
+    "ok": "موافق",
+    "viewDetails": "عرض التفاصيل",
+    "clearSearch": "مسح البحث",
+    "refreshPage": "تحديث الصفحة",
+    "backToHome": "العودة للرئيسية",
+    "nothingHere": "لا يوجد شيء هنا حتى الآن.",
+    "tryAgain": "حاول مرة أخرى"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "products": "المنتجات",
+    "categories": "الفئات",
+    "brands": "العلامات التجارية",
+    "about": "حولنا",
+    "contact": "اتصل بنا",
+    "cart": "السلة",
+    "wishlist": "المفضلة",
+    "account": "الحساب",
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "admin": "الإدارة"
+  },
+  "product": {
+    "name": "اسم المنتج",
+    "description": "الوصف",
+    "price": "السعر",
+    "stock": "المخزون",
+    "available": "متوفر",
+    "outOfStock": "غير متوفر",
+    "inStock": "متوفر في المخزون",
+    "lowStock": "مخزون منخفض",
+    "addToCart": "إضافة للسلة",
+    "addToWishlist": "إضافة للمفضلة",
+    "removeFromWishlist": "إزالة من المفضلة",
+    "addedToCart": "تمت إضافة {name} للسلة!",
+    "adding": "جاري الإضافة...",
+    "addedToWishlist": "تمت الإضافة للمفضلة",
+    "removedFromWishlist": "تمت الإزالة من المفضلة",
+    "variants": "الخيارات",
+    "variant": "المتغير",
+    "singleOption": "خيار واحد",
+    "multipleOptions": "خيارات متعددة",
+    "selectVariant": "اختر خيار",
+    "sale": "تخفيض",
+    "featured": "مميز",
+    "new": "جديد"
+  },
+  "cart": {
+    "title": "سلة التسوق",
+    "empty": "سلة التسوق فارغة",
+    "item": "عنصر",
+    "items": "عناصر",
+    "total": "المجموع",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن",
+    "tax": "الضريبة",
+    "quantity": "الكمية",
+    "remove": "إزالة",
+    "update": "تحديث",
+    "checkout": "إنهاء الطلب",
+    "continueShopping": "متابعة التسوق",
+    "clearCart": "إفراغ السلة",
+    "clearConfirm": "إفراغ جميع العناصر من السلة؟",
+    "cartCleared": "تم إفراغ السلة.",
+    "itemRemoved": "تم إزالة العنصر من السلة.",
+    "noItems": "لا توجد عناصر في السلة."
+  },
+  "wishlist": {
+    "title": "قائمة المفضلة",
+    "empty": "قائمة المفضلة فارغة",
+    "item": "عنصر",
+    "items": "عناصر",
+    "addToCart": "إضافة للسلة",
+    "remove": "إزالة",
+    "startShopping": "ابدأ التسوق",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "pleaseLogin": "يرجى تسجيل الدخول لعرض قائمة المفضلة"
+  },
+  "category": {
+    "all": "جميع الفئات",
+    "products": "المنتجات",
+    "noProducts": "لا توجد منتجات في هذه الفئة",
+    "shopByCategory": "تسوق حسب الفئة",
+    "discoverCategories": "اكتشف مجموعتنا الواسعة من المنتجات المنظمة حسب الفئة",
+    "searchPlaceholder": "البحث في الفئات...",
+    "browseMore": "تصفح المزيد",
+    "noCategoriesFound": "لم يتم العثور على فئات",
+    "noSearchResults": "لا توجد فئات تطابق \"{query}\". جرب مصطلح بحث مختلف.",
+    "noCategoriesAvailable": "لم نجد أي فئات في الوقت الحالي. يرجى المراجعة لاحقاً.",
+    "errorTitle": "خطأ في تحميل الفئات"
+  },
+  "brand": {
+    "all": "جميع العلامات التجارية",
+    "products": "المنتجات",
+    "noProducts": "لا توجد منتجات لهذه العلامة التجارية"
+  },
+  "search": {
+    "placeholder": "البحث عن المنتجات والفئات والعلامات التجارية...",
+    "results": "نتائج البحث",
+    "noResults": "لم يتم العثور على نتائج",
+    "showingResults": "عرض {count} نتيجة لـ '{query}'",
+    "startTyping": "ابدأ الكتابة للبحث...",
+    "tags": "العلامات"
+  },
+  "filter": {
+    "priceRange": "نطاق السعر",
+    "availability": "التوفر",
+    "inStock": "متوفر",
+    "onSale": "في التخفيضات",
+    "featured": "مميز",
+    "sortBy": "ترتيب حسب",
+    "filters": "المرشحات",
+    "categories": "الفئات",
+    "brands": "العلامات التجارية",
+    "tags": "العلامات",
+    "clearAll": "مسح الكل",
+    "clearAllFilters": "مسح جميع المرشحات",
+    "resetAll": "إعادة تعيين الكل",
+    "applyFilters": "تطبيق المرشحات",
+    "closeFilters": "إغلاق المرشحات",
+    "productFilters": "مرشحات المنتجات",
+    "loadMoreProducts": "تحميل المزيد من المنتجات",
+    "sortOptions": {
+      "relevance": "الصلة",
+      "priceLowHigh": "السعر: من الأقل للأعلى",
+      "priceHighLow": "السعر: من الأعلى للأقل",
+      "nameAZ": "الاسم: أ إلى ي",
+      "nameZA": "الاسم: ي إلى أ",
+      "newest": "الأحدث أولاً",
+      "oldest": "الأقدم أولاً"
+    }
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "register": "إنشاء حساب",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "loginRequired": "يرجى تسجيل الدخول للمتابعة",
+    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+    "accessDenied": "تم رفض الوصول"
+  },
+  "checkout": {
+    "title": "إنهاء الطلب",
+    "shippingAddress": "عنوان الشحن",
+    "billingAddress": "عنوان الفواتير",
+    "paymentMethod": "طريقة الدفع",
+    "orderSummary": "ملخص الطلب",
+    "placeOrder": "تأكيد الطلب",
+    "processingOrder": "جاري معالجة طلبك..."
+  },
+  "order": {
+    "title": "الطلب",
+    "number": "رقم الطلب",
+    "date": "تاريخ الطلب",
+    "status": "الحالة",
+    "total": "المجموع",
+    "items": "العناصر",
+    "shipping": "الشحن",
+    "billing": "الفواتير",
+    "statusOptions": {
+      "pending": "في الانتظار",
+      "confirmed": "مؤكد",
+      "processing": "قيد المعالجة",
+      "shipped": "تم الشحن",
+      "delivered": "تم التسليم",
+      "cancelled": "ملغى",
+      "refunded": "مسترد"
+    }
+  },
+  "error": {
+    "notFound": "الصفحة غير موجودة",
+    "serverError": "خطأ في الخادم",
+    "networkError": "خطأ في الشبكة",
+    "tryAgain": "يرجى المحاولة مرة أخرى",
+    "goHome": "العودة للرئيسية"
+  },
+  "home": {
+    "hero": {
+      "title": "حيث تجد أيقونات العالم منزلها",
+      "subtitle": "مجموعات منتقاة من الرفاهية العالمية، تصل إلى عتبة بابك",
+      "shopNow": "تسوق الآن"
+    },
+    "features": {
+      "shipping": {
+        "title": "شحن سريع",
+        "description": "نشحن إلى جميع أنحاء المملكة"
+      },
+      "quality": {
+        "title": "ضمان الجودة",
+        "description": "جميع المنتجات مختارة ومفحوصة بعناية"
+      },
+      "payment": {
+        "title": "ادفع عند الاستلام",
+        "description": "لا تدفع حتى تستلم المنتج"
+      },
+      "support": {
+        "title": "دعم 24/7",
+        "description": "نحن هنا للمساعدة في أي استفسار"
+      }
+    },
+    "sections": {
+      "newArrivals": "وصلت حديثاً",
+      "categories": "تسوق حسب الفئة"
+    },
+    "viewAll": "عرض الكل",
+    "viewAllCategories": "عرض جميع الفئات",
+    "noProducts": "لم يتم العثور على منتجات. يرجى المحاولة لاحقاً.",
+    "noCategories": "لم يتم العثور على فئات. يرجى المحاولة لاحقاً."
+  },
+  "contact": {
+    "title": "تواصل معنا",
+    "subtitle": "هل لديك أسئلة أو ملاحظات؟ نحن نحب أن نسمع منك. فريقنا هنا للمساعدة والإجابة على أي أسئلة قد تكون لديك.",
+    "contactInfo": "معلومات الاتصال",
+    "sendMessage": "أرسل لنا رسالة",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "location": "الموقع",
+    "messageSent": "تم إرسال الرسالة! سنعود إليك قريباً.",
+    "sending": "جاري الإرسال...",
+    "sendButton": "إرسال الرسالة",
+    "fields": {
+      "fullName": "الاسم الكامل",
+      "email": "عنوان البريد الإلكتروني",
+      "message": "رسالتك"
+    },
+    "placeholders": {
+      "name": "اسمك",
+      "email": "you@email.com",
+      "message": "كيف يمكننا مساعدتك؟"
+    },
+    "validation": {
+      "nameRequired": "يرجى إدخال اسمك",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "عنوان بريد إلكتروني غير صالح",
+      "messageRequired": "الرسالة مطلوبة",
+      "messageMinLength": "يجب أن تحتوي الرسالة على 10 أحرف على الأقل"
+    }
+  },
+  "checkout": {
+    "title": "إنهاء الطلب",
+    "deliveryInfo": "معلومات التسليم",
+    "personalInfo": "المعلومات الشخصية",
+    "shippingInfo": "معلومات الشحن",
+    "orderSummary": "ملخص الطلب",
+    "sendOrder": "إرسال الطلب",
+    "sendingOrder": "جاري إرسال الطلب...",
+    "orderConfirmed": "تم تأكيد الطلب!",
+    "orderReceivedMessage": "لقد تلقينا طلبك وسنتصل بك قريباً لتأكيد التفاصيل.",
+    "callConfirmMessage": "سيتصل فريقنا بك خلال 24 ساعة لتأكيد طلبك وتفاصيل التسليم.",
+    "whatsNext": "ما التالي؟",
+    "orderConfirmation": "تأكيد الطلب",
+    "verifyOrderMessage": "سيقوم فريقنا بالتحقق من تفاصيل طلبك والتواصل معك.",
+    "shipping": "الشحن",
+    "prepareShipMessage": "بمجرد التأكيد، سنقوم بتحضير وشحن طلبك.",
+    "contactHelp": "تحتاج مساعدة؟ اتصل بنا على support@sheinauriva.com",
+    "orderSuccess": "تم استلام الطلب! سنتصل بك قريباً للتأكيد.",
+    "orderSuccessShort": "تم استلام الطلب! سنتصل بك قريباً.",
+    "orderError": "فشل في تقديم الطلب. يرجى المحاولة مرة أخرى.",
+    "shippingTo": "الشحن إلى {city}",
+    "selectCityShipping": "اختر مدينة لحساب الشحن",
+    "fields": {
+      "fullName": "الاسم الكامل",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني (اختياري)",
+      "country": "البلد",
+      "city": "المدينة",
+      "address": "العنوان الكامل",
+      "notes": "ملاحظات الطلب (اختياري)"
+    },
+    "placeholders": {
+      "fullName": "اسمك الكامل",
+      "phone": "612345678",
+      "email": "your@email.com",
+      "selectCountry": "اختر البلد",
+      "selectCity": "اختر المدينة",
+      "selectCountryFirst": "اختر البلد أولاً",
+      "address": "الشارع، المبنى، الشقة",
+      "notes": "تعليمات خاصة للتسليم"
+    },
+    "validation": {
+      "nameMin": "يجب أن يحتوي الاسم على حرفين على الأقل",
+      "phoneValid": "يرجى إدخال رقم هاتف صالح",
+      "emailValid": "يرجى إدخال بريد إلكتروني صالح",
+      "addressValid": "يرجى إدخال عنوان صالح",
+      "selectCountry": "يرجى اختيار بلد",
+      "selectCity": "يرجى اختيار مدينة"
+    }
+  },
+  "order": {
+    "title": "الطلب",
+    "number": "رقم الطلب",
+    "date": "تاريخ الطلب",
+    "status": "الحالة",
+    "total": "المجموع",
+    "items": "العناصر",
+    "shipping": "الشحن",
+    "billing": "الفواتير",
+    "statusOptions": {
+      "pending": "في الانتظار",
+      "confirmed": "مؤكد",
+      "processing": "قيد المعالجة",
+      "shipped": "تم الشحن",
+      "delivered": "تم التسليم",
+      "cancelled": "ملغى",
+      "refunded": "مسترد",
+      "pendingConfirmation": "في انتظار التأكيد"
+    }
+  },
+  "footer": {
+    "tagline": "وجهتك المتميزة للتجارة الإلكترونية للمنتجات عالية الجودة التي يمكنك الوثوق بها.",
+    "motto": "منتجات عالية الجودة، تُسلم بعناية.",
+    "copyright": "© {year} JustOriginale. جميع الحقوق محفوظة.",
+    "developedBy": "تم التطوير بواسطة",
+    "newsletter": {
+      "title": "ابق على اطلاع",
+      "placeholder": "أدخل بريدك الإلكتروني",
+      "emailLabel": "البريد الإلكتروني للنشرة الإخبارية",
+      "subscribe": "اشترك"
+    },
+    "socialMedia": {
+      "twitter": "تابعنا على تويتر",
+      "facebook": "تابعنا على فيسبوك",
+      "instagram": "تابعنا على إنستغرام"
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "تسجيل دخول الإدارة",
+      "welcomeBack": "مرحباً بعودتك",
+      "signInSubtitle": "سجل الدخول إلى حساب الإدارة",
+      "enterCredentials": "أدخل بيانات الاعتماد للمتابعة",
+      "signIn": "تسجيل الدخول",
+      "signingIn": "جاري تسجيل الدخول...",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "havingTrouble": "تواجه مشاكل؟",
+      "contactSupport": "اتصل بالدعم",
+      "copyright": "© {year} SheinAuriva. جميع الحقوق محفوظة.",
+      "fields": {
+        "email": "عنوان البريد الإلكتروني",
+        "password": "كلمة المرور"
+      },
+      "placeholders": {
+        "email": "you@example.com",
+        "password": "••••••••"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMinLength": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل"
+      },
+      "errors": {
+        "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+        "checkCredentials": "يرجى التحقق من بيانات الاعتماد والمحاولة مرة أخرى.",
+        "sessionExpired": "انتهت صلاحية الجلسة",
+        "loginAgain": "يرجى تسجيل الدخول مرة أخرى للمتابعة.",
+        "serverConfig": "خطأ في إعدادات الخادم",
+        "serverConfigDetails": "كانت هناك مشكلة في إعدادات الخادم.",
+        "accessDenied": "تم رفض الوصول",
+        "noPermission": "ليس لديك إذن للوصول إلى هذه الصفحة.",
+        "authError": "خطأ في المصادقة",
+        "unknownError": "حدث خطأ غير معروف أثناء المصادقة.",
+        "unexpectedError": "حدث خطأ غير متوقع",
+        "tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً."
+      }
+    }
+  },
+  "pages": {
+    "title": "منتجاتنا",
+    "description": "اكتشف مجموعتنا الواسعة من المنتجات عالية الجودة",
+    "allProducts": "جميع المنتجات",
+    "clearAllFilters": "مسح جميع المرشحات",
+    "filters": "المرشحات",
+    "clearAll": "مسح الكل",
+    "showingProducts": "عرض {count} منتج",
+    "resetAll": "إعادة تعيين الكل",
+    "applyFilters": "تطبيق المرشحات",
+    "noProductsFound": "لم يتم العثور على منتجات",
+    "tryAdjustingFilters": "جرب تعديل البحث أو المرشح للعثور على ما تبحث عنه.",
+    "loadMoreProducts": "تحميل المزيد من المنتجات"
+  }
+}

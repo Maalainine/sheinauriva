@@ -1,0 +1,378 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "viewDetails": "Voir les détails",
+    "clearSearch": "Effacer la recherche",
+    "refreshPage": "Actualiser la page",
+    "backToHome": "Retour à l'accueil",
+    "nothingHere": "Rien ici pour le moment.",
+    "tryAgain": "Réessayer"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "products": "Produits",
+    "categories": "Catégories",
+    "brands": "Marques",
+    "about": "À propos",
+    "contact": "Contact",
+    "cart": "Panier",
+    "wishlist": "Favoris",
+    "account": "Compte",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "admin": "Administration"
+  },
+  "product": {
+    "name": "Nom du produit",
+    "description": "Description",
+    "price": "Prix",
+    "stock": "Stock",
+    "available": "Disponible",
+    "outOfStock": "Rupture de stock",
+    "inStock": "En stock",
+    "lowStock": "Stock faible",
+    "addToCart": "Ajouter au panier",
+    "addToWishlist": "Ajouter aux favoris",
+    "removeFromWishlist": "Retirer des favoris",
+    "addedToCart": "{name} ajouté au panier !",
+    "adding": "Ajout...",
+    "addedToWishlist": "Ajouté aux favoris",
+    "removedFromWishlist": "Retiré des favoris",
+    "variants": "Options",
+    "variant": "Variante",
+    "singleOption": "Option unique",
+    "multipleOptions": "Options multiples",
+    "selectVariant": "Sélectionner une option",
+    "sale": "Promotion",
+    "featured": "Vedette",
+    "new": "Nouveau"
+  },
+  "cart": {
+    "title": "Panier d'achat",
+    "empty": "Votre panier est vide",
+    "item": "article",
+    "items": "articles",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "tax": "Taxe",
+    "quantity": "Quantité",
+    "remove": "Supprimer",
+    "update": "Mettre à jour",
+    "checkout": "Commander",
+    "continueShopping": "Continuer les achats",
+    "clearCart": "Vider le panier",
+    "clearConfirm": "Vider tous les articles du panier ?",
+    "cartCleared": "Panier vidé.",
+    "itemRemoved": "Article retiré du panier.",
+    "noItems": "Aucun article dans le panier."
+  },
+  "wishlist": {
+    "title": "Ma liste de favoris",
+    "empty": "Votre liste de favoris est vide",
+    "item": "article",
+    "items": "articles",
+    "addToCart": "Ajouter au panier",
+    "remove": "Supprimer",
+    "startShopping": "Commencer les achats",
+    "loginRequired": "Connexion requise",
+    "pleaseLogin": "Veuillez vous connecter pour voir vos favoris"
+  },
+  "category": {
+    "all": "Toutes les catégories",
+    "products": "Produits",
+    "noProducts": "Aucun produit trouvé dans cette catégorie",
+    "shopByCategory": "Acheter par catégorie",
+    "discoverCategories": "Découvrez notre large gamme de produits organisés par catégorie",
+    "searchPlaceholder": "Rechercher des catégories...",
+    "browseMore": "Parcourir plus",
+    "noCategoriesFound": "Aucune catégorie trouvée",
+    "noSearchResults": "Aucune catégorie ne correspond à \"{query}\". Essayez un terme de recherche différent.",
+    "noCategoriesAvailable": "Nous n'avons trouvé aucune catégorie pour le moment. Revenez plus tard.",
+    "errorTitle": "Erreur lors du chargement des catégories"
+  },
+  "brand": {
+    "all": "Toutes les marques",
+    "products": "Produits",
+    "noProducts": "Aucun produit trouvé pour cette marque"
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "subtitle": "Vous avez des questions ou des commentaires ? Nous aimerions avoir de vos nouvelles. Notre équipe est là pour vous aider et répondre à toutes vos questions.",
+    "contactInfo": "Informations de Contact",
+    "sendMessage": "Envoyez-nous un Message",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "location": "Localisation",
+    "messageSent": "Message envoyé ! Nous vous répondrons bientôt.",
+    "sending": "Envoi...",
+    "sendButton": "Envoyer le Message",
+    "fields": {
+      "fullName": "Nom Complet",
+      "email": "Adresse E-mail",
+      "message": "Votre Message"
+    },
+    "placeholders": {
+      "name": "Votre Nom",
+      "email": "vous@email.com",
+      "message": "Comment pouvons-nous vous aider ?"
+    },
+    "validation": {
+      "nameRequired": "Veuillez entrer votre nom",
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Adresse e-mail invalide",
+      "messageRequired": "Le message est requis",
+      "messageMinLength": "Le message doit contenir au moins 10 caractères"
+    }
+  },
+  "search": {
+    "placeholder": "Rechercher des produits, catégories, marques...",
+    "results": "Résultats de recherche",
+    "noResults": "Aucun résultat trouvé",
+    "showingResults": "Affichage de {count} résultats pour '{query}'",
+    "startTyping": "Commencez à taper pour rechercher...",
+    "tags": "Étiquettes"
+  },
+  "filter": {
+    "priceRange": "Gamme de prix",
+    "availability": "Disponibilité",
+    "inStock": "En stock",
+    "onSale": "En promotion",
+    "featured": "Vedette",
+    "sortBy": "Trier par",
+    "filters": "Filtres",
+    "categories": "Catégories",
+    "brands": "Marques",
+    "tags": "Étiquettes",
+    "clearAll": "Tout effacer",
+    "clearAllFilters": "Effacer tous les filtres",
+    "resetAll": "Tout réinitialiser",
+    "applyFilters": "Appliquer les filtres",
+    "closeFilters": "Fermer les filtres",
+    "productFilters": "Filtres de produits",
+    "loadMoreProducts": "Charger plus de produits",
+    "sortOptions": {
+      "relevance": "Pertinence",
+      "priceLowHigh": "Prix : Croissant",
+      "priceHighLow": "Prix : Décroissant",
+      "nameAZ": "Nom : A à Z",
+      "nameZA": "Nom : Z à A",
+      "newest": "Plus récent",
+      "oldest": "Plus ancien"
+    }
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "register": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loginRequired": "Veuillez vous connecter pour continuer",
+    "invalidCredentials": "E-mail ou mot de passe invalide",
+    "accessDenied": "Accès refusé"
+  },
+  "checkout": {
+    "title": "Commande",
+    "deliveryInfo": "Informations de Livraison",
+    "personalInfo": "Informations Personnelles",
+    "shippingInfo": "Informations d'Expédition",
+    "orderSummary": "Résumé de Commande",
+    "sendOrder": "Envoyer la Commande",
+    "sendingOrder": "Envoi de la Commande...",
+    "orderConfirmed": "Commande Confirmée !",
+    "orderReceivedMessage": "Nous avons reçu votre commande et vous contacterons sous peu pour confirmer les détails.",
+    "callConfirmMessage": "Notre équipe vous appellera dans les 24 heures pour confirmer votre commande et les détails de livraison.",
+    "whatsNext": "Et Maintenant ?",
+    "orderConfirmation": "Confirmation de Commande",
+    "verifyOrderMessage": "Notre équipe vérifiera les détails de votre commande et vous contactera.",
+    "shipping": "Livraison",
+    "prepareShipMessage": "Une fois confirmée, nous préparerons et expédierons votre commande.",
+    "contactHelp": "Besoin d'aide ? Contactez-nous à support@sheinauriva.com",
+    "orderSuccess": "Commande reçue ! Nous vous contacterons sous peu pour confirmer.",
+    "orderSuccessShort": "Commande reçue ! Nous vous contacterons sous peu.",
+    "orderError": "Échec de la commande. Veuillez réessayer.",
+    "shippingTo": "Livraison à {city}",
+    "selectCityShipping": "Sélectionnez une ville pour calculer la livraison",
+    "fields": {
+      "fullName": "Nom Complet",
+      "phone": "Téléphone",
+      "email": "E-mail (Optionnel)",
+      "country": "Pays",
+      "city": "Ville",
+      "address": "Adresse Complète",
+      "notes": "Notes de Commande (Optionnel)"
+    },
+    "placeholders": {
+      "fullName": "Votre nom complet",
+      "phone": "612345678",
+      "email": "votre@email.com",
+      "selectCountry": "Sélectionner le pays",
+      "selectCity": "Sélectionner la ville",
+      "selectCountryFirst": "Sélectionner d'abord le pays",
+      "address": "Rue, Bâtiment, Appartement",
+      "notes": "Instructions spéciales pour la livraison"
+    },
+    "validation": {
+      "nameMin": "Le nom doit contenir au moins 2 caractères",
+      "phoneValid": "Veuillez entrer un numéro de téléphone valide",
+      "emailValid": "Veuillez entrer un e-mail valide",
+      "addressValid": "Veuillez entrer une adresse valide",
+      "selectCountry": "Veuillez sélectionner un pays",
+      "selectCity": "Veuillez sélectionner une ville"
+    }
+  },
+  "order": {
+    "title": "Commande",
+    "number": "Numéro de commande",
+    "date": "Date de commande",
+    "status": "Statut",
+    "total": "Total",
+    "items": "Articles",
+    "shipping": "Livraison",
+    "billing": "Facturation",
+    "statusOptions": {
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "processing": "En cours",
+      "shipped": "Expédiée",
+      "delivered": "Livrée",
+      "cancelled": "Annulée",
+      "refunded": "Remboursée",
+      "pendingConfirmation": "En Attente de Confirmation"
+    }
+  },
+  "error": {
+    "notFound": "Page non trouvée",
+    "serverError": "Erreur du serveur",
+    "networkError": "Erreur réseau",
+    "tryAgain": "Veuillez réessayer",
+    "goHome": "Accueil"
+  },
+  "home": {
+    "hero": {
+      "title": "Où les Icônes du Monde Trouvent leur Foyer",
+      "subtitle": "Collections Sélectionnées de Luxe Mondial, Livrées à Votre Porte",
+      "shopNow": "Acheter Maintenant"
+    },
+    "features": {
+      "shipping": {
+        "title": "Livraison Rapide",
+        "description": "Expédition dans tout le Royaume"
+      },
+      "quality": {
+        "title": "Garantie Qualité",
+        "description": "Tous les produits sont soigneusement sélectionnés et testés"
+      },
+      "payment": {
+        "title": "Paiement à la Réception",
+        "description": "Ne payez qu'après avoir reçu le produit"
+      },
+      "support": {
+        "title": "Support 24/7",
+        "description": "Nous sommes là pour vous aider avec toute question"
+      }
+    },
+    "sections": {
+      "newArrivals": "Nouveautés",
+      "categories": "Acheter par Catégorie"
+    },
+    "viewAll": "Voir tout",
+    "viewAllCategories": "Voir toutes les catégories",
+    "noProducts": "Aucun produit trouvé. Revenez plus tard.",
+    "noCategories": "Aucune catégorie trouvée. Revenez plus tard."
+  },
+  "footer": {
+    "tagline": "Votre destination e-commerce premium pour des produits de qualité en qui vous pouvez avoir confiance.",
+    "motto": "Des produits de qualité, livrés avec soin.",
+    "copyright": "© {year} JustOriginale. Tous droits réservés.",
+    "developedBy": "Développé par",
+    "newsletter": {
+      "title": "Restez Informé",
+      "placeholder": "Entrez votre e-mail",
+      "emailLabel": "E-mail pour la newsletter",
+      "subscribe": "S'abonner"
+    },
+    "socialMedia": {
+      "twitter": "Suivez-nous sur Twitter",
+      "facebook": "Suivez-nous sur Facebook",
+      "instagram": "Suivez-nous sur Instagram"
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Connexion Admin",
+      "welcomeBack": "Bon Retour",
+      "signInSubtitle": "Connectez-vous à votre compte admin",
+      "enterCredentials": "Entrez vos identifiants pour continuer",
+      "signIn": "Se Connecter",
+      "signingIn": "Connexion...",
+      "forgotPassword": "Mot de passe oublié ?",
+      "havingTrouble": "Difficultés ?",
+      "contactSupport": "Contacter le support",
+      "copyright": "© {year} SheinAuriva. Tous droits réservés.",
+      "fields": {
+        "email": "Adresse E-mail",
+        "password": "Mot de Passe"
+      },
+      "placeholders": {
+        "email": "vous@exemple.com",
+        "password": "••••••••"
+      },
+      "validation": {
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Veuillez entrer une adresse e-mail valide",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères"
+      },
+      "errors": {
+        "invalidCredentials": "E-mail ou mot de passe invalide",
+        "checkCredentials": "Veuillez vérifier vos identifiants et réessayer.",
+        "sessionExpired": "Session expirée",
+        "loginAgain": "Veuillez vous reconnecter pour continuer.",
+        "serverConfig": "Erreur de configuration serveur",
+        "serverConfigDetails": "Il y a eu un problème avec la configuration du serveur.",
+        "accessDenied": "Accès refusé",
+        "noPermission": "Vous n'avez pas la permission d'accéder à cette page.",
+        "authError": "Erreur d'authentification",
+        "unknownError": "Une erreur inconnue s'est produite lors de l'authentification.",
+        "unexpectedError": "Une erreur inattendue s'est produite",
+        "tryAgainLater": "Veuillez réessayer plus tard."
+      }
+    }
+  },
+  "pages": {
+    "title": "Nos Produits",
+    "description": "Découvrez notre large gamme de produits de haute qualité",
+    "allProducts": "Tous les Produits",
+    "clearAllFilters": "Effacer tous les filtres",
+    "filters": "Filtres",
+    "clearAll": "Tout effacer",
+    "showingProducts": "Affichage de {count} produits",
+    "resetAll": "Tout Réinitialiser",
+    "applyFilters": "Appliquer les Filtres",
+    "noProductsFound": "Aucun produit trouvé",
+    "tryAdjustingFilters": "Essayez d'ajuster votre recherche ou filtre pour trouver ce que vous cherchez.",
+    "loadMoreProducts": "Charger plus de produits"
+  }
+}

@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { useTranslations } from '@/hooks/useTranslations';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +23,7 @@ type LoginError = {
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslations();
   const callbackUrl = searchParams?.get('callbackUrl') || '/admin/dashboard';
   const errorParam = searchParams?.get('error');
   
@@ -47,28 +49,28 @@ export default function LoginPage() {
     const errorMap: Record<string, LoginError> = {
       'CredentialsSignin': {
         type: 'credentials',
-        message: 'Invalid email or password',
-        details: 'Please check your credentials and try again.'
+        message: t('admin.login.errors.invalidCredentials'),
+        details: t('admin.login.errors.checkCredentials')
       },
       'SessionRequired': {
         type: 'credentials',
-        message: 'Session expired',
-        details: 'Please log in again to continue.'
+        message: t('admin.login.errors.sessionExpired'),
+        details: t('admin.login.errors.loginAgain')
       },
       'Configuration': {
         type: 'server',
-        message: 'Server configuration error',
-        details: 'There was an issue with the server configuration.'
+        message: t('admin.login.errors.serverConfig'),
+        details: t('admin.login.errors.serverConfigDetails')
       },
       'AccessDenied': {
         type: 'credentials',
-        message: 'Access denied',
-        details: 'You do not have permission to access this page.'
+        message: t('admin.login.errors.accessDenied'),
+        details: t('admin.login.errors.noPermission')
       },
       'default': {
         type: 'unknown',
-        message: 'Authentication error',
-        details: 'An unknown error occurred during authentication.'
+        message: t('admin.login.errors.authError'),
+        details: t('admin.login.errors.unknownError')
       }
     };
     
@@ -82,19 +84,19 @@ export default function LoginPage() {
     
     // Email validation
     if (!email.trim()) {
-      errors.email = 'Email is required';
+      errors.email = t('admin.login.validation.emailRequired');
       isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = t('admin.login.validation.emailInvalid');
       isValid = false;
     }
     
     // Password validation
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = t('admin.login.validation.passwordRequired');
       isValid = false;
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = t('admin.login.validation.passwordMinLength');
       isValid = false;
     }
     
@@ -166,8 +168,8 @@ export default function LoginPage() {
       console.error('Login error:', error);
       setErrorState({
         type: 'unknown',
-        message: 'An unexpected error occurred',
-        details: error instanceof Error ? error.message : 'Please try again later.'
+        message: t('admin.login.errors.unexpectedError'),
+        details: error instanceof Error ? error.message : t('admin.login.errors.tryAgainLater')
       });
     } finally {
       setIsLoading(false);
@@ -194,7 +196,7 @@ export default function LoginPage() {
               className="h-auto p-0 text-sm font-normal text-destructive underline"
               onClick={() => window.location.reload()}
             >
-              Try again
+              {t('common.tryAgain')}
             </Button>
           )}
         </div>
@@ -206,8 +208,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p className="text-gray-600">Sign in to your admin account</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('admin.login.welcomeBack')}</h1>
+          <p className="text-gray-600">{t('admin.login.signInSubtitle')}</p>
         </div>
         
         <Card className="overflow-hidden shadow-lg p-0">
@@ -215,9 +217,9 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
               <Lock className="h-8 w-8 text-white" />
             </div>
-            <CardTitle className="text-2xl font-bold text-white">Admin Login</CardTitle>
+            <CardTitle className="text-2xl font-bold text-white">{t('admin.login.title')}</CardTitle>
             <CardDescription className="text-white/90 mt-1">
-              Enter your credentials to continue
+              {t('admin.login.enterCredentials')}
             </CardDescription>
           </div>
           
@@ -229,7 +231,7 @@ export default function LoginPage() {
                 {/* Email Field */}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    Email Address
+                    {t('admin.login.fields.email')}
                   </Label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -238,7 +240,7 @@ export default function LoginPage() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t('admin.login.placeholders.email')}
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -265,14 +267,14 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-                      Password
+                      {t('admin.login.fields.password')}
                     </Label>
                     <Link 
                       href="/forgot-password" 
                       className="text-sm font-medium text-primary hover:underline"
                       tabIndex={-1} // Prevent tab focus on forgot password link
                     >
-                      Forgot password?
+                      {t('admin.login.forgotPassword')}
                     </Link>
                   </div>
                   <div className="relative">
@@ -282,7 +284,7 @@ export default function LoginPage() {
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
+                      placeholder={t('admin.login.placeholders.password')}
                       value={password}
                       onChange={(e) => {
                         setPassword(e.target.value);
@@ -325,10 +327,10 @@ export default function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {t('admin.login.signingIn')}
                   </>
                 ) : (
-                  'Sign In'
+                  t('admin.login.signIn')
                 )}
               </Button>
             </form>
@@ -336,19 +338,19 @@ export default function LoginPage() {
           
           <CardFooter className="bg-gray-50 px-8 py-4 border-t">
             <p className="text-center text-sm text-gray-600 w-full">
-              Having trouble?{' '}
+              {t('admin.login.havingTrouble')}{' '}
               <Link 
                 href="mailto:support@sheinauriva.com" 
                 className="font-medium text-primary hover:underline"
               >
-                Contact support
+                {t('admin.login.contactSupport')}
               </Link>
             </p>
           </CardFooter>
         </Card>
         
         <div className="mt-6 text-center text-sm text-gray-500">
-          <p>© {new Date().getFullYear()} SheinAuriva. All rights reserved.</p>
+          <p>{t('admin.login.copyright', { year: new Date().getFullYear() })}</p>
         </div>
       </div>
     </div>

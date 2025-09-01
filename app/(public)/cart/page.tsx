@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useTranslations } from "@/hooks/useTranslations";
 import { TypographyH1, TypographyP } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import Image from "next/image";
 
 export default function CartPage() {
   const { cart, updateQuantity, removeItem, clearCart } = useCart();
+  const { t } = useTranslations();
   const validCart = (cart || []).filter(item => typeof item.price === "number" && !isNaN(item.price) && typeof item.name === "string");
 
   // Loading state
@@ -29,23 +31,23 @@ export default function CartPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-8">
-      <TypographyH1 className="mb-6 text-2xl">Your Cart</TypographyH1>
+      <TypographyH1 className="mb-6 text-2xl">{t('cart.title')}</TypographyH1>
       {validCart.length > 0 && (
         <Button
           variant="destructive"
           className="mb-6"
           onClick={() => {
-            if (window.confirm("Clear all items from cart?")) {
+            if (window.confirm(t('cart.clearConfirm'))) {
               clearCart();
-              toast.success("Cart cleared.");
+              toast.success(t('cart.cartCleared'));
             }
           }}
         >
-          Clear Cart
+          {t('cart.clearCart')}
         </Button>
       )}
       {validCart.length === 0 ? (
-        <EmptyState message="Your cart is empty." />
+        <EmptyState message={t('cart.empty')} />
       ) : (
         <div className="space-y-6">
           {validCart.map(item => {
@@ -71,7 +73,7 @@ export default function CartPage() {
                   <div className="font-semibold text-lg truncate">{item.name}</div>
                   <div className="text-muted-foreground">${price.toFixed(2)}</div>
                   <div className="flex items-center gap-2 mt-2">
-                    <label htmlFor={`qty-${item.id}`} className="text-sm">Qty:</label>
+                    <label htmlFor={`qty-${item.id}`} className="text-sm">{t('cart.quantity')}:</label>
                     <input
                       id={`qty-${item.id}`}
                       type="number"
@@ -88,21 +90,21 @@ export default function CartPage() {
                   className="text-destructive ml-4"
                   onClick={() => {
                     removeItem(item.id);
-                    toast.success("Item removed from cart.");
+                    toast.success(t('cart.itemRemoved'));
                   }}
                   aria-label={`Remove ${item.name}`}
                 >
-                  Remove
+                  {t('cart.remove')}
                 </Button>
               </Card>
             );
           })}
           <div className="flex justify-between items-center mt-6">
             <div className="font-bold text-lg">
-              Total: ${validCart.reduce((sum, item) => sum + item.price * (typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1), 0).toFixed(2)}
+              {t('cart.total')}: ${validCart.reduce((sum, item) => sum + item.price * (typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1), 0).toFixed(2)}
             </div>
             <Button asChild className="px-6 py-2">
-              <Link href="/checkout">Checkout</Link>
+              <Link href="/checkout">{t('cart.checkout')}</Link>
             </Button>
           </div>
         </div>

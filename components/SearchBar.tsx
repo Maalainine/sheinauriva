@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface SearchBarProps {
   className?: string;
@@ -19,6 +20,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ className, variant = 'default', autoFocus = false }: SearchBarProps) {
   const router = useRouter();
+  const { t } = useTranslations();
   const {
     query,
     setQuery,
@@ -82,7 +84,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
   };
 
   const renderSection = (
-    title: string,
+    titleKey: string,
     items: any[],
     type: "products" | "categories" | "tags" | "brands"
   ) => {
@@ -91,7 +93,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
     return (
       <div key={type} className="mb-4 last:mb-0">
         <h4 className="text-xs font-medium text-muted-foreground mb-2 px-2 uppercase tracking-wider">
-          {title}
+          {t(titleKey)}
         </h4>
         <div className="space-y-1">
           {items.slice(0, 5).map((item) => (
@@ -175,7 +177,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                 autoFocus={autoFocus}
                 ref={inputRef}
                 type="search"
-                placeholder="Search products, categories, brands..."
+                placeholder={t('search.placeholder')}
                 className="pl-3 pr-8 text-sm"
                 value={query}
                 onChange={(e) => {
@@ -216,23 +218,23 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                 <div className="flex items-center justify-center p-8">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                   <span className="ml-2 text-sm text-muted-foreground">
-                    Searching...
+                    {t('common.loading')}
                   </span>
                 </div>
               ) : hasResults ? (
                 <>
-                  {renderSection("Products", results.products, "products")}
-                  {renderSection("Categories", results.categories, "categories")}
-                  {renderSection("Brands", results.brands, "brands")}
-                  {renderSection("Tags", results.tags, "tags")}
+                  {renderSection("navigation.products", results.products, "products")}
+                  {renderSection("navigation.categories", results.categories, "categories")}
+                  {renderSection("navigation.brands", results.brands, "brands")}
+                  {renderSection("search.tags", results.tags, "tags")}
                 </>
               ) : query ? (
                 <div className="p-8 text-center text-sm text-muted-foreground">
-                  No results for "{query}"
+                  {t('search.noResults')}
                 </div>
               ) : (
                 <div className="p-4 text-center text-sm text-muted-foreground">
-                  Start typing to search...
+                  {t('search.startTyping')}
                 </div>
               )}
             </div>

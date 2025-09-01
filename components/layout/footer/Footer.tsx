@@ -1,9 +1,11 @@
+"use client";
 import Link from "next/link";
 import {
   TypographyH1,
   TypographyH3,
   TypographyP,
 } from "@/components/ui/typography";
+import { useTranslations } from "@/hooks/useTranslations";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +17,7 @@ import {
 import Image from "next/image";
 
 export default function Footer() {
+  const { t } = useTranslations();
   return (
     <footer className="bg-background border-t border-border py-8">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -35,7 +38,7 @@ export default function Footer() {
             </TypographyH1>
           </Link>
           <TypographyP className="text-sm text-muted-foreground max-w-md">
-            Discover premier global beauty brands.
+            {t('footer.tagline')}
           </TypographyP>
 
           {/* Social Links */}
@@ -43,21 +46,21 @@ export default function Footer() {
             <Link
               href="https://twitter.com/JO"
               target="_blank"
-              aria-label="Twitter"
+              aria-label={t('footer.socialMedia.twitter')}
             >
               <IconBrandTwitter className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
             <Link
               href="https://facebook.com/JO"
               target="_blank"
-              aria-label="Facebook"
+              aria-label={t('footer.socialMedia.facebook')}
             >
               <IconBrandFacebook className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
             <Link
               href="https://instagram.com/JO"
               target="_blank"
-              aria-label="Instagram"
+              aria-label={t('footer.socialMedia.instagram')}
             >
               <IconBrandInstagram className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
@@ -67,21 +70,21 @@ export default function Footer() {
         {/* Newsletter */}
         <div>
           <TypographyH1 className="text-lg font-semibold mb-2">
-            Stay Updated
+            {t('footer.newsletter.title')}
           </TypographyH1>
           <form className="space-y-2">
             <Input
               type="email"
-              placeholder="Your email address"
+              placeholder={t('footer.newsletter.placeholder')}
               className="w-full"
-              aria-label="Email for newsletter"
+              aria-label={t('footer.newsletter.emailLabel')}
             />
             <Button type="submit" className="w-full">
-              Subscribe
+              {t('footer.newsletter.subscribe')}
             </Button>
           </form>
           <p className="text-xs text-muted-foreground mt-2">
-            Because Excellence Knows No Borders
+            {t('footer.motto')}
           </p>
         </div>
       </div>
@@ -89,9 +92,9 @@ export default function Footer() {
       <Separator className="my-6" />
 
       <div className="text-center text-muted-foreground text-xs">
-        &copy; {new Date().getFullYear()} JustOriginale. All rights reserved.
+        {t('footer.copyright', { year: new Date().getFullYear() })}
         <div className="mt-1">
-          Developed by <span className="font-medium">CosmoCode</span>
+          {t('footer.developedBy')} <span className="font-medium">CosmoCode</span>
         </div>
       </div>
     </footer>

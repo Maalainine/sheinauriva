@@ -1,5 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "@/hooks/useTranslations";
 import { TypographyH1, TypographyP, TypographyH2 } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,28 +12,29 @@ import { IconMail, IconPhone, IconMapPin } from "@tabler/icons-react";
 
 export default function ContactPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { t } = useTranslations();
 
   const onSubmit = async (data: any) => {
     // Simulate API call
     await new Promise(res => setTimeout(res, 600));
-    toast.success("Message sent! We'll get back to you soon.");
+    toast.success(t('contact.messageSent'));
   };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <div className="text-center mb-12">
         <TypographyH1 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-          Get in Touch
+          {t('contact.title')}
         </TypographyH1>
         <TypographyP className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Have questions or feedback? We'd love to hear from you. Our team is here to help and answer any questions you might have.
+          {t('contact.subtitle')}
         </TypographyP>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="bg-background/50">
           <CardHeader>
-            <TypographyH2 className="text-xl font-semibold">Contact Information</TypographyH2>
+            <TypographyH2 className="text-xl font-semibold">{t('contact.contactInfo')}</TypographyH2>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-start space-x-4">
@@ -40,7 +42,7 @@ export default function ContactPage() {
                 <IconMail className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium">Email</h3>
+                <h3 className="font-medium">{t('contact.email')}</h3>
                 <a 
                   href="mailto:contact@JustOriginale.com" 
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -55,7 +57,7 @@ export default function ContactPage() {
                 <IconPhone className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium">Phone</h3>
+                <h3 className="font-medium">{t('contact.phone')}</h3>
                 <a 
                   href="tel:+212610454716" 
                   className="text-muted-foreground hover:text-primary transition-colors"
@@ -70,7 +72,7 @@ export default function ContactPage() {
                 <IconMapPin className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-medium">Location</h3>
+                <h3 className="font-medium">{t('contact.location')}</h3>
                 <p className="text-muted-foreground">
                   Casablanca, Morocco
                 </p>
@@ -81,33 +83,33 @@ export default function ContactPage() {
 
         <Card className="bg-background/50">
           <CardHeader>
-            <TypographyH2 className="text-xl font-semibold">Send us a Message</TypographyH2>
+            <TypographyH2 className="text-xl font-semibold">{t('contact.sendMessage')}</TypographyH2>
           </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
               <div>
-                <Label htmlFor="name" className="text-foreground">Full Name</Label>
+                <Label htmlFor="name" className="text-foreground">{t('contact.fields.fullName')}</Label>
                 <Input 
                   id="name" 
-                  placeholder="Your Name" 
+                  placeholder={t('contact.placeholders.name')} 
                   {...register("name", { required: true })} 
                   aria-invalid={!!errors.name} 
                   className="mt-1"
                 />
-                {errors.name && <p className="text-destructive text-sm mt-1">Please enter your name</p>}
+                {errors.name && <p className="text-destructive text-sm mt-1">{t('contact.validation.nameRequired')}</p>}
               </div>
               
               <div>
-                <Label htmlFor="email" className="text-foreground">Email Address</Label>
+                <Label htmlFor="email" className="text-foreground">{t('contact.fields.email')}</Label>
                 <Input 
                   id="email" 
                   type="email" 
-                  placeholder="you@email.com" 
+                  placeholder={t('contact.placeholders.email')} 
                   {...register("email", { 
-                    required: "Email is required",
+                    required: t('contact.validation.emailRequired'),
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Invalid email address"
+                      message: t('contact.validation.emailInvalid')
                     }
                   })} 
                   aria-invalid={!!errors.email}
@@ -117,16 +119,16 @@ export default function ContactPage() {
               </div>
               
               <div>
-                <Label htmlFor="message" className="text-foreground">Your Message</Label>
+                <Label htmlFor="message" className="text-foreground">{t('contact.fields.message')}</Label>
                 <Textarea 
                   id="message" 
                   rows={5} 
-                  placeholder="How can we help you?" 
+                  placeholder={t('contact.placeholders.message')} 
                   {...register("message", { 
-                    required: "Message is required",
+                    required: t('contact.validation.messageRequired'),
                     minLength: {
                       value: 10,
-                      message: "Message must be at least 10 characters"
+                      message: t('contact.validation.messageMinLength')
                     }
                   })} 
                   aria-invalid={!!errors.message}
@@ -140,7 +142,7 @@ export default function ContactPage() {
                 className="w-full mt-2" 
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? t('contact.sending') : t('contact.sendButton')}
               </Button>
             </form>
           </CardContent>

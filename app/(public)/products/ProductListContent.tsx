@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "@/hooks/useTranslations";
 
 // Types for product data
 interface ProductImage {
@@ -88,14 +89,7 @@ interface FilterState {
   isMobileFiltersOpen: boolean;
 }
 
-// Sort options - values must match the API's expected format
-const SORT_OPTIONS = [
-  { value: "createdAt-desc", label: "Newest" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
-  { value: "name-asc", label: "Name: A to Z" },
-  { value: "name-desc", label: "Name: Z to A" },
-];
+// Sort options - will be translated inline
 
 // Enhanced Filter Section Component with search and better UX
 function FilterSection({
@@ -104,10 +98,12 @@ function FilterSection({
   selected,
   onToggle,
   defaultOpen = true,
+  t,
 }: {
   title: string;
   options: FilterOption[];
   selected: string[];
+  t: (key: string) => string;
   onToggle: (id: string) => void;
   defaultOpen?: boolean;
 }) {
@@ -205,7 +201,7 @@ function FilterSection({
                   </div>
                 ) : (
                   <div className="py-4 text-center text-sm text-muted-foreground">
-                    No {title.toLowerCase()} found
+                    {t('search.noResults')}
                   </div>
                 )}
               </div>
@@ -284,6 +280,7 @@ const PAGE_SIZE = 12;
 export default function ProductListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslations();
   const [products, setProducts] = useState<Product[]>([]);
   const [total, setTotal] = useState(0);
   const [skip, setSkip] = useState(0);
@@ -300,6 +297,15 @@ export default function ProductListContent() {
   // State for mobile filters dialog
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [mobileSortOpen, setMobileSortOpen] = useState(false);
+
+  // Dynamic sort options with translations
+  const SORT_OPTIONS = [
+    { value: "createdAt-desc", label: t('filter.sortOptions.newest') },
+    { value: "price-asc", label: t('filter.sortOptions.priceLowHigh') },
+    { value: "price-desc", label: t('filter.sortOptions.priceHighLow') },
+    { value: "name-asc", label: t('filter.sortOptions.nameAZ') },
+    { value: "name-desc", label: t('filter.sortOptions.nameZA') },
+  ];
 
   // State for filters
   const [filters, setFilters] = useState<FilterState>({
@@ -566,7 +572,7 @@ export default function ProductListContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Our Products
+          {t('pages.title')}
         </motion.h1>
         <motion.p
           className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-4"
@@ -574,7 +580,7 @@ export default function ProductListContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Discover our wide range of high-quality products
+          {t('pages.description')}
         </motion.p>
 
         {/* Search is now only available in the navbar */}
@@ -604,11 +610,11 @@ export default function ProductListContent() {
                     }}
                   >
                     <ArrowLeft className="h-4 w-4 mr-1" />
-                    Clear all filters
+                    {t('filter.clearAllFilters')}
                   </Button>
                 </div>
               ) : (
-                <span>All Products</span>
+                <span>{t('pages.allProducts')}</span>
               )}
             </h1>
           </div>
@@ -627,7 +633,7 @@ export default function ProductListContent() {
                 <span>
                   {SORT_OPTIONS.find(
                     (option) => option.value === filters.sortBy
-                  )?.label || "Sort by"}
+                  )?.label || t('filter.sortBy')}
                 </span>
               </Button>
 
@@ -641,7 +647,7 @@ export default function ProductListContent() {
                   }}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sort by" />
+                    <SelectValue placeholder={t('filter.sortBy')} />
                   </SelectTrigger>
                   <SelectContent>
                     {SORT_OPTIONS.map((option) => (
@@ -662,7 +668,7 @@ export default function ProductListContent() {
               onClick={() => setMobileFiltersOpen(true)}
             >
               <SlidersHorizontal className="h-4 w-4" />
-              <span>Filters</span>
+              <span>{t('filter.filters')}</span>
               {(filters.categories.length > 0 ||
                 filters.brands.length > 0 ||
                 filters.tags.length > 0) && (
@@ -693,21 +699,21 @@ export default function ProductListContent() {
               className="w-full max-h-[90vh] p-0 rounded-t-2xl"
             >
               <SheetHeader className="sr-only">
-                <SheetTitle>Product Filters</SheetTitle>
+                <SheetTitle>{t('filter.productFilters')}</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col h-full">
                 {/* Sticky Header */}
                 <div className="sticky top-0 z-10 bg-background border-b p-4 flex items-center justify-between">
-                  <h2 className="text-xl font-bold">Filters</h2>
+                  <h2 className="text-xl font-bold">{t('filter.filters')}</h2>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setMobileFiltersOpen(false)}
                     className="rounded-full"
-                    aria-label="Close filters"
+                    aria-label={t('filter.closeFilters')}
                   >
                     <X className="h-5 w-5" />
-                    <span className="sr-only">Close filters</span>
+                    <span className="sr-only">{t('filter.closeFilters')}</span>
                   </Button>
                 </div>
 
@@ -716,31 +722,34 @@ export default function ProductListContent() {
                   <div className="space-y-2 py-2">
                     {/* Categories */}
                     <FilterSection
-                      title="Categories"
+                      title={t('filter.categories')}
                       options={filterOptions.categories}
                       selected={localFilters.categories}
                       onToggle={(id) =>
                         handleLocalFilterChange("categories", id)
                       }
                       defaultOpen={localFilters.categories.length > 0}
+                      t={t}
                     />
 
                     {/* Brands */}
                     <FilterSection
-                      title="Brands"
+                      title={t('filter.brands')}
                       options={filterOptions.brands}
                       selected={localFilters.brands}
                       onToggle={(id) => handleLocalFilterChange("brands", id)}
                       defaultOpen={localFilters.brands.length > 0}
+                      t={t}
                     />
 
                     {/* Tags */}
                     <FilterSection
-                      title="Tags"
+                      title={t('filter.tags')}
                       options={filterOptions.tags}
                       selected={localFilters.tags}
                       onToggle={(id) => handleLocalFilterChange("tags", id)}
                       defaultOpen={localFilters.tags.length > 0}
+                      t={t}
                     />
                   </div>
                 </ScrollArea>
@@ -752,10 +761,10 @@ export default function ProductListContent() {
                     className="flex-1"
                     onClick={resetFilters}
                   >
-                    Reset All
+                    {t('filter.resetAll')}
                   </Button>
                   <Button className="flex-1" onClick={applyFilters}>
-                    Apply Filters
+                    {t('filter.applyFilters')}
                   </Button>
                 </div>
               </div>
@@ -803,7 +812,7 @@ export default function ProductListContent() {
               <div className="rounded-lg bg-muted/30 p-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">
-                    Filters
+                    {t('filter.filters')}
                   </h2>
                   {activeFilterCount > 0 && (
                     <Button
@@ -812,7 +821,7 @@ export default function ProductListContent() {
                       onClick={clearAllFilters}
                       className="h-7 text-xs text-primary hover:bg-transparent hover:text-primary/80"
                     >
-                      Clear all
+                      {t('filter.clearAll')}
                     </Button>
                   )}
                 </div>
@@ -863,27 +872,30 @@ export default function ProductListContent() {
               {/* Filter Sections */}
               <div className="rounded-lg bg-card p-4 shadow-sm">
                 <FilterSection
-                  title="Categories"
+                  title={t('filter.categories')}
                   options={filterOptions.categories}
                   selected={filters.categories}
                   onToggle={(id) => toggleFilter("categories", id)}
                   defaultOpen={filters.categories.length > 0}
+                  t={t}
                 />
 
                 <FilterSection
-                  title="Brands"
+                  title={t('filter.brands')}
                   options={filterOptions.brands}
                   selected={filters.brands}
                   onToggle={(id) => toggleFilter("brands", id)}
                   defaultOpen={filters.brands.length > 0}
+                  t={t}
                 />
 
                 <FilterSection
-                  title="Tags"
+                  title={t('filter.tags')}
                   options={filterOptions.tags}
                   selected={filters.tags}
                   onToggle={(id) => toggleFilter("tags", id)}
                   defaultOpen={filters.tags.length > 0}
+                  t={t}
                 />
 
                 {/* Results Count */}
@@ -1068,7 +1080,7 @@ export default function ProductListContent() {
                         Loading...
                       </>
                     ) : (
-                      "Load more products"
+                      t('filter.loadMoreProducts')
                     )}
                     {loading && (
                       <motion.div

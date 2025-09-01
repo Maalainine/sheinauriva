@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { IconArrowLeft, IconCategory, IconSearch, IconX } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/hooks/useTranslations";
 import { CategoryCard } from "@/components/category/card/CategoryCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/common/error-state";
@@ -38,6 +39,7 @@ function CategoryCardSkeleton() {
 
 export default function CategoryListPage() {
   const router = useRouter();
+  const { t } = useTranslations();
   const [categories, setCategories] = useState<Category[]>([]);
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +133,7 @@ export default function CategoryListPage() {
     return (
       <div className="container mx-auto p-6">
         <ErrorState
-          title="Error loading categories"
+          title={t('category.errorTitle')}
           message={error}
           onRetry={() => window.location.reload()}
         />
@@ -150,7 +152,7 @@ export default function CategoryListPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Shop by Category
+            {t('category.shopByCategory')}
           </motion.h1>
           <motion.p 
             className="text-muted-foreground text-lg max-w-2xl mx-auto"
@@ -158,7 +160,7 @@ export default function CategoryListPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            Discover our wide range of products organized by category
+            {t('category.discoverCategories')}
           </motion.p>
         </div>
       </div>
@@ -176,7 +178,7 @@ export default function CategoryListPage() {
             <IconSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="text"
-              placeholder="Search categories..."
+              placeholder={t('category.searchPlaceholder')}
               value={searchQuery}
               onChange={handleSearchChange}
               className="pl-10 pr-10 py-6 text-base rounded-full border-border/50 focus-visible:ring-2 focus-visible:ring-primary/50"
@@ -185,7 +187,7 @@ export default function CategoryListPage() {
               <button
                 onClick={clearSearch}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Clear search"
+                aria-label={t('common.clearSearch')}
               >
                 <IconX className="h-5 w-5" />
               </button>
@@ -219,7 +221,7 @@ export default function CategoryListPage() {
                       category.images?.[0]?.url ||
                       `https://placehold.co/600x400/1e293b/ffffff?text=${encodeURIComponent(category.name)}`
                     }
-                    buttonText="Browse more"
+                    buttonText={t('category.browseMore')}
                     productCount={category._count?.products}
                     className="h-full w-full hover:shadow-lg transition-shadow duration-300"
                   />
@@ -237,11 +239,11 @@ export default function CategoryListPage() {
               <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-muted/50 mb-6">
                 <IconSearch className="h-12 w-12 text-muted-foreground" />
               </div>
-              <h2 className="text-2xl font-semibold tracking-tight mb-2">No categories found</h2>
+              <h2 className="text-2xl font-semibold tracking-tight mb-2">{t('category.noCategoriesFound')}</h2>
               <p className="text-muted-foreground mb-6 max-w-md">
                 {searchQuery 
-                  ? `No categories match "${searchQuery}". Try a different search term.`
-                  : "We couldn't find any categories at the moment. Please check back later."}
+                  ? t('category.noSearchResults', { query: searchQuery })
+                  : t('category.noCategoriesAvailable')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 {searchQuery ? (
@@ -251,7 +253,7 @@ export default function CategoryListPage() {
                     className="gap-2"
                   >
                     <IconX size={16} />
-                    Clear search
+                    {t('common.clearSearch')}
                   </Button>
                 ) : (
                   <Button 
@@ -259,7 +261,7 @@ export default function CategoryListPage() {
                     variant="outline"
                     className="gap-2"
                   >
-                    Refresh page
+                    {t('common.refreshPage')}
                   </Button>
                 )}
                 <Button 
@@ -267,7 +269,7 @@ export default function CategoryListPage() {
                   className="gap-2"
                 >
                   <IconArrowLeft size={16} />
-                  Back to home
+                  {t('common.backToHome')}
                 </Button>
               </div>
             </motion.div>

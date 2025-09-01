@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "@/hooks/useTranslations";
 import * as z from "zod";
 import {
   Loader2,
@@ -52,23 +53,26 @@ import { COUNTRIES, getCitiesByCountry, DEFAULT_CITY } from "@/lib/locations";
 
 const steps = ["Information", "Confirmation"];
 
-// Form validation schema
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }), // contactName
-  phone: z.string().min(6, { message: "Please enter a valid phone number" }), // contactPhone
-  email: z.string().email({ message: "Please enter a valid email" }).optional().or(z.literal('')), // optional email
-  address: z.string().min(5, { message: "Please enter a valid address" }), // shippingLine1
-  country: z.string().min(2, { message: "Please select a country" }), // shippingCountry
-  city: z.string().min(1, { message: "Please select a city" }), // shippingCity
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+// Form validation schema will be created inside component to access translations
 
 export default function CheckoutPage() {
   const [step, setStep] = useState(1); // 1: Information, 2: Confirmation
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { cart, clearCart } = useCart?.() || { cart: [], clearCart: () => {} };
+  const { t } = useTranslations();
+
+  // Form validation schema with translated messages
+  const formSchema = z.object({
+    name: z.string().min(2, { message: t('checkout.validation.nameMin') }),
+    phone: z.string().min(6, { message: t('checkout.validation.phoneValid') }),
+    email: z.string().email({ message: t('checkout.validation.emailValid') }).optional().or(z.literal('')),
+    address: z.string().min(5, { message: t('checkout.validation.addressValid') }),
+    country: z.string().min(2, { message: t('checkout.validation.selectCountry') }),
+    city: z.string().min(1, { message: t('checkout.validation.selectCity') }),
+    notes: z.string().optional(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -164,7 +168,7 @@ export default function CheckoutPage() {
       }
 
       // Show success message
-      toast.success("Order received! We'll contact you shortly to confirm.", {
+      toast.success(t('checkout.orderSuccess'), {
         id: loadingToastId,
         duration: 5000,
       });
@@ -227,13 +231,13 @@ export default function CheckoutPage() {
       }
       
       // Show success message
-      toast.success('Order received! We will contact you shortly.', {
+      toast.success(t('checkout.orderSuccessShort'), {
         duration: 5000,
       });
     } catch (error) {
       console.error("Error submitting order:", error);
       toast.error(
-        error instanceof Error ? error.message : "Failed to place order. Please try again.",
+        error instanceof Error ? error.message : t('checkout.orderError'),
         {
           id: loadingToastId,
           duration: 5000,
@@ -255,17 +259,19 @@ export default function CheckoutPage() {
   if (cart.length === 0 && step === 1) {
     return (
       <div className="max-w-4xl mx-auto py-10 px-4">
-        <EmptyState message="Your cart is empty." />
+        <EmptyState message={t('cart.empty')} />
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto py-6 sm:py-10 px-4">
-      {/* Stepper UI */}
-      <div className="mb-8">
-        <StepIndicator steps={steps} current={step} />
-      </div>
+      {/* Stepper UI - Only show on step 1 */}
+      {step === 1 && (
+        <div className="mb-8">
+          <StepIndicator steps={steps} current={step} />
+        </div>
+      )}
 
       {step === 1 ? (
         <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] h-fit">
@@ -274,24 +280,24 @@ export default function CheckoutPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">
-                    Delivery Information
+                    {t('checkout.deliveryInfo')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {/* Personal Information */}
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Personal Information</h4>
+                      <h4 className="text-sm font-medium">{t('checkout.personalInfo')}</h4>
                       <div className="grid gap-4 md:grid-cols-2">
                         <FormField
                           control={form.control}
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Full Name</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.fullName')}</FormLabel>
                               <FormControl>
                                 <Input 
-                                  placeholder="Your full name" 
+                                  placeholder={t('checkout.placeholders.fullName')} 
                                   {...field} 
                                   className="h-9 text-sm"
                                 />
@@ -306,7 +312,7 @@ export default function CheckoutPage() {
                           name="phone"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Phone</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.phone')}</FormLabel>
                               <FormControl>
                                 <div className="relative">
                                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">
@@ -314,7 +320,7 @@ export default function CheckoutPage() {
                                   </span>
                                   <Input
                                     className="pl-12 h-9 text-sm"
-                                    placeholder="612345678"
+                                    placeholder={t('checkout.placeholders.phone')}
                                     {...field}
                                     onChange={(e) => {
                                       const value = e.target.value
@@ -336,11 +342,11 @@ export default function CheckoutPage() {
                           name="email"
                           render={({ field }) => (
                             <FormItem className="md:col-span-2">
-                              <FormLabel className="text-xs">Email (Optional)</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.email')}</FormLabel>
                               <FormControl>
                                 <Input
                                   type="email"
-                                  placeholder="your@email.com"
+                                  placeholder={t('checkout.placeholders.email')}
                                   className="h-9 text-sm"
                                   {...field}
                                 />
@@ -356,14 +362,14 @@ export default function CheckoutPage() {
 
                     {/* Shipping Information */}
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Shipping Information</h4>
+                      <h4 className="text-sm font-medium">{t('checkout.shippingInfo')}</h4>
                       <div className="grid gap-4 md:grid-cols-2">
                         <FormField
                           control={form.control}
                           name="country"
                           render={({ field }) => (
                             <FormItem className="w-full">
-                              <FormLabel className="text-xs">Country</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.country')}</FormLabel>
                               <Select
                                 onValueChange={(value) => {
                                   handleCountryChange(value);
@@ -373,7 +379,7 @@ export default function CheckoutPage() {
                               >
                                 <FormControl>
                                   <SelectTrigger className="h-9 text-sm w-full">
-                                    <SelectValue placeholder="Select country" />
+                                    <SelectValue placeholder={t('checkout.placeholders.selectCountry')} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -394,7 +400,7 @@ export default function CheckoutPage() {
                           name="city"
                           render={({ field }) => (
                             <FormItem className="w-full">
-                              <FormLabel className="text-xs">City</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.city')}</FormLabel>
                               <Select
                                 onValueChange={field.onChange}
                                 value={field.value}
@@ -405,8 +411,8 @@ export default function CheckoutPage() {
                                     <SelectValue 
                                       placeholder={
                                         selectedCountry 
-                                          ? "Select city" 
-                                          : "Select country first"
+                                          ? t('checkout.placeholders.selectCity') 
+                                          : t('checkout.placeholders.selectCountryFirst')
                                       } 
                                     />
                                   </SelectTrigger>
@@ -429,10 +435,10 @@ export default function CheckoutPage() {
                           name="address"
                           render={({ field }) => (
                             <FormItem className="md:col-span-2">
-                              <FormLabel className="text-xs">Full Address</FormLabel>
+                              <FormLabel className="text-xs">{t('checkout.fields.address')}</FormLabel>
                               <FormControl>
                                 <Input
-                                  placeholder="Street, Building, Apartment"
+                                  placeholder={t('checkout.placeholders.address')}
                                   className="h-9 text-sm"
                                   {...field}
                                 />
@@ -453,10 +459,10 @@ export default function CheckoutPage() {
                         name="notes"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs">Order Notes (Optional)</FormLabel>
+                            <FormLabel className="text-xs">{t('checkout.fields.notes')}</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="Special instructions for delivery"
+                                placeholder={t('checkout.placeholders.notes')}
                                 className="h-9 text-sm"
                                 {...field}
                               />
@@ -478,12 +484,12 @@ export default function CheckoutPage() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending Order...
+                        {t('checkout.sendingOrder')}
                       </>
                     ) : (
                       <>
                         <Package className="mr-2 h-4 w-4" />
-                        Send Order
+                        {t('checkout.sendOrder')}
                       </>
                     )}
                   </Button>
@@ -495,7 +501,7 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <Card className="h-full flex flex-col w-full max-w-md">
             <CardHeader className="pb-4 border-b">
-              <CardTitle className="text-lg">Order Summary</CardTitle>
+              <CardTitle className="text-lg">{t('checkout.orderSummary')}</CardTitle>
             </CardHeader>
             
             <CardContent className="flex-1 p-0">
@@ -506,7 +512,7 @@ export default function CheckoutPage() {
               ) : cart.length === 0 ? (
                 <div className="p-6 text-center">
                   <TypographyP className="text-muted-foreground">
-                    No items in cart.
+                    {t('cart.noItems')}
                   </TypographyP>
                 </div>
               ) : (
@@ -521,11 +527,11 @@ export default function CheckoutPage() {
                           <p className="font-medium truncate">{item.name}</p>
                           {item.variantId && (
                             <p className="text-sm text-muted-foreground">
-                              Variant: {item.variantId}
+                              {t('product.variant')}: {item.variantId}
                             </p>
                           )}
                           <p className="text-sm text-muted-foreground">
-                            Qty: {item.quantity}
+                            {t('cart.quantity')}: {item.quantity}
                           </p>
                         </div>
                         <div className="flex-shrink-0">
@@ -543,7 +549,7 @@ export default function CheckoutPage() {
             <CardFooter className="flex flex-col gap-4 pt-4 border-t">
               <div className="w-full space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-muted-foreground">{t('cart.subtotal')}</span>
                   <span className="font-medium">
                     {subtotal.toFixed(2)} MAD
                   </span>
@@ -551,8 +557,8 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">
                     {selectedCity 
-                      ? `Shipping to ${selectedCity}` 
-                      : 'Select a city to calculate shipping'}
+                      ? t('checkout.shippingTo', { city: selectedCity }) 
+                      : t('checkout.selectCityShipping')}
                   </span>
                   <span className="font-medium">
                     {shipping > 0 ? `${shipping.toFixed(2)} MAD` : '—'}
@@ -560,7 +566,7 @@ export default function CheckoutPage() {
                 </div>
                 <Separator className="my-2" />
                 <div className="flex justify-between text-base font-medium">
-                  <span>Total</span>
+                  <span>{t('cart.total')}</span>
                   <span className="whitespace-nowrap">
                     {total.toFixed(2)} MAD
                   </span>
@@ -576,38 +582,36 @@ export default function CheckoutPage() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <CheckCircle2 className="h-10 w-10 text-green-600" />
             </div>
-            <CardTitle>Order Confirmed!</CardTitle>
+            <CardTitle>{t('checkout.orderConfirmed')}</CardTitle>
             <TypographyP className="text-muted-foreground">
-              We've received your order and will contact you shortly to confirm
-              the details.
+              {t('checkout.orderReceivedMessage')}
             </TypographyP>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">Status:</span>
+                <span className="font-medium">{t('order.status')}:</span>
                 <span className="text-yellow-600 font-medium">
-                  Pending Confirmation
+                  {t('order.statusOptions.pendingConfirmation')}
                 </span>
               </div>
               <div className="pl-6 text-sm text-muted-foreground">
-                Our team will call you within 24 hours to confirm your order and
-                delivery details.
+                {t('checkout.callConfirmMessage')}
               </div>
             </div>
 
             <div className="space-y-4">
-              <TypographyH3 className="text-lg">What's Next?</TypographyH3>
+              <TypographyH3 className="text-lg">{t('checkout.whatsNext')}</TypographyH3>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                     <Package className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium">Order Confirmation</h4>
+                    <h4 className="font-medium">{t('checkout.orderConfirmation')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Our team will verify your order details and contact you.
+                      {t('checkout.verifyOrderMessage')}
                     </p>
                   </div>
                 </div>
@@ -616,9 +620,9 @@ export default function CheckoutPage() {
                     <Truck className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium">Shipping</h4>
+                    <h4 className="font-medium">{t('checkout.shipping')}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Once confirmed, we'll prepare and ship your order.
+                      {t('checkout.prepareShipMessage')}
                     </p>
                   </div>
                 </div>
@@ -632,11 +636,11 @@ export default function CheckoutPage() {
                 className="w-full"
               >
                 <Package className="mr-2 h-4 w-4" />
-                Continue Shopping
+                {t('cart.continueShopping')}
               </Button>
             </Link>
             <p className="text-sm text-muted-foreground text-center">
-              Need help? Contact us at support@sheinauriva.com
+              {t('checkout.contactHelp')}
             </p>
           </CardFooter>
         </Card>

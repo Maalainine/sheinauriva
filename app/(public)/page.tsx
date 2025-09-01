@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/card";
 import { CategoryCard } from "@/components/category/card/CategoryCard";
 import { BrandLogos } from "@/components/ui/brand-logos";
+import { useTranslations } from "@/hooks/useTranslations";
 
 interface ProductImage {
   id: string;
@@ -101,6 +102,7 @@ export default function Home() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const { t } = useTranslations();
 
   // Set mounted state
   useEffect(() => {
@@ -319,15 +321,15 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary/50 z-10 flex items-center">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <TypographyH1 className="mb-4 text-secondary">
-              Where the World’s Icons Find Their Home{" "}
+              {t('home.hero.title')}
             </TypographyH1>
             <TypographyH4 className="mb-8 max-w-2xl text-secondary">
-              Curated Collections of Global Luxury, Delivered to Your Doorstep
+              {t('home.hero.subtitle')}
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/products">
                 <Button size="lg" className="hover:bg-primary/90">
-                  Shop Now
+                  {t('home.hero.shopNow')}
                 </Button>
               </Link>
             </div>
@@ -352,23 +354,23 @@ export default function Home() {
             {[
               {
                 icon: Truck,
-                title: "Fast Shipping",
-                description: "Ship throughout all the Kingdom Territories",
+                title: t('home.features.shipping.title'),
+                description: t('home.features.shipping.description'),
               },
               {
                 icon: CheckCircle2,
-                title: "Quality Guarantee",
-                description: "All products are carefully selected and tested",
+                title: t('home.features.quality.title'),
+                description: t('home.features.quality.description'),
               },
               {
                 icon: Shield,
-                title: "Pay Upon Receipt",
-                description: "Don't pay until you receive the product",
+                title: t('home.features.payment.title'),
+                description: t('home.features.payment.description'),
               },
               {
                 icon: Headphones,
-                title: "24/7 Support",
-                description: "We're here to help with any questions",
+                title: t('home.features.support.title'),
+                description: t('home.features.support.description'),
               },
             ].map((feature, index) => (
               <Card key={index}>
@@ -394,12 +396,12 @@ export default function Home() {
       <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <TypographyH2>New Arrivals</TypographyH2>
+            <TypographyH2>{t('home.sections.newArrivals')}</TypographyH2>
             <Link
               href="/products?featured=true&sort=newest"
               className="text-primary flex items-center gap-1"
             >
-              View all <ChevronRight className="h-4 w-4" />
+              {t('home.viewAll')} <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -416,7 +418,7 @@ export default function Home() {
           ) : newArrivals.length === 0 ? (
             <div className="text-center py-12">
               <TypographyP className="text-muted-foreground">
-                No products found. Please check back{" "}
+                {t('home.noProducts')}
               </TypographyP>
             </div>
           ) : (
@@ -453,12 +455,12 @@ export default function Home() {
         <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
-              <TypographyH2>Shop by Category</TypographyH2>
+              <TypographyH2>{t('home.sections.categories')}</TypographyH2>
               <Link
                 href="/categories"
                 className="text-primary flex items-center gap-1"
               >
-                View all categories <ChevronRight className="h-4 w-4" />
+                {t('home.viewAllCategories')} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
 
@@ -495,7 +497,7 @@ export default function Home() {
             ) : (
               <div className="text-center py-12">
                 <TypographyP className="text-muted-foreground">
-                  No categories found. Please check back later.
+                  {t('home.noCategories')}
                 </TypographyP>
               </div>
             )}

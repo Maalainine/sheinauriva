@@ -17,6 +17,8 @@ import Image from "next/image";
 import { X, Plus, Minus, ShoppingCart, ArrowLeft, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/hooks/useTranslations";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Skeleton Loader Component
 const CartItemSkeleton = () => (
@@ -145,6 +147,8 @@ export default function CartDrawer({
   onOpenChange: (v: boolean) => void;
 }) {
   const { cart, updateQuantity, removeItem, clearCart } = useCart();
+  const { t } = useTranslations();
+  const { isRtl } = useLanguage();
   const [isClient, setIsClient] = useState(false);
   
   // Calculate subtotal
@@ -174,12 +178,15 @@ export default function CartDrawer({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} direction="right">
-      <DrawerContent className="h-full max-h-screen w-full sm:w-[28rem] ml-auto rounded-l-lg">
+    <Drawer open={open} onOpenChange={onOpenChange} direction={isRtl ? "left" : "right"}>
+      <DrawerContent className={cn(
+        "h-full max-h-screen w-full sm:w-[28rem]",
+        isRtl ? "mr-auto rounded-r-lg" : "ml-auto rounded-l-lg"
+      )}>
         <DrawerHeader className="px-4 sm:px-6 border-b">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-lg font-semibold">
-              Your Cart
+              {t('cart.title')}
               {cart.length > 0 && (
                 <span className="text-muted-foreground font-normal ml-2">
                   ({cart.reduce((sum, item) => sum + item.quantity, 0)})
@@ -195,13 +202,13 @@ export default function CartDrawer({
                   className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4 mr-1" />
-                  Clear All
+                  {t('cart.clearCart')}
                 </Button>
               )}
               <DrawerClose asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <X className="h-4 w-4" />
-                  <span className="sr-only">Close cart</span>
+                  <span className="sr-only">{t('common.close')}</span>
                 </Button>
               </DrawerClose>
             </div>
@@ -212,15 +219,15 @@ export default function CartDrawer({
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-8">
               <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
+              <h3 className="text-lg font-medium mb-2">{t('cart.empty')}</h3>
               <p className="text-sm text-muted-foreground mb-6">
-                Looks like you haven't added anything to your cart yet.
+                {t('cart.noItems')}
               </p>
               <DrawerClose asChild>
                 <Button asChild>
                   <Link href="/products" className="flex items-center gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    Continue Shopping
+                    {t('cart.continueShopping')}
                   </Link>
                 </Button>
               </DrawerClose>
@@ -259,7 +266,7 @@ export default function CartDrawer({
           <DrawerFooter className="border-t p-4 sm:p-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between text-lg font-semibold">
-                <span>Total</span>
+                <span>{t('cart.total')}</span>
                 <span>MAD {subtotal.toFixed(2)}</span>
               </div>
             </div>
@@ -270,12 +277,12 @@ export default function CartDrawer({
               className="mt-4"
               onClick={() => onOpenChange(false)}
             >
-              <Link href="/checkout">Place Order</Link>
+              <Link href="/checkout">{t('cart.checkout')}</Link>
             </Button>
 
             <DrawerClose asChild>
               <Button variant="outline" className="mt-2">
-                Continue Shopping
+                {t('cart.continueShopping')}
               </Button>
             </DrawerClose>
           </DrawerFooter>

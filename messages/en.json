@@ -1,0 +1,395 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "viewDetails": "View Details",
+    "clearSearch": "Clear search",
+    "refreshPage": "Refresh page",
+    "backToHome": "Back to home",
+    "nothingHere": "Nothing here yet.",
+    "tryAgain": "Try again"
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "categories": "Categories",
+    "brands": "Brands",
+    "about": "About",
+    "contact": "Contact",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "account": "Account",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Admin"
+  },
+  "product": {
+    "name": "Product Name",
+    "description": "Description",
+    "price": "Price",
+    "stock": "Stock",
+    "available": "Available",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "lowStock": "Low Stock",
+    "addToCart": "Add to Cart",
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "addedToCart": "{name} added to cart!",
+    "adding": "Adding...",
+    "addedToWishlist": "Added to wishlist",
+    "removedFromWishlist": "Removed from wishlist",
+    "variants": "Options",
+    "variant": "Variant",
+    "singleOption": "Single Option",
+    "multipleOptions": "Multiple Options",
+    "selectVariant": "Select Option",
+    "sale": "Sale",
+    "featured": "Featured",
+    "new": "New"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "item": "item",
+    "items": "items",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "tax": "Tax",
+    "quantity": "Quantity",
+    "remove": "Remove",
+    "update": "Update",
+    "checkout": "Checkout",
+    "continueShopping": "Continue Shopping",
+    "clearCart": "Clear Cart",
+    "clearConfirm": "Clear all items from cart?",
+    "cartCleared": "Cart cleared.",
+    "itemRemoved": "Item removed from cart.",
+    "noItems": "No items in cart."
+  },
+  "wishlist": {
+    "title": "My Wishlist",
+    "empty": "Your wishlist is empty",
+    "item": "item",
+    "items": "items",
+    "addToCart": "Add to Cart",
+    "remove": "Remove",
+    "startShopping": "Start Shopping",
+    "loginRequired": "Login Required",
+    "pleaseLogin": "Please log in to view your wishlist"
+  },
+  "category": {
+    "all": "All Categories",
+    "products": "Products",
+    "noProducts": "No products found in this category",
+    "shopByCategory": "Shop by Category",
+    "discoverCategories": "Discover our wide range of products organized by category",
+    "searchPlaceholder": "Search categories...",
+    "browseMore": "Browse more",
+    "noCategoriesFound": "No categories found",
+    "noSearchResults": "No categories match \"{query}\". Try a different search term.",
+    "noCategoriesAvailable": "We couldn't find any categories at the moment. Please check back later.",
+    "errorTitle": "Error loading categories"
+  },
+  "brand": {
+    "all": "All Brands",
+    "products": "Products",
+    "noProducts": "No products found for this brand"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions or feedback? We'd love to hear from you. Our team is here to help and answer any questions you might have.",
+    "contactInfo": "Contact Information",
+    "sendMessage": "Send us a Message",
+    "email": "Email",
+    "phone": "Phone",
+    "location": "Location",
+    "messageSent": "Message sent! We'll get back to you soon.",
+    "sending": "Sending...",
+    "sendButton": "Send Message",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "message": "Your Message"
+    },
+    "placeholders": {
+      "name": "Your Name",
+      "email": "you@email.com",
+      "message": "How can we help you?"
+    },
+    "validation": {
+      "nameRequired": "Please enter your name",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "messageRequired": "Message is required",
+      "messageMinLength": "Message must be at least 10 characters"
+    }
+  },
+  "search": {
+    "placeholder": "Search products, categories, brands...",
+    "results": "Search Results",
+    "noResults": "No results found",
+    "showingResults": "Showing {count} results for '{query}'",
+    "startTyping": "Start typing to search...",
+    "tags": "Tags"
+  },
+  "filter": {
+    "priceRange": "Price Range",
+    "availability": "Availability",
+    "inStock": "In Stock",
+    "onSale": "On Sale",
+    "featured": "Featured",
+    "sortBy": "Sort By",
+    "filters": "Filters",
+    "categories": "Categories",
+    "brands": "Brands",
+    "tags": "Tags",
+    "clearAll": "Clear all",
+    "clearAllFilters": "Clear all filters",
+    "resetAll": "Reset All",
+    "applyFilters": "Apply Filters",
+    "closeFilters": "Close filters",
+    "productFilters": "Product Filters",
+    "loadMoreProducts": "Load more products",
+    "sortOptions": {
+      "relevance": "Relevance",
+      "priceLowHigh": "Price: Low to High",
+      "priceHighLow": "Price: High to Low",
+      "nameAZ": "Name: A to Z",
+      "nameZA": "Name: Z to A",
+      "newest": "Newest First",
+      "oldest": "Oldest First"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?",
+    "loginRequired": "Please log in to continue",
+    "invalidCredentials": "Invalid email or password",
+    "accessDenied": "Access denied"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "deliveryInfo": "Delivery Information",
+    "personalInfo": "Personal Information",
+    "shippingInfo": "Shipping Information",
+    "orderSummary": "Order Summary",
+    "sendOrder": "Send Order",
+    "sendingOrder": "Sending Order...",
+    "orderConfirmed": "Order Confirmed!",
+    "orderReceivedMessage": "We've received your order and will contact you shortly to confirm the details.",
+    "callConfirmMessage": "Our team will call you within 24 hours to confirm your order and delivery details.",
+    "whatsNext": "What's Next?",
+    "orderConfirmation": "Order Confirmation",
+    "verifyOrderMessage": "Our team will verify your order details and contact you.",
+    "shipping": "Shipping",
+    "prepareShipMessage": "Once confirmed, we'll prepare and ship your order.",
+    "contactHelp": "Need help? Contact us at support@sheinauriva.com",
+    "orderSuccess": "Order received! We'll contact you shortly to confirm.",
+    "orderSuccessShort": "Order received! We will contact you shortly.",
+    "orderError": "Failed to place order. Please try again.",
+    "shippingTo": "Shipping to {city}",
+    "selectCityShipping": "Select a city to calculate shipping",
+    "fields": {
+      "fullName": "Full Name",
+      "phone": "Phone",
+      "email": "Email (Optional)",
+      "country": "Country",
+      "city": "City",
+      "address": "Full Address",
+      "notes": "Order Notes (Optional)"
+    },
+    "placeholders": {
+      "fullName": "Your full name",
+      "phone": "612345678",
+      "email": "your@email.com",
+      "selectCountry": "Select country",
+      "selectCity": "Select city",
+      "selectCountryFirst": "Select country first",
+      "address": "Street, Building, Apartment",
+      "notes": "Special instructions for delivery"
+    },
+    "validation": {
+      "nameMin": "Name must be at least 2 characters",
+      "phoneValid": "Please enter a valid phone number",
+      "emailValid": "Please enter a valid email",
+      "addressValid": "Please enter a valid address",
+      "selectCountry": "Please select a country",
+      "selectCity": "Please select a city"
+    }
+  },
+  "order": {
+    "title": "Order",
+    "number": "Order Number",
+    "date": "Order Date",
+    "status": "Status",
+    "total": "Total",
+    "items": "Items",
+    "shipping": "Shipping",
+    "billing": "Billing",
+    "statusOptions": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded",
+      "pendingConfirmation": "Pending Confirmation"
+    }
+  },
+  "error": {
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "networkError": "Network error",
+    "tryAgain": "Please try again",
+    "goHome": "Go Home"
+  },
+  "home": {
+    "hero": {
+      "title": "Where the World's Icons Find Their Home",
+      "subtitle": "Curated Collections of Global Luxury, Delivered to Your Doorstep",
+      "shopNow": "Shop Now"
+    },
+    "features": {
+      "shipping": {
+        "title": "Fast Shipping",
+        "description": "Ship throughout all the Kingdom Territories"
+      },
+      "quality": {
+        "title": "Quality Guarantee",
+        "description": "All products are carefully selected and tested"
+      },
+      "payment": {
+        "title": "Pay Upon Receipt",
+        "description": "Don't pay until you receive the product"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "We're here to help with any questions"
+      }
+    },
+    "sections": {
+      "newArrivals": "New Arrivals",
+      "categories": "Shop by Category"
+    },
+    "viewAll": "View all",
+    "viewAllCategories": "View all categories",
+    "noProducts": "No products found. Please check back later.",
+    "noCategories": "No categories found. Please check back later."
+  },
+  "footer": {
+    "tagline": "Discover premier global beauty brands.",
+    "motto": "Because Excellence Knows No Borders",
+    "copyright": "© {year} JustOriginale. All rights reserved.",
+    "developedBy": "Developed by",
+    "newsletter": {
+      "title": "Stay Updated",
+      "placeholder": "Your email address",
+      "emailLabel": "Email for newsletter",
+      "subscribe": "Subscribe"
+    },
+    "socialMedia": {
+      "twitter": "Twitter",
+      "facebook": "Facebook",
+      "instagram": "Instagram"
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "welcomeBack": "Welcome Back",
+      "signInSubtitle": "Sign in to your admin account",
+      "enterCredentials": "Enter your credentials to continue",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "forgotPassword": "Forgot password?",
+      "havingTrouble": "Having trouble?",
+      "contactSupport": "Contact support",
+      "copyright": "© {year} SheinAuriva. All rights reserved.",
+      "fields": {
+        "email": "Email Address",
+        "password": "Password"
+      },
+      "placeholders": {
+        "email": "you@example.com",
+        "password": "••••••••"
+      },
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters"
+      },
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "checkCredentials": "Please check your credentials and try again.",
+        "sessionExpired": "Session expired",
+        "loginAgain": "Please log in again to continue.",
+        "serverConfig": "Server configuration error",
+        "serverConfigDetails": "There was an issue with the server configuration.",
+        "accessDenied": "Access denied",
+        "noPermission": "You do not have permission to access this page.",
+        "authError": "Authentication error",
+        "unknownError": "An unknown error occurred during authentication.",
+        "unexpectedError": "An unexpected error occurred",
+        "tryAgainLater": "Please try again later."
+      }
+    }
+  },
+  "pages": {
+    "title": "Our Products",
+    "description": "Discover our wide range of high-quality products",
+    "allProducts": "All Products",
+    "clearAllFilters": "Clear all filters",
+    "filters": "Filters",
+    "clearAll": "Clear all",
+    "showingProducts": "Showing {count} products",
+    "resetAll": "Reset All",
+    "applyFilters": "Apply Filters",
+    "noProductsFound": "No products found",
+    "tryAdjustingFilters": "Try adjusting your search or filter to find what you're looking for.",
+    "loadMoreProducts": "Load more products"
+  },
+  "footer": {
+    "tagline": "Your premium e-commerce destination for quality products you can trust.",
+    "newsletter": {
+      "title": "Stay Updated",
+      "placeholder": "Enter your email",
+      "emailLabel": "Email for newsletter",
+      "subscribe": "Subscribe"
+    },
+    "socialMedia": {
+      "twitter": "Follow us on Twitter",
+      "facebook": "Follow us on Facebook", 
+      "instagram": "Follow us on Instagram"
+    },
+    "motto": "Quality products, delivered with care.",
+    "copyright": "© {year} JustOriginale. All rights reserved.",
+    "developedBy": "Developed by"
+  }
+}

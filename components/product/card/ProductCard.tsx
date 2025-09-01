@@ -21,6 +21,8 @@ import {
 } from "@tabler/icons-react";
 import { useState, useMemo, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import WishlistButton from "@/components/wishlist/WishlistButton";
+import { useTranslations } from "@/hooks/useTranslations";
 import {
   TypographyP,
   TypographyLarge,
@@ -111,6 +113,7 @@ const ProductCard = ({
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = useCart();
+  const { t } = useTranslations();
   // Check if product has a single variant (can add to cart directly)
   const hasSingleVariant = hasVariants && variantCount === 1;
   const hasMultipleVariants = hasVariants && variantCount > 1;
@@ -182,12 +185,12 @@ const ProductCard = ({
 
   return (
     <Card className=" gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
-      {/* Product Badges */}
+      {/* Product Badges and Wishlist Button */}
       <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
         {/* Sale badge */}
         {originalPrice && originalPrice > price && (
           <Badge variant="destructive" className="bg-red-500/90 text-white">
-            Sale
+            {t('product.sale')}
           </Badge>
         )}
         {/* Variant badges */}
@@ -196,16 +199,35 @@ const ProductCard = ({
             variant="outline"
             className="bg-background/90 backdrop-blur-sm"
           >
-            <span className="text-primary">{variantCount} Options</span>
+            <span className="text-primary">{variantCount} {t('product.variants')}</span>
           </Badge>
         ) : hasSingleVariant ? (
           <Badge
             variant="outline"
             className="bg-background/90 backdrop-blur-sm"
           >
-            <span className="text-primary">Single Option</span>
+            <span className="text-primary">{t('product.singleOption')}</span>
           </Badge>
         ) : null}
+      </div>
+
+      {/* Wishlist Button */}
+      <div className="absolute top-2 right-2 z-10">
+        <WishlistButton
+          product={{
+            id,
+            name,
+            price,
+            image: normalizedImages[0]?.url,
+            description,
+            brand,
+            stock,
+            hasVariants,
+            variantCount,
+          }}
+          variant="icon"
+          className="bg-background/80 backdrop-blur-sm shadow-sm hover:bg-background/90 transition-all duration-200"
+        />
       </div>
 
       {/* Product Image Section */}
@@ -263,7 +285,7 @@ const ProductCard = ({
                 >
                   <IconShoppingCart className="h-4 w-4" />
                   <span className="whitespace-nowrap">
-                    {stock > 0 ? "Add to Cart" : "Out of Stock"}
+                    {stock > 0 ? t('product.addToCart') : t('product.outOfStock')}
                   </span>
                 </Button>
                 <Button
@@ -282,7 +304,7 @@ const ProductCard = ({
                     onClick={(e) => e.stopPropagation()}
                   >
                     <IconInfoCircle className="h-4 w-4" />
-                    <span>View Details</span>
+                    <span>{t('common.viewDetails')}</span>
                   </Link>
                 </Button>
               </>
@@ -304,7 +326,7 @@ const ProductCard = ({
                   onClick={(e) => e.stopPropagation()}
                 >
                   <IconInfoCircle className="h-4 w-4" />
-                  <span>View Details</span>
+                  <span>{t('common.viewDetails')}</span>
                 </Link>
               </Button>
             )}
@@ -377,7 +399,7 @@ const ProductCard = ({
       {/* Stock Status Footer */}
       <CardFooter className="flex-1 border-t [.border-t]:px-4 [.border-t]:py-2 w-full flex items-center justify-between">
         <span className="text-muted-foreground">
-          {hasVariants ? "Availability" : "Stock"}
+          {hasVariants ? t('product.available') : t('product.stock')}
         </span>
         <div className="flex items-center gap-2">
           <Badge
@@ -392,7 +414,7 @@ const ProductCard = ({
                   : "text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900"
             }
           >
-            {stock === 0 ? "Out of stock" : `${stock} available`}
+{stock === 0 ? t('product.outOfStock') : `${stock} ${t('product.available')}`}
           </Badge>
         </div>
       </CardFooter>

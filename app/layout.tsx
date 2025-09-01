@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { WishlistProvider } from "@/context/WishlistContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/providers";
 
@@ -35,12 +37,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <CartProvider>
-            {children}
-            <Toaster richColors position="top-center" />
-          </CartProvider>
-        </Providers>
+        <LanguageProvider>
+          <Providers>
+            <WishlistProvider>
+              <CartProvider>
+                {children}
+                <Toaster richColors position="top-center" />
+              </CartProvider>
+            </WishlistProvider>
+          </Providers>
+        </LanguageProvider>
       </body>
     </html>
   );

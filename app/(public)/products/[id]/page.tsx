@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductDetail } from "@/components/products/ProductDetail";
+import { useTranslations } from "@/hooks/useTranslations";
 
 // Types
 interface ProductImage {
@@ -81,6 +82,7 @@ export interface Product {
 export default function ProductDetailPage() {
   const params = useParams() || {};
   const id = (Array.isArray(params.id) ? params.id[0] : params.id) || '';
+  const { t } = useTranslations();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +90,7 @@ export default function ProductDetailPage() {
   // Fetch product data
   useEffect(() => {
     if (!id) {
-      setError('Product ID is missing');
+      setError(t('product.detail.missingId'));
       setLoading(false);
       return;
     }
@@ -106,7 +108,7 @@ export default function ProductDetailPage() {
         setProduct(data);
       } catch (err) {
         console.error('Error fetching product:', err);
-        setError('Failed to load product. Please try again later.');
+        setError(t('product.detail.loadError'));
       } finally {
         setLoading(false);
       }
@@ -155,9 +157,9 @@ export default function ProductDetailPage() {
   if (error || !product) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <h2 className="text-2xl font-bold mb-4">Product Not Found</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('product.detail.notFound')}</h2>
         <p className="text-muted-foreground mb-6">
-          {error || 'The requested product could not be found.'}
+          {error || t('product.detail.notFoundDescription')}
         </p>
       </div>
     );

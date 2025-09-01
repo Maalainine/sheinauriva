@@ -17,6 +17,9 @@ import { IconShoppingCart, IconMenu2, IconSearch, IconX } from "@tabler/icons-re
 // Components
 import CartDrawer from "@/components/cart/CartDrawer";
 import SearchBar from "@/components/SearchBar";
+import LanguageSwitcher from "@/components/language/LanguageSwitcher";
+import { useTranslations } from "@/hooks/useTranslations";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Hooks
 import { useCart } from "@/context/CartContext";
@@ -25,17 +28,19 @@ import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
 import { TypographyH1, TypographyH2, TypographyH3, TypographyLarge } from "@/components/ui/typography";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Shop" },
-  { href: "/categories", label: "Categories" },
-  { href: "/contact", label: "Contact" },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { cart } = useCart();
+  const { t } = useTranslations();
+  const { isRtl } = useLanguage();
+
+  const navLinks = [
+    { href: "/", label: t('navigation.home') },
+    { href: "/products", label: t('navigation.products') },
+    { href: "/categories", label: t('navigation.categories') },
+    { href: "/contact", label: t('navigation.contact') },
+  ];
   const [cartOpen, setCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -192,8 +197,11 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Right side - Search & Cart */}
-            <div className="flex items-center gap-1">
+            {/* Right side - Language, Search & Cart */}
+            <div className={cn("flex items-center gap-1", isRtl && "flex-row-reverse")}>
+              {/* Language Switcher */}
+              <LanguageSwitcher variant="compact" />
+              
               {/* Mobile Search Toggle */}
               <Sheet>
                 <SheetTrigger asChild>
@@ -203,7 +211,7 @@ export default function Navbar() {
                 </SheetTrigger>
                 <SheetContent side="top" className="p-0">
                   <SheetHeader className="px-4 pt-2.5 pb-0">
-                    <SheetTitle className="text-lg font-semibold">Search</SheetTitle>
+                    <SheetTitle className="text-lg font-semibold">{t('common.search')}</SheetTitle>
                   </SheetHeader>
                   <SearchBar className="p-4 border-t" variant="expanded" autoFocus />
                 </SheetContent>
@@ -287,8 +295,11 @@ export default function Navbar() {
             </div>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-2">
-            <SearchBar />
+            <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+              {/* Language Switcher */}
+              <LanguageSwitcher variant="compact" />
+              
+              <SearchBar />
               <Button
                 variant="ghost"
                 size="icon"

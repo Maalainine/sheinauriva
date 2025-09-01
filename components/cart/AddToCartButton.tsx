@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
+import { useTranslations } from "@/hooks/useTranslations";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ interface AddToCartButtonProps {
 
 export default function AddToCartButton({ product, className, disabled }: AddToCartButtonProps) {
   const { addItem, cart } = useCart();
+  const { t } = useTranslations();
   const [adding, setAdding] = useState(false);
 
   const handleAddToCart = async () => {
@@ -44,7 +46,7 @@ export default function AddToCartButton({ product, className, disabled }: AddToC
         console.log('[AddToCartButton] Failed to parse cart:', e);
       }
     }, 200);
-    toast.success(`${product.name} added to cart!`);
+    toast.success(t('product.addedToCart', { name: product.name }));
     setAdding(false);
   };
 
@@ -56,7 +58,7 @@ export default function AddToCartButton({ product, className, disabled }: AddToC
       onClick={handleAddToCart}
       disabled={disabled || !product.stock || adding}
     >
-      {product.stock === 0 ? "Out of Stock" : adding ? "Adding..." : "Add to Cart"}
+      {product.stock === 0 ? t('product.outOfStock') : adding ? t('product.adding') : t('product.addToCart')}
     </Button>
   );
 }
