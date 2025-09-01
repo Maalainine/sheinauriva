@@ -18,12 +18,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Saad - Premium E-commerce",
-  description: "Welcome to Saad - Your premium e-commerce destination. Quality products you can trust.",
-  keywords: ["e-commerce", "online shopping", "premium products", "saad"],
-  authors: [{ name: "Saad" }],
-  creator: "Saad",
-  publisher: "Saad",
+  title: "JustOriginale – Global Brands, Curated for You",
+  description:
+    "Discover JustOriginale.com – Your destination for authentic, high-quality products from the world's most celebrated brands.",
+  keywords: [
+    "global brands",
+    "premium products",
+    "online shopping",
+    "authentic goods",
+    "curated collections",
+  ],
+  authors: [{ name: "Maalainine" }],
+  creator: "Maalainine",
+  publisher: "Maalainine",
   icons: {
     icon: "/images/LOGO.png",
   },
@@ -36,7 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <LanguageProvider>
           <Providers>
             <WishlistProvider>
