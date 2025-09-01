@@ -23,6 +23,7 @@
     "viewDetails": "عرض التفاصيل",
     "clearSearch": "مسح البحث",
     "refreshPage": "تحديث الصفحة",
+    "refresh": "تحديث",
     "backToHome": "العودة للرئيسية",
     "nothingHere": "لا يوجد شيء هنا حتى الآن.",
     "tryAgain": "حاول مرة أخرى"
@@ -64,7 +65,51 @@
     "selectVariant": "اختر خيار",
     "sale": "تخفيض",
     "featured": "مميز",
-    "new": "جديد"
+    "new": "جديد",
+    "detail": {
+      "missingId": "معرف المنتج مفقود",
+      "loadError": "فشل في تحميل المنتج",
+      "notFound": "المنتج غير موجود",
+      "notFoundDescription": "المنتج الذي تبحث عنه غير موجود أو تم حذفه.",
+      "breadcrumbs": {
+        "home": "الرئيسية"
+      },
+      "stockStatus": {
+        "outOfStock": "غير متوفر",
+        "lowStock": "متبقي {count} فقط",
+        "inStock": "متوفر ({count} قطعة)"
+      },
+      "quantity": "الكمية",
+      "chooseOptions": "اختر الخيارات",
+      "unavailable": "غير متاح",
+      "trustSignals": {
+        "authentic": "أصلي",
+        "fastShipping": "شحن سريع"
+      },
+      "descriptionTitle": "الوصف",
+      "showMore": "اقرأ المزيد",
+      "showLess": "عرض أقل",
+      "tagsTitle": "العلامات",
+      "relatedProducts": {
+        "title": "قد يعجبك أيضاً",
+        "subtitle": "اكتشف منتجات مشابهة"
+      },
+      "variantModal": {
+        "title": "اختر الخيارات",
+        "subtitle": "يرجى اختيار خياراتك المفضلة قبل الإضافة للسلة",
+        "selectedVariant": "الخيار المحدد",
+        "price": "السعر",
+        "sku": "رمز المنتج",
+        "stockLevel": "مستوى المخزون",
+        "stockAvailable": "{count} متوفر",
+        "outOfStock": "غير متوفر",
+        "quantityLabel": "الكمية",
+        "quantityAvailable": "{count} متوفر",
+        "cancel": "إلغاء",
+        "addToCart": "إضافة للسلة",
+        "unavailable": "غير متاح"
+      }
+    }
   },
   "cart": {
     "title": "سلة التسوق",
@@ -88,14 +133,17 @@
   },
   "wishlist": {
     "title": "قائمة المفضلة",
+    "description": "احفظ منتجاتك المفضلة لوقت لاحق",
     "empty": "قائمة المفضلة فارغة",
+    "emptyDescription": "ابدأ بإضافة المنتجات التي تحبها لتتبعها",
     "item": "عنصر",
     "items": "عناصر",
     "addToCart": "إضافة للسلة",
     "remove": "إزالة",
     "startShopping": "ابدأ التسوق",
     "loginRequired": "تسجيل الدخول مطلوب",
-    "pleaseLogin": "يرجى تسجيل الدخول لعرض قائمة المفضلة"
+    "pleaseLogin": "يرجى تسجيل الدخول لعرض قائمة المفضلة",
+    "loginPrompt": "يرجى تسجيل الدخول لحفظ قائمة المفضلة نهائياً"
   },
   "category": {
     "all": "جميع الفئات",

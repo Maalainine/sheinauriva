@@ -112,11 +112,23 @@ const ProductCard = ({
 
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [stableVariantState, setStableVariantState] = useState<{
+    hasVariants: boolean;
+    variantCount: number;
+  } | null>(null);
   const { addItem } = useCart();
   const { t } = useTranslations();
   // Check if product has a single variant (can add to cart directly)
-  const hasSingleVariant = hasVariants && variantCount === 1;
-  const hasMultipleVariants = hasVariants && variantCount > 1;
+  // Add defensive checks to prevent flickering during hydration
+  const safeVariantCount = typeof variantCount === 'number' ? variantCount : (variants?.length || 0);
+  const safeHasVariants = Boolean(hasVariants) || safeVariantCount > 0 || (variants && variants.length > 0);
+  
+  // Use stable state if available, otherwise use current calculated state
+  const finalVariantCount = stableVariantState?.variantCount ?? safeVariantCount;
+  const finalHasVariants = stableVariantState?.hasVariants ?? safeHasVariants;
+  
+  const hasSingleVariant = finalHasVariants && finalVariantCount === 1;
+  const hasMultipleVariants = finalHasVariants && finalVariantCount > 1;
 
   // Check if device is touch-enabled
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -125,6 +137,25 @@ const ProductCard = ({
   useEffect(() => {
     setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
   }, []);
+
+  // Stabilize variant state to prevent flickering
+  useEffect(() => {
+    const currentVariantCount = safeVariantCount;
+    const currentHasVariants = safeHasVariants;
+    
+    // Only update if we have a more definitive state (more variants than previously recorded)
+    if (currentHasVariants && (currentVariantCount > 0)) {
+      setStableVariantState(prevState => {
+        if (!prevState || currentVariantCount > prevState.variantCount) {
+          return {
+            hasVariants: currentHasVariants,
+            variantCount: currentVariantCount
+          };
+        }
+        return prevState;
+      });
+    }
+  }, [safeVariantCount, safeHasVariants]);
 
   if (process.env.NODE_ENV !== "production") {
     console.log(`[ProductCard Debug] ${name} - Variant State`, {
@@ -186,7 +217,7 @@ const ProductCard = ({
   return (
     <Card className=" gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
       {/* Product Badges and Wishlist Button */}
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+      <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
         {/* Sale badge */}
         {originalPrice && originalPrice > price && (
           <Badge variant="destructive" className="bg-red-500/90 text-white">
@@ -212,7 +243,7 @@ const ProductCard = ({
       </div>
 
       {/* Wishlist Button */}
-      <div className="absolute top-2 right-2 z-10">
+      <div className="absolute top-2 right-2 z-30 pointer-events-auto">
         <WishlistButton
           product={{
             id,
@@ -257,18 +288,20 @@ const ProductCard = ({
             isTouchDevice || isHovered
               ? "opacity-100"
               : "opacity-0 md:group-hover:opacity-100"
-          } transition-opacity duration-300 flex items-end p-4`}
+          } transition-opacity duration-300 flex items-end p-4 pointer-events-none`}
           onMouseEnter={() => !isTouchDevice && setIsHovered(true)}
           onMouseLeave={() => !isTouchDevice && setIsHovered(false)}
-          onClick={(e) => {
-            // Prevent click from bubbling up to parent elements
-            e.stopPropagation();
-            if (isTouchDevice) {
-              setIsHovered(!isHovered);
-            }
-          }}
         >
-          <div className="w-full flex gap-2">
+          <div 
+            className="w-full flex gap-2 pointer-events-auto"
+            onClick={(e) => {
+              // Prevent click from bubbling up to parent elements
+              e.stopPropagation();
+              if (isTouchDevice) {
+                setIsHovered(!isHovered);
+              }
+            }}
+          >
             {hasSingleVariant ? (
               // Show both buttons for single variant products
               <>

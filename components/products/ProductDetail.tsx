@@ -5,6 +5,7 @@ import { getClothingColorHex } from "@/lib/clothingColors";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/useTranslations";
 
 // Tabler Icons
 import {
@@ -49,6 +50,8 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import WishlistButton from "@/components/wishlist/WishlistButton";
 import {
   Dialog,
   DialogContent,
@@ -245,9 +248,11 @@ const ImageZoomModal = ({
 const StockStatus = ({
   stock,
   variant,
+  t,
 }: {
   stock: number;
   variant: ProductVariant | null;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }) => {
   const currentStock = variant?.stock ?? stock;
 
@@ -255,7 +260,7 @@ const StockStatus = ({
     return (
       <div className="flex items-center gap-2 text-destructive">
         <IconAlertCircle className="h-4 w-4" />
-        <span className="font-medium">Out of Stock</span>
+        <span className="font-medium">{t('product.detail.stockStatus.outOfStock')}</span>
       </div>
     );
 
@@ -263,14 +268,14 @@ const StockStatus = ({
     return (
       <div className="flex items-center gap-2 text-orange-600">
         <IconClock className="h-4 w-4" />
-        <span className="font-medium">Only {currentStock} left</span>
+        <span className="font-medium">{t('product.detail.stockStatus.lowStock', { count: currentStock })}</span>
       </div>
     );
 
   return (
     <div className="flex items-center gap-2 text-green-600">
       <IconCheck className="h-4 w-4" />
-      <span className="font-medium">In Stock ({currentStock} available)</span>
+      <span className="font-medium">{t('product.detail.stockStatus.inStock', { count: currentStock })}</span>
     </div>
   );
 };
@@ -288,6 +293,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
   // Make a copy of the product to work with
   const product = useMemo(() => propProduct, [propProduct]);
   const { addItem } = useCart();
+  const { t } = useTranslations();
   
   // State management
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -585,7 +591,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center space-x-2 text-sm text-muted-foreground">
             <Link href="/" className="hover:text-primary transition-colors font-medium">
-              Home
+              {t('product.detail.breadcrumbs.home')}
             </Link>
             <IconChevronRight className="h-4 w-4" />
             {product.category && (
@@ -769,7 +775,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                     </span>
                   </div>
 
-                  <StockStatus stock={product.stock} variant={selectedVariant} />
+                  <StockStatus stock={product.stock} variant={selectedVariant} t={t} />
 
                   {/* Stock Progress Bar */}
                   {currentStock > 0 && currentStock <= 20 && (
@@ -787,7 +793,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
               {/* Quantity Selector - Only for simple products */}
               {!hasVariants && (
                 <div className="flex items-center gap-3">
-                  <Label className="text-sm font-medium">Quantity:</Label>
+                  <Label className="text-sm font-medium">{t('product.detail.quantity')}:</Label>
                   <div className="flex items-center bg-background border rounded-lg">
                     <Button
                       variant="ghost"
@@ -819,37 +825,56 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                 </div>
               )}
 
-              {/* Add to Cart Button */}
+              {/* Add to Cart and Wishlist Buttons */}
               <div className="space-y-4">
-                <Button
-                  type="button"
-                  size="lg"
-                  className="w-full h-12 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                  onClick={handleAddToCartClick}
-                  disabled={!canAddToCart || isAddingToCart}
-                >
-                  <IconShoppingCart className="mr-2 h-4 w-4" />
-                  {isAddingToCart
-                    ? "Adding..."
-                    : hasVariants && availableVariants.length === 0
-                      ? "Unavailable"
-                      : !canAddToCart
-                        ? "Out of Stock"
-                        : hasVariants && availableVariants.length > 0
-                          ? "Choose Options"
-                          : "Add to Cart"}
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="flex-1 h-12 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    onClick={handleAddToCartClick}
+                    disabled={!canAddToCart || isAddingToCart}
+                  >
+                    <IconShoppingCart className="mr-2 h-4 w-4" />
+                    {isAddingToCart
+                      ? t('product.adding')
+                      : hasVariants && availableVariants.length === 0
+                        ? t('product.detail.unavailable')
+                        : !canAddToCart
+                          ? t('product.outOfStock')
+                          : hasVariants && availableVariants.length > 0
+                            ? t('product.detail.chooseOptions')
+                            : t('product.addToCart')}
+                  </Button>
+                  
+                  <WishlistButton
+                    product={{
+                      id: product.id,
+                      name: product.name,
+                      price: displayPrice,
+                      image: normalizedImages[0]?.url,
+                      description: product.description,
+                      brand: product.brand,
+                      stock: currentStock,
+                      hasVariants,
+                      variantCount: availableVariants.length,
+                    }}
+                    variant="default"
+                    size="lg"
+                    className="h-12 px-6"
+                  />
+                </div>
               </div>
 
               {/* Trust Signals */}
               <div className="grid grid-cols-2 gap-2 pt-2 border-t">
                 <div className="flex items-center gap-2 text-xs">
                   <IconShield className="h-3 w-3 text-green-600" />
-                  <span className="font-medium">Authentic</span>
+                  <span className="font-medium">{t('product.detail.trustSignals.authentic')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <IconTruck className="h-3 w-3 text-blue-600" />
-                  <span className="font-medium">Fast Shipping</span>
+                  <span className="font-medium">{t('product.detail.trustSignals.fastShipping')}</span>
                 </div>
               </div>
 
@@ -857,7 +882,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
               <Card className="p-4 overflow-hidden">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold">Description</h3>
+                    <h3 className="font-semibold">{t('product.detail.descriptionTitle')}</h3>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -865,7 +890,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                       className="text-primary h-auto p-1"
                       aria-expanded={showFullDescription}
                     >
-                      {showFullDescription ? "Show Less" : "Read More"}
+                      {showFullDescription ? t('product.detail.showLess') : t('product.detail.showMore')}
                       <IconChevronDown
                         className={cn(
                           "ml-1 h-4 w-4 transition-transform",
@@ -897,7 +922,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
               {/* Product Tags */}
               {Array.isArray(product.tags) && product.tags.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-medium text-sm">Tags</h4>
+                  <h4 className="font-medium text-sm">{t('product.detail.tagsTitle')}</h4>
                   <div className="flex flex-wrap gap-1">
                     {product.tags.slice(0, 6).map((tag) => (
                       <Badge
@@ -927,8 +952,8 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
           <div className="container mx-auto px-4 py-12">
             <div className="space-y-8">
               <div className="text-center space-y-2">
-                <h2 className="text-2xl font-bold tracking-tight">You May Also Like</h2>
-                <p className="text-muted-foreground">Discover similar products</p>
+                <h2 className="text-2xl font-bold tracking-tight">{t('product.detail.relatedProducts.title')}</h2>
+                <p className="text-muted-foreground">{t('product.detail.relatedProducts.subtitle')}</p>
               </div>
 
               <Carousel
@@ -1023,9 +1048,9 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
           <div className="p-6 pt-4 space-y-6">
             <div>
               <DialogHeader>
-                <DialogTitle className="text-xl">Select Options</DialogTitle>
+                <DialogTitle className="text-xl">{t('product.detail.variantModal.title')}</DialogTitle>
                 <DialogDescription className="text-sm">
-                  Please select your preferred options before adding to cart
+                  {t('product.detail.variantModal.subtitle')}
                 </DialogDescription>
               </DialogHeader>
             </div>
@@ -1135,35 +1160,35 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                 <div className="mt-2 p-4 bg-muted/10 border rounded-lg transition-all duration-200 hover:shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="font-medium text-sm uppercase tracking-wider text-muted-foreground">
-                      Selected Variant
+                      {t('product.detail.variantModal.selectedVariant')}
                     </h4>
                     {selectedVariant.stock > 0 ? (
                       <Badge variant="outline" className="border-green-200 bg-green-50 text-green-700">
                         <div className="h-2 w-2 rounded-full bg-green-500 mr-1.5" />
-                        In Stock
+                        {t('product.inStock')}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="border-destructive/20 bg-destructive/10 text-destructive">
                         <div className="h-2 w-2 rounded-full bg-destructive mr-1.5" />
-                        Out of Stock
+                        {t('product.outOfStock')}
                       </Badge>
                     )}
                   </div>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between items-center py-1.5 border-b">
-                      <span className="text-muted-foreground">Price:</span>
+                      <span className="text-muted-foreground">{t('product.detail.variantModal.price')}:</span>
                       <span className="font-semibold text-foreground">
                         {formatCurrency(Number(product.basePrice))}
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-1.5 border-b">
-                      <span className="text-muted-foreground">SKU:</span>
+                      <span className="text-muted-foreground">{t('product.detail.variantModal.sku')}:</span>
                       <span className="font-mono text-sm bg-muted/30 px-2 py-0.5 rounded">
                         {selectedVariant.sku || "N/A"}
                       </span>
                     </div>
                     <div className="flex justify-between items-center py-1.5">
-                      <span className="text-muted-foreground">Stock Level:</span>
+                      <span className="text-muted-foreground">{t('product.detail.variantModal.stockLevel')}:</span>
                       <span
                         className={cn(
                           "font-medium inline-flex items-center",
@@ -1173,12 +1198,12 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                         {selectedVariant.stock > 0 ? (
                           <>
                           <span className="inline-block h-2 w-2 rounded-full bg-green-500 mr-1.5" />
-                          {selectedVariant.stock} available
+                          {t('product.detail.variantModal.stockAvailable', { count: selectedVariant.stock })}
                           </>
                         ) : (
                           <>
                             <span className="inline-block h-2 w-2 rounded-full bg-destructive mr-1.5" />
-                            Out of stock
+                            {t('product.detail.variantModal.outOfStock')}
                           </>
                         )}
                       </span>
@@ -1190,9 +1215,11 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
               {/* Quantity Selector */}
               <div className="flex items-center justify-between pt-2 pb-4">
                 <div>
-                  <Label className="text-sm font-medium">Quantity</Label>
+                  <Label className="text-sm font-medium">{t('product.detail.variantModal.quantityLabel')}</Label>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {selectedVariant ? selectedVariant.stock : product.stock} available
+                    {t('product.detail.variantModal.quantityAvailable', { 
+                      count: selectedVariant ? selectedVariant.stock : product.stock 
+                    })}
                   </p>
                 </div>
                 <div className="flex items-center space-x-1 bg-muted/30 rounded-lg p-1">
@@ -1236,7 +1263,7 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                   disabled={isAddingToCart}
                   className="flex-1"
                 >
-                  Cancel
+                  {t('product.detail.variantModal.cancel')}
                 </Button>
                 <Button
                   onClick={handleVariantConfirm}
@@ -1246,13 +1273,13 @@ export function ProductDetail({ product: propProduct }: { product: Product }) {
                   {isAddingToCart ? (
                     <>
                       <IconRefresh className="mr-2 w-4 animate-spin" />
-                      Adding...
+                      {t('product.adding')}
                     </>
                   ) : (
                     <>
                       <IconShoppingCart className="mr-2 w-4" />
-                      Add to Cart
-                      {selectedVariant?.stock > 0 && (
+                      {t('product.detail.variantModal.addToCart')}
+                      {selectedVariant && selectedVariant.stock > 0 && (
                         <span className="ml-2 font-normal opacity-90">
                           • {formatCurrency(Number(product.basePrice) * quantity)}
                         </span>

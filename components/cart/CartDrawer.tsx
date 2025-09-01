@@ -150,6 +150,7 @@ export default function CartDrawer({
   const { t } = useTranslations();
   const { isRtl } = useLanguage();
   const [isClient, setIsClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
   // Calculate subtotal
   const subtotal = cart.reduce(
@@ -160,6 +161,16 @@ export default function CartDrawer({
   // Handle client-side only rendering
   useEffect(() => {
     setIsClient(true);
+    
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Handle quantity update with debounce
@@ -177,12 +188,15 @@ export default function CartDrawer({
     clearCart();
   };
 
+  // Determine drawer direction and styling based on screen size and language
+  const direction = isMobile ? "top" : (isRtl ? "left" : "right");
+  const contentClassName = isMobile 
+    ? "h-[85vh] max-h-[85vh] w-full rounded-b-lg"
+    : "h-full w-96 max-w-96";
+
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} direction={isRtl ? "left" : "right"}>
-      <DrawerContent className={cn(
-        "h-full max-h-screen w-full sm:w-[28rem]",
-        isRtl ? "mr-auto rounded-r-lg" : "ml-auto rounded-l-lg"
-      )}>
+    <Drawer open={open} onOpenChange={onOpenChange} direction={direction}>
+      <DrawerContent className={contentClassName}>
         <DrawerHeader className="px-4 sm:px-6 border-b">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-lg font-semibold">

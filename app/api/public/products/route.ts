@@ -91,7 +91,14 @@ export async function GET(request: Request) {
       prisma.product.count({ where }),
     ]);
 
-    return NextResponse.json({ products, total });
+    // Add hasVariants and variantCount fields to each product
+    const enhancedProducts = products.map(product => ({
+      ...product,
+      hasVariants: product.variants && product.variants.length > 0,
+      variantCount: product.variants ? product.variants.length : 0
+    }));
+
+    return NextResponse.json({ products: enhancedProducts, total });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }

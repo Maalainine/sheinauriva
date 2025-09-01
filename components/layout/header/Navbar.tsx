@@ -12,7 +12,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle 
 import { Label } from "@/components/ui/label";
 
 // Icons
-import { IconShoppingCart, IconMenu2, IconSearch, IconX } from "@tabler/icons-react";
+import { IconShoppingCart, IconMenu2, IconSearch, IconX, IconHeart } from "@tabler/icons-react";
 
 // Components
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -135,10 +135,10 @@ export default function Navbar() {
                   <IconMenu2 className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[280px] sm:w-[350px] p-0">
-                <SheetHeader className="border-b py-2 pl-6   text-left">
+              <SheetContent side="top" className={cn("w-full h-[70vh] p-0", isRtl && "[&>[data-slot=close]]:left-2 [&>[data-slot=close]]:right-auto")}>
+                <SheetHeader className={cn("border-b py-2", isRtl ? "pl-6 pr-12 text-right" : "pl-6 pr-12 text-left")}>
                   <SheetTitle className="text-xl font-bold tracking-tight">
-                    <div className="flex items-center gap-2">
+                    <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
                       <Link
                         href="/"
                         className="border-2 border-primary flex items-center relative"
@@ -175,6 +175,29 @@ export default function Navbar() {
                         {link.label}
                       </Link>
                     ))}
+                    
+                    {/* Wishlist Link */}
+                    <Link
+                      href="/wishlist"
+                      className={cn(
+                        "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                        pathname === "/wishlist"
+                          ? "bg-primary/10 text-primary"
+                          : "text-foreground/90 hover:bg-accent"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <IconHeart className="mr-3 h-5 w-5" />
+                      {t('navigation.wishlist')}
+                    </Link>
+                    
+                    {/* Language Switcher in Mobile Menu */}
+                    <div className="px-3 py-3">
+                      <Label className="text-sm font-medium text-muted-foreground mb-2 block">
+                        Language
+                      </Label>
+                      <LanguageSwitcher variant="compact" />
+                    </div>
                   </div>
                 </div>
               </SheetContent>
@@ -197,10 +220,14 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Right side - Language, Search & Cart */}
+            {/* Right side - Wishlist, Search & Cart */}
             <div className={cn("flex items-center gap-1", isRtl && "flex-row-reverse")}>
-              {/* Language Switcher */}
-              <LanguageSwitcher variant="compact" />
+              {/* Wishlist Button */}
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/wishlist">
+                  <IconHeart className="h-5 w-5" />
+                </Link>
+              </Button>
               
               {/* Mobile Search Toggle */}
               <Sheet>
@@ -209,7 +236,7 @@ export default function Navbar() {
                     <IconSearch className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="top" className="p-0">
+                <SheetContent side="top" className="p-0 h-auto">
                   <SheetHeader className="px-4 pt-2.5 pb-0">
                     <SheetTitle className="text-lg font-semibold">{t('common.search')}</SheetTitle>
                   </SheetHeader>
@@ -300,6 +327,14 @@ export default function Navbar() {
               <LanguageSwitcher variant="compact" />
               
               <SearchBar />
+              
+              {/* Wishlist Button */}
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="/wishlist">
+                  <IconHeart className="h-5 w-5" />
+                </Link>
+              </Button>
+              
               <Button
                 variant="ghost"
                 size="icon"

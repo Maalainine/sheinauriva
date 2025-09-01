@@ -23,6 +23,7 @@
     "viewDetails": "Voir les détails",
     "clearSearch": "Effacer la recherche",
     "refreshPage": "Actualiser la page",
+    "refresh": "Actualiser",
     "backToHome": "Retour à l'accueil",
     "nothingHere": "Rien ici pour le moment.",
     "tryAgain": "Réessayer"
@@ -64,7 +65,51 @@
     "selectVariant": "Sélectionner une option",
     "sale": "Promotion",
     "featured": "Vedette",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "detail": {
+      "missingId": "ID du produit manquant",
+      "loadError": "Échec du chargement du produit",
+      "notFound": "Produit introuvable",
+      "notFoundDescription": "Le produit que vous cherchez n'existe pas ou a été supprimé.",
+      "breadcrumbs": {
+        "home": "Accueil"
+      },
+      "stockStatus": {
+        "outOfStock": "Rupture de stock",
+        "lowStock": "Plus que {count}",
+        "inStock": "En stock ({count} disponible)"
+      },
+      "quantity": "Quantité",
+      "chooseOptions": "Choisir les options",
+      "unavailable": "Indisponible",
+      "trustSignals": {
+        "authentic": "Authentique",
+        "fastShipping": "Livraison rapide"
+      },
+      "descriptionTitle": "Description",
+      "showMore": "Lire la suite",
+      "showLess": "Afficher moins",
+      "tagsTitle": "Tags",
+      "relatedProducts": {
+        "title": "Vous pourriez aussi aimer",
+        "subtitle": "Découvrez des produits similaires"
+      },
+      "variantModal": {
+        "title": "Sélectionner les options",
+        "subtitle": "Veuillez sélectionner vos options préférées avant d'ajouter au panier",
+        "selectedVariant": "Variante sélectionnée",
+        "price": "Prix",
+        "sku": "SKU",
+        "stockLevel": "Niveau de stock",
+        "stockAvailable": "{count} disponible",
+        "outOfStock": "Rupture de stock",
+        "quantityLabel": "Quantité",
+        "quantityAvailable": "{count} disponible",
+        "cancel": "Annuler",
+        "addToCart": "Ajouter au panier",
+        "unavailable": "Indisponible"
+      }
+    }
   },
   "cart": {
     "title": "Panier d'achat",
@@ -88,14 +133,17 @@
   },
   "wishlist": {
     "title": "Ma liste de favoris",
+    "description": "Sauvegardez vos produits favoris pour plus tard",
     "empty": "Votre liste de favoris est vide",
+    "emptyDescription": "Commencez à ajouter des produits que vous aimez pour les suivre",
     "item": "article",
     "items": "articles",
     "addToCart": "Ajouter au panier",
     "remove": "Supprimer",
     "startShopping": "Commencer les achats",
     "loginRequired": "Connexion requise",
-    "pleaseLogin": "Veuillez vous connecter pour voir vos favoris"
+    "pleaseLogin": "Veuillez vous connecter pour voir vos favoris",
+    "loginPrompt": "Veuillez vous connecter pour sauvegarder vos favoris de façon permanente"
   },
   "category": {
     "all": "Toutes les catégories",

@@ -400,7 +400,6 @@ export default function ProductListContent() {
 
   // Fetch products when filters or search query changes
   const fetchProducts = useCallback(async () => {
-    if (!isClient) return;
 
     setLoading(true);
     try {
@@ -450,7 +449,7 @@ export default function ProductListContent() {
       setLoading(false);
       setInitialLoad(false);
     }
-  }, [filters, skip, isClient]);
+  }, [filters, skip]);
 
   // Debounced fetch function
   useEffect(() => {
@@ -991,6 +990,7 @@ export default function ProductListContent() {
                       const variants = Array.isArray(product.variants)
                         ? product.variants
                         : [];
+                      
                       const stock =
                         variants.length > 0
                           ? variants.reduce((sum, v) => sum + (v.stock || 0), 0)
@@ -1024,12 +1024,8 @@ export default function ProductListContent() {
                             }
                             tags={product.tags || []}
                             brand={product.brand}
-                            hasVariants={
-                              !!(product.hasVariants || variants.length > 0)
-                            }
-                            variantCount={
-                              product.variantCount || variants.length
-                            }
+                            hasVariants={product.hasVariants || false}
+                            variantCount={product.variantCount || 0}
                             variants={variants}
                           />
                         </motion.div>

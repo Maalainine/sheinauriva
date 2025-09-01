@@ -23,6 +23,7 @@
     "viewDetails": "View Details",
     "clearSearch": "Clear search",
     "refreshPage": "Refresh page",
+    "refresh": "Refresh",
     "backToHome": "Back to home",
     "nothingHere": "Nothing here yet.",
     "tryAgain": "Try again"
@@ -64,7 +65,51 @@
     "selectVariant": "Select Option",
     "sale": "Sale",
     "featured": "Featured",
-    "new": "New"
+    "new": "New",
+    "detail": {
+      "missingId": "Product ID is missing",
+      "loadError": "Failed to load product",
+      "notFound": "Product not found",
+      "notFoundDescription": "The product you're looking for doesn't exist or has been removed.",
+      "breadcrumbs": {
+        "home": "Home"
+      },
+      "stockStatus": {
+        "outOfStock": "Out of Stock",
+        "lowStock": "Only {count} left",
+        "inStock": "In Stock ({count} available)"
+      },
+      "quantity": "Quantity",
+      "chooseOptions": "Choose Options",
+      "unavailable": "Unavailable",
+      "trustSignals": {
+        "authentic": "Authentic",
+        "fastShipping": "Fast Shipping"
+      },
+      "descriptionTitle": "Description",
+      "showMore": "Read More",
+      "showLess": "Show Less",
+      "tagsTitle": "Tags",
+      "relatedProducts": {
+        "title": "You May Also Like",
+        "subtitle": "Discover similar products"
+      },
+      "variantModal": {
+        "title": "Select Options",
+        "subtitle": "Please select your preferred options before adding to cart",
+        "selectedVariant": "Selected Variant",
+        "price": "Price",
+        "sku": "SKU",
+        "stockLevel": "Stock Level",
+        "stockAvailable": "{count} available",
+        "outOfStock": "Out of stock",
+        "quantityLabel": "Quantity",
+        "quantityAvailable": "{count} available",
+        "cancel": "Cancel",
+        "addToCart": "Add to Cart",
+        "unavailable": "Unavailable"
+      }
+    }
   },
   "cart": {
     "title": "Your Cart",
@@ -88,14 +133,17 @@
   },
   "wishlist": {
     "title": "My Wishlist",
+    "description": "Save your favorite products for later",
     "empty": "Your wishlist is empty",
+    "emptyDescription": "Start adding products you love to keep track of them",
     "item": "item",
     "items": "items",
     "addToCart": "Add to Cart",
     "remove": "Remove",
     "startShopping": "Start Shopping",
     "loginRequired": "Login Required",
-    "pleaseLogin": "Please log in to view your wishlist"
+    "pleaseLogin": "Please log in to view your wishlist",
+    "loginPrompt": "Please log in to save your wishlist permanently"
   },
   "category": {
     "all": "All Categories",

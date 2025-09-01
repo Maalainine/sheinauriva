@@ -62,6 +62,7 @@ export interface Product {
   description: string;
   shortDescription?: string;
   price: number;
+  basePrice: number;
   originalPrice?: number;
   stock: number;
   sku: string;

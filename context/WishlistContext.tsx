@@ -36,10 +36,36 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, status } = useSession();
 
+  // Load local wishlist from localStorage
+  const loadLocalWishlist = () => {
+    try {
+      const stored = localStorage.getItem("wishlist");
+      if (stored) {
+        const items = JSON.parse(stored);
+        setWishlist(Array.isArray(items) ? items : []);
+      }
+    } catch (error) {
+      console.error("Error loading local wishlist:", error);
+      setWishlist([]);
+    }
+  };
+
+  // Save local wishlist to localStorage
+  const saveLocalWishlist = (items: WishlistItem[]) => {
+    try {
+      localStorage.setItem("wishlist", JSON.stringify(items));
+    } catch (error) {
+      console.error("Error saving local wishlist:", error);
+    }
+  };
+
   // Fetch user's wishlist on login
   const fetchWishlist = async () => {
+    if (status === "loading") return;
+    
     if (status !== "authenticated" || !session?.user?.id) {
-      setWishlist([]);
+      // Load local wishlist for unauthenticated users
+      loadLocalWishlist();
       return;
     }
 
@@ -48,14 +74,37 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
       const response = await fetch("/api/wishlist");
       if (response.ok) {
         const data = await response.json();
-        setWishlist(data.wishlist || []);
+        const serverWishlist = data.wishlist || [];
+        
+        // Merge local wishlist with server wishlist if user just logged in
+        const localWishlist = (() => {
+          try {
+            const stored = localStorage.getItem("wishlist");
+            return stored ? JSON.parse(stored) : [];
+          } catch {
+            return [];
+          }
+        })();
+        
+        // Remove duplicates, preferring server items
+        const mergedWishlist = [...serverWishlist];
+        localWishlist.forEach((localItem: WishlistItem) => {
+          if (!mergedWishlist.find(serverItem => serverItem.id === localItem.id)) {
+            mergedWishlist.push(localItem);
+          }
+        });
+        
+        setWishlist(mergedWishlist);
+        
+        // Clear local wishlist since it's now on server
+        localStorage.removeItem("wishlist");
       } else {
         console.error("Failed to fetch wishlist");
-        setWishlist([]);
+        loadLocalWishlist();
       }
     } catch (error) {
       console.error("Error fetching wishlist:", error);
-      setWishlist([]);
+      loadLocalWishlist();
     } finally {
       setIsLoading(false);
     }
@@ -67,13 +116,17 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
   }, [session?.user?.id, status]);
 
   const addToWishlist = async (item: WishlistItem) => {
-    if (status !== "authenticated") {
-      toast.error("Please log in to add items to your wishlist");
+    if (isInWishlist(item.id)) {
+      toast.info("Item is already in your wishlist");
       return;
     }
 
-    if (isInWishlist(item.id)) {
-      toast.info("Item is already in your wishlist");
+    // Handle local storage for unauthenticated users
+    if (status !== "authenticated") {
+      const newWishlist = [...wishlist, item];
+      setWishlist(newWishlist);
+      saveLocalWishlist(newWishlist);
+      toast.success(`${item.name} added to wishlist`);
       return;
     }
 
@@ -103,13 +156,17 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   const removeFromWishlist = async (productId: string) => {
-    if (status !== "authenticated") {
-      toast.error("Please log in to manage your wishlist");
-      return;
-    }
-
     const item = wishlist.find(item => item.id === productId);
     if (!item) return;
+
+    // Handle local storage for unauthenticated users
+    if (status !== "authenticated") {
+      const newWishlist = wishlist.filter(item => item.id !== productId);
+      setWishlist(newWishlist);
+      saveLocalWishlist(newWishlist);
+      toast.success(`${item.name} removed from wishlist`);
+      return;
+    }
 
     setIsLoading(true);
     try {

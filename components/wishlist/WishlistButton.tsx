@@ -22,16 +22,14 @@ export default function WishlistButton({
   const { toggleWishlist, isInWishlist, isLoading } = useWishlist();
 
   const isWishlisted = isInWishlist(product.id);
-  const isDisabled = isLoading || status !== "authenticated";
+  const isDisabled = isLoading;
 
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (status !== "authenticated") {
-      return;
-    }
-    
+    // Allow wishlist functionality for both authenticated and unauthenticated users
+    // The context will handle local vs server-side storage
     await toggleWishlist(product);
   };
 
