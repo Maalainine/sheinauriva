@@ -23,6 +23,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 // Hooks
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
 
 // Utils
 import { cn } from "@/lib/utils";
@@ -32,6 +33,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { cart } = useCart();
+  const { wishlist } = useWishlist();
   const { t } = useTranslations();
   const { isRtl } = useLanguage();
 
@@ -43,6 +45,7 @@ export default function Navbar() {
   ];
   const [cartOpen, setCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -80,6 +83,12 @@ export default function Navbar() {
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setCartCount(count);
   }, [cart]);
+
+  // Update wishlist count when wishlist changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setWishlistCount(wishlist.length);
+  }, [wishlist]);
 
   // Listen for cart updates from other tabs/windows
   useEffect(() => {
@@ -223,9 +232,20 @@ export default function Navbar() {
             {/* Right side - Wishlist, Search & Cart */}
             <div className={cn("flex items-center gap-1", isRtl && "flex-row-reverse")}>
               {/* Wishlist Button */}
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" className="relative group" asChild>
                 <Link href="/wishlist">
-                  <IconHeart className="h-5 w-5" />
+                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  {isClient && wishlistCount > 0 && (
+                    <motion.span
+                      key={`wishlist-count-${wishlistCount}`}
+                      initial={{ scale: 1.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                    >
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </motion.span>
+                  )}
                 </Link>
               </Button>
               
@@ -329,9 +349,20 @@ export default function Navbar() {
               <SearchBar />
               
               {/* Wishlist Button */}
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" className="relative group" asChild>
                 <Link href="/wishlist">
-                  <IconHeart className="h-5 w-5" />
+                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  {isClient && wishlistCount > 0 && (
+                    <motion.span
+                      key={`wishlist-count-desktop-${wishlistCount}`}
+                      initial={{ scale: 1.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                    >
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </motion.span>
+                  )}
                 </Link>
               </Button>
               
