@@ -1,13 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { IconLanguage, IconChevronDown } from "@tabler/icons-react";
+import { IconGlobe } from "@tabler/icons-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { locales, localeLabels, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
@@ -23,77 +16,40 @@ export default function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { locale, setLocale, isRtl } = useLanguage();
 
-  const handleLocaleChange = (newLocale: Locale) => {
-    console.log('Language switcher clicked:', newLocale);
-    setLocale(newLocale);
+  const cycleLanguage = () => {
+    const currentIndex = locales.indexOf(locale);
+    const nextIndex = (currentIndex + 1) % locales.length;
+    const nextLocale = locales[nextIndex];
+    console.log('Language switcher clicked:', nextLocale);
+    setLocale(nextLocale);
   };
 
   if (variant === "compact") {
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn("h-8 px-2", className)}
-            aria-label="Change language"
-          >
-            <span className="text-sm font-medium">{localeLabels[locale]}</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" className="min-w-[160px]">
-          {locales.map((loc) => (
-            <DropdownMenuItem 
-              key={loc} 
-              onClick={() => handleLocaleChange(loc)}
-              className="cursor-pointer"
-            >
-              <div className="flex items-center justify-between w-full">
-                <span className="flex-1">{localeLabels[loc]}</span>
-                {loc === locale && (
-                  <Badge variant="secondary" className="text-xs">
-                    Active
-                  </Badge>
-                )}
-              </div>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={cycleLanguage}
+        className={cn("h-8 px-2 text-sm font-medium", className)}
+        aria-label={`Switch language - current: ${localeLabels[locale]}`}
+      >
+        {localeLabels[locale]}
+      </Button>
     );
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="outline" 
-          className={cn("gap-2", className)}
-          aria-label="Change language"
-        >
-          <IconLanguage className="h-4 w-4" />
-          <span>{localeLabels[locale]}</span>
-          <IconChevronDown className="h-3 w-3 opacity-50" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="center" className="min-w-[180px]">
-        {locales.map((loc) => (
-          <DropdownMenuItem 
-            key={loc} 
-            onClick={() => handleLocaleChange(loc)}
-            className="cursor-pointer"
-          >
-            <div className="flex items-center justify-between w-full">
-              <span className="flex-1">{localeLabels[loc]}</span>
-              {loc === locale && (
-                <Badge variant="secondary" className="text-xs">
-                  Current
-                </Badge>
-              )}
-            </div>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button 
+      variant="ghost" 
+      size="icon"
+      onClick={cycleLanguage}
+      className={cn("relative", className)}
+      aria-label={`Switch language - current: ${localeLabels[locale]}`}
+    >
+      <IconGlobe className="h-5 w-5" />
+      <span className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+        {locale.toUpperCase()}
+      </span>
+    </Button>
   );
 }

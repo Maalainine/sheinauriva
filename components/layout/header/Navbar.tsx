@@ -131,89 +131,90 @@ export default function Navbar() {
       >
         <div className="container flex items-center justify-between px-4 mx-auto">
           {/* Mobile Layout */}
-          <div className="flex lg:hidden items-center justify-between w-full">
+          <div className="grid lg:hidden grid-cols-3 items-center w-full">
             {/* Left side - Menu */}
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Toggle menu"
-                  className="text-foreground/80 hover:bg-transparent hover:text-foreground"
-                >
-                  <IconMenu2 className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="top" className={cn("w-full h-[70vh] p-0", isRtl && "[&>[data-slot=close]]:left-2 [&>[data-slot=close]]:right-auto")}>
-                <SheetHeader className={cn("border-b py-2", isRtl ? "pl-6 pr-12 text-right" : "pl-6 pr-12 text-left")}>
-                  <SheetTitle className="text-xl font-bold tracking-tight">
-                    <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
-                      <Link
-                        href="/"
-                        className="border-2 border-primary flex items-center relative"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Image
-                          src="/images/JO-removebg.png"
-                          alt="JO"
-                          width={30}
-                          height={30}
-                          className="object-contain"
-                          priority
-                        />
-                      </Link>
-                      <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
+            <div className={cn("flex", isRtl ? "justify-end" : "justify-start")}>
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Toggle menu"
+                    className="text-foreground/80 hover:bg-transparent hover:text-foreground"
+                  >
+                    <IconMenu2 className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="top" className={cn("w-full h-auto max-h-[80vh] p-0", isRtl && "[&>[data-slot=close]]:left-2 [&>[data-slot=close]]:right-auto")}>
+                  <SheetHeader className={cn("border-b py-2", isRtl ? "pl-6 pr-12 text-right" : "pl-6 pr-12 text-left")}>
+                    <SheetTitle className="text-xl font-bold tracking-tight">
+                      <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+                        <Link
+                          href="/"
+                          className="border-2 border-primary flex items-center relative"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Image
+                            src="/images/JO-removebg.png"
+                            alt="JO"
+                            width={30}
+                            height={30}
+                            className="object-contain"
+                            priority
+                          />
+                        </Link>
+                        <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
 
-                    </div>
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="h-full flex flex-col">
-                  <div className="flex-1 overflow-y-auto p-4 space-y-1">
-                    {navLinks.map((link) => (
+                      </div>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="pb-4">
+                    <div className="p-4 space-y-1">
+                      {navLinks.map((link) => (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className={cn(
+                            "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                            pathname === link.href
+                              ? "bg-primary/10 text-primary"
+                              : "text-foreground/90 hover:bg-accent"
+                          )}
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                      
+                      {/* Wishlist Link */}
                       <Link
-                        key={link.href}
-                        href={link.href}
+                        href="/wishlist"
                         className={cn(
                           "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
-                          pathname === link.href
+                          pathname === "/wishlist"
                             ? "bg-primary/10 text-primary"
                             : "text-foreground/90 hover:bg-accent"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {link.label}
+                        {t('navigation.wishlist')}
                       </Link>
-                    ))}
-                    
-                    {/* Wishlist Link */}
-                    <Link
-                      href="/wishlist"
-                      className={cn(
-                        "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
-                        pathname === "/wishlist"
-                          ? "bg-primary/10 text-primary"
-                          : "text-foreground/90 hover:bg-accent"
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <IconHeart className="mr-3 h-5 w-5" />
-                      {t('navigation.wishlist')}
-                    </Link>
-                    
-                    {/* Language Switcher in Mobile Menu */}
-                    <div className="px-3 py-3">
-                      <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                        Language
-                      </Label>
-                      <LanguageSwitcher variant="compact" />
+                      
+                      {/* Language Switcher in Mobile Menu */}
+                      <div className="px-3 py-3">
+                        <Label className="text-sm font-medium text-muted-foreground mb-2 block">
+                          Language
+                        </Label>
+                        <LanguageSwitcher variant="compact" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+                </SheetContent>
+              </Sheet>
+            </div>
 
-            {/* Center - Logo */}
-            <div className="flex-1 flex justify-center">
+            {/* Center - Logo (Perfectly Centered) */}
+            <div className="flex justify-center">
               <Link
                 href="/"
                 className="border-2 border-primary relative hover:opacity-90 transition-opacity flex-shrink-0"
@@ -229,26 +230,8 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Right side - Wishlist, Search & Cart */}
-            <div className={cn("flex items-center gap-1", isRtl && "flex-row-reverse")}>
-              {/* Wishlist Button */}
-              <Button variant="ghost" size="icon" className="relative group" asChild>
-                <Link href="/wishlist">
-                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                  {isClient && wishlistCount > 0 && (
-                    <motion.span
-                      key={`wishlist-count-${wishlistCount}`}
-                      initial={{ scale: 1.2, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-                    >
-                      {wishlistCount > 9 ? "9+" : wishlistCount}
-                    </motion.span>
-                  )}
-                </Link>
-              </Button>
-              
+            {/* Right side - Search & Cart */}
+            <div className={cn("flex items-center justify-end gap-1", isRtl ? "flex-row-reverse [&>*:nth-child(1)]:order-2 [&>*:nth-child(2)]:order-1" : "")}>
               {/* Mobile Search Toggle */}
               <Sheet>
                 <SheetTrigger asChild>
@@ -256,8 +239,8 @@ export default function Navbar() {
                     <IconSearch className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="top" className="p-0 h-auto">
-                  <SheetHeader className="px-4 pt-2.5 pb-0">
+                <SheetContent side="top" className={cn("p-0 h-auto", isRtl && "[&>button.absolute]:!left-4 [&>button.absolute]:!right-auto")}>
+                  <SheetHeader className={cn("px-4 pt-2.5 pb-0", isRtl ? "text-left pl-12 pr-5" : "text-left pr-12 pl-4")}>
                     <SheetTitle className="text-lg font-semibold">{t('common.search')}</SheetTitle>
                   </SheetHeader>
                   <SearchBar className="p-4 border-t" variant="expanded" autoFocus />
@@ -293,7 +276,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Layout */}
-          <div className="hidden lg:flex items-center justify-between w-full">
+          <div className="hidden lg:grid lg:grid-cols-3 lg:items-center w-full">
             {/* Logo */}
             <div className="flex-shrink-0 items-center">
               <Link
@@ -312,8 +295,8 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Navigation Links */}
-            <div className="flex items-center space-x-1">
+            {/* Navigation Links - Perfectly Centered */}
+            <div className="flex items-center justify-center space-x-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -342,10 +325,7 @@ export default function Navbar() {
             </div>
 
             {/* Right Actions */}
-            <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
-              {/* Language Switcher */}
-              <LanguageSwitcher variant="compact" />
-              
+            <div className={cn("flex items-center justify-end gap-2", isRtl ? "flex-row-reverse [&>*:nth-child(1)]:order-4 [&>*:nth-child(2)]:order-3 [&>*:nth-child(3)]:order-2 [&>*:nth-child(4)]:order-1" : "")}>
               <SearchBar />
               
               {/* Wishlist Button */}
@@ -390,6 +370,9 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Button>
+              
+              {/* Language Switcher */}
+              <LanguageSwitcher variant="compact" />
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { useTranslations } from "@/hooks/useTranslations";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface SearchBarProps {
   className?: string;
@@ -21,6 +22,7 @@ interface SearchBarProps {
 export default function SearchBar({ className, variant = 'default', autoFocus = false }: SearchBarProps) {
   const router = useRouter();
   const { t } = useTranslations();
+  const { isRtl } = useLanguage();
   const {
     query,
     setQuery,
@@ -178,7 +180,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                 ref={inputRef}
                 type="search"
                 placeholder={t('search.placeholder')}
-                className="pl-3 pr-8 text-sm"
+                className={cn("text-sm", isRtl ? "pr-3 pl-8" : "pl-3 pr-8")}
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
@@ -189,7 +191,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                 type="button"
                 size="icon"
                 variant="ghost"
-                className="absolute right-0"
+                className={cn("absolute", isRtl ? "left-0" : "right-0")}
                 onClick={() => {
                   resetSearch();
                   setExpanded(false);
