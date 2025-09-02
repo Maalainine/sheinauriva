@@ -215,7 +215,7 @@ const ProductCard = ({
   }, [price, originalPrice]);
 
   return (
-    <Card className=" gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
+    <Card className="relative gap-2 h-full flex flex-col overflow-hidden transition-shadow duration-300 hover:shadow-md group p-0">
       {/* Product Badges and Wishlist Button */}
       <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
         {/* Sale badge */}
