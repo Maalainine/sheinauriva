@@ -177,14 +177,13 @@ export function CenterFocusedCarousel({
   }
 
   return (
-    <div className={`relative w-full max-w-7xl mx-auto px-2 sm:px-4 ${className} overflow-hidden`}>
+    <div className={`relative w-full max-w-7xl mx-auto ${className} overflow-hidden`}>
       <div 
         className="relative" 
         style={{ 
           height: cardHeight + 100,
           overflow: 'hidden',
-          width: '100%',
-          padding: '0 8px' // Add padding to prevent cards from touching screen edges
+          width: '100%'
         }}
         ref={containerRef}
         onMouseDown={handleMouseDown}
@@ -216,14 +215,14 @@ export function CenterFocusedCarousel({
           ))}
         </div>
 
-        {/* Navigation Buttons - Hidden on mobile (sm breakpoint and below) */}
+        {/* Navigation Buttons - Now visible on all screen sizes */}
         {children.length > 1 && (
           <>
             <Button
               onClick={goToPrevious}
               variant="outline"
               size="icon"
-              className="hidden md:flex absolute left-0 sm:left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
+              className="flex absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Previous"
             >
               <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -233,7 +232,7 @@ export function CenterFocusedCarousel({
               onClick={goToNext}
               variant="outline"
               size="icon"
-              className="hidden md:flex absolute right-0 sm:right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
+              className="flex absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Next"
             >
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
