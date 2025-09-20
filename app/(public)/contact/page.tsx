@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
-import { IconMail, IconPhone, IconMapPin } from "@tabler/icons-react";
+import { IconMail, IconMapPin } from "@tabler/icons-react";
 
 export default function ContactPage() {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -54,27 +54,12 @@ export default function ContactPage() {
             
             <div className="flex items-start space-x-4">
               <div className="bg-primary/10 p-2 rounded-full">
-                <IconPhone className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium">{t('contact.phone')}</h3>
-                <a 
-                  href="tel:+212610454716" 
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  +212 6 10 45 47 16
-                </a>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-4">
-              <div className="bg-primary/10 p-2 rounded-full">
                 <IconMapPin className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <h3 className="font-medium">{t('contact.location')}</h3>
                 <p className="text-muted-foreground">
-                  Casablanca, Morocco
+                  Settat, Morocco
                 </p>
               </div>
             </div>

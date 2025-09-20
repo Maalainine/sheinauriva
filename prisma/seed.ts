@@ -9,10 +9,10 @@ async function main() {
   // 1. Create admin user
   const adminPassword = await hash('admin123', 10);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@sheinauriva.com' },
+    where: { email: 'admin@justoriginale.com' },
     update: {},
     create: {
-      email: 'admin@sheinauriva.com',
+      email: 'admin@justoriginale.com',
       name: 'Site Admin',
       password: adminPassword,
       role: UserRole.ADMIN,
@@ -232,20 +232,24 @@ async function main() {
     }
   }
 
-  // 9. Create settings
-  await prisma.settings.upsert({
-    where: { id: 'main' },
-    update: {},
-    create: {
-      id: 'main',
-      siteTitle: 'SheinAuriva',
-      contactEmail: 'contact@sheinauriva.com',
-      themeUrl: '/themes/default.css',
-    },
-  });
+  // 9. Create settings (optional)
+  try {
+    await prisma.settings.upsert({
+      where: { id: 'main' },
+      update: {},
+      create: {
+        id: 'main',
+        siteTitle: 'JustOriginale',
+        contactEmail: 'contact@justoriginale.com',
+        themeUrl: '/themes/default.css',
+      },
+    });
+  } catch (error) {
+    console.log('⚠️  Settings table might not exist, skipping...');
+  }
 
   console.log('✅ Database seed completed successfully!');
-  console.log(`👤 Admin user created: admin@sheinauriva.com (password: admin123)`);
+  console.log(`👤 Admin user created: admin@justoriginale.com (password: admin123)`);
   console.log(`👥 ${clientUsers.length} client users created`);
   console.log(`🏷️  ${brands.length} brands created`);
   console.log(`📦 ${categories.length} categories created`);

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "@/hooks/useTranslations";
+import { useLanguage } from "@/context/LanguageContext";
 import * as z from "zod";
 import {
   Loader2,
@@ -60,12 +61,12 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { cart, clearCart } = useCart?.() || { cart: [], clearCart: () => {} };
   const { t } = useTranslations();
+  const { locale } = useLanguage();
 
   // Form validation schema with translated messages
   const formSchema = z.object({
     name: z.string().min(2, { message: t('checkout.validation.nameMin') }),
     phone: z.string().min(6, { message: t('checkout.validation.phoneValid') }),
-    email: z.string().email({ message: t('checkout.validation.emailValid') }).optional().or(z.literal('')),
     address: z.string().min(5, { message: t('checkout.validation.addressValid') }),
     country: z.string().min(2, { message: t('checkout.validation.selectCountry') }),
     city: z.string().min(1, { message: t('checkout.validation.selectCity') }),
@@ -78,7 +79,6 @@ export default function CheckoutPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      email: '',
       phone: '+212',
       address: '',
       country: 'MA', // Default to Morocco
@@ -126,7 +126,6 @@ export default function CheckoutPage() {
       const orderData = {
         customer: {
           name: data.name,
-          email: data.email || '',
           phone: data.phone,
           // Include full address with city and country
           address: `${data.address}, ${data.city}, ${countryName}`,
@@ -337,24 +336,6 @@ export default function CheckoutPage() {
                           )}
                         />
 
-                        <FormField
-                          control={form.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem className="md:col-span-2">
-                              <FormLabel className="text-xs">{t('checkout.fields.email')}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="email"
-                                  placeholder={t('checkout.placeholders.email')}
-                                  className="h-9 text-sm"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage className="text-xs" />
-                            </FormItem>
-                          )}
-                        />
                       </div>
                     </div>
 
@@ -385,7 +366,7 @@ export default function CheckoutPage() {
                                 <SelectContent>
                                   {COUNTRIES.map((country) => (
                                     <SelectItem key={country.code} value={country.code} className="text-sm">
-                                      {country.name}
+                                      {locale === 'ar' && country.nameAr ? country.nameAr : country.name}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
@@ -420,7 +401,7 @@ export default function CheckoutPage() {
                                 <SelectContent>
                                   {cities.map((city) => (
                                     <SelectItem key={city.name} value={city.name} className="text-sm">
-                                      {city.name}
+                                      {locale === 'ar' && city.nameAr ? city.nameAr : city.name}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>

@@ -42,9 +42,9 @@ export default function WishlistButton({
         disabled={isDisabled}
         className={cn(
           "rounded-full transition-all duration-200",
-          isWishlisted 
-            ? "text-red-500 hover:text-red-600" 
-            : "text-muted-foreground hover:text-red-500",
+          isWishlisted
+            ? "text-gray-500 hover:text-gray-600"
+            : "text-muted-foreground hover:text-gray-500",
           isDisabled && "opacity-50 cursor-not-allowed",
           className
         )}
@@ -67,9 +67,9 @@ export default function WishlistButton({
       disabled={isDisabled}
       className={cn(
         "gap-2 transition-all duration-200",
-        isWishlisted 
-          ? "bg-red-500 hover:bg-red-600 text-white" 
-          : "hover:bg-red-50 hover:border-red-200 hover:text-red-600",
+        isWishlisted
+          ? "bg-gray-500 hover:bg-gray-600 text-white"
+          : "hover:bg-gray-50 hover:border-gray-200 hover:text-gray-600",
         isDisabled && "opacity-50 cursor-not-allowed",
         className
       )}

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import {
   IconBrandInstagram,
   IconBrandFacebook,
-  IconBrandTwitter,
+  IconBrandTiktok,
 } from "@tabler/icons-react";
 import Image from "next/image";
 
@@ -44,25 +44,25 @@ export default function Footer() {
           {/* Social Links */}
           <div className="flex space-x-4 mt-4">
             <Link
-              href="https://twitter.com/JO"
+              href="https://www.instagram.com/jusoriginale/"
               target="_blank"
-              aria-label={t('footer.socialMedia.twitter')}
+              aria-label={t('footer.socialMedia.instagram')}
             >
-              <IconBrandTwitter className="w-5 h-5 text-foreground hover:text-accent transition" />
+              <IconBrandInstagram className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
             <Link
-              href="https://facebook.com/JO"
+              href="https://www.facebook.com/profile.php?id=61580176392827"
               target="_blank"
               aria-label={t('footer.socialMedia.facebook')}
             >
               <IconBrandFacebook className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
             <Link
-              href="https://instagram.com/JO"
+              href="https://www.tiktok.com/@justoriginale?lang=fr"
               target="_blank"
-              aria-label={t('footer.socialMedia.instagram')}
+              aria-label={t('footer.socialMedia.tiktok')}
             >
-              <IconBrandInstagram className="w-5 h-5 text-foreground hover:text-accent transition" />
+              <IconBrandTiktok className="w-5 h-5 text-foreground hover:text-accent transition" />
             </Link>
           </div>
         </div>

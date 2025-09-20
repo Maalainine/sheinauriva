@@ -51,7 +51,22 @@ export default function RootLayout({
             <WishlistProvider>
               <CartProvider>
                 {children}
-                <Toaster richColors position="top-center" />
+                <Toaster
+                  position="top-center"
+                  toastOptions={{
+                    style: {
+                      background: 'white',
+                      color: '#6B7280',
+                      border: '1px solid #E5E7EB'
+                    },
+                    classNames: {
+                      success: 'bg-white text-gray-600 border-gray-200',
+                      error: 'bg-white text-gray-600 border-gray-200',
+                      warning: 'bg-white text-gray-600 border-gray-200',
+                      info: 'bg-white text-gray-600 border-gray-200',
+                    }
+                  }}
+                />
               </CartProvider>
             </WishlistProvider>
           </Providers>

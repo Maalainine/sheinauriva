@@ -318,17 +318,17 @@ export default function Home() {
     <main className="flex min-h-screen flex-col">
       {/* Hero Section */}
       <section className="relative h-[500px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary/50 z-10 flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 z-10 flex items-center">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <TypographyH1 className="mb-4 text-secondary">
+            <TypographyH1 className="mb-4 text-white font-bold drop-shadow-lg">
               {t('home.hero.title')}
             </TypographyH1>
-            <TypographyH4 className="mb-8 max-w-2xl text-secondary">
+            <TypographyH4 className="mb-8 max-w-2xl text-white/90 drop-shadow-md">
               {t('home.hero.subtitle')}
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/products">
-                <Button size="lg" className="hover:bg-primary/90">
+                <Button size="lg" className="bg-white text-black hover:bg-white/90 font-semibold shadow-lg">
                   {t('home.hero.shopNow')}
                 </Button>
               </Link>
