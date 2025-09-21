@@ -1,18 +1,33 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
 // UI Components
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 
 // Icons
-import { IconShoppingCart, IconMenu2, IconSearch, IconX, IconHeart } from "@tabler/icons-react";
+import {
+  IconShoppingCart,
+  IconMenu2,
+  IconSearch,
+  IconHeart,
+  IconHome,
+  IconPackage,
+  IconCategory,
+  IconMail,
+} from "@tabler/icons-react";
 
 // Components
 import CartDrawer from "@/components/cart/CartDrawer";
@@ -27,21 +42,24 @@ import { useWishlist } from "@/context/WishlistContext";
 
 // Utils
 import { cn } from "@/lib/utils";
-import { TypographyH1, TypographyH2, TypographyH3, TypographyLarge } from "@/components/ui/typography";
+import { TypographyH3 } from "@/components/ui/typography";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const { t } = useTranslations();
   const { isRtl } = useLanguage();
 
   const navLinks = [
-    { href: "/", label: t('navigation.home') },
-    { href: "/products", label: t('navigation.products') },
-    { href: "/categories", label: t('navigation.categories') },
-    { href: "/contact", label: t('navigation.contact') },
+    { href: "/", label: t("navigation.home"), icon: IconHome },
+    { href: "/products", label: t("navigation.products"), icon: IconPackage },
+    {
+      href: "/categories",
+      label: t("navigation.categories"),
+      icon: IconCategory,
+    },
+    { href: "/contact", label: t("navigation.contact"), icon: IconMail },
   ];
   const [cartOpen, setCartOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
@@ -126,14 +144,16 @@ export default function Navbar() {
       <nav
         className={cn(
           "w-full bg-background/95 border-b border-border/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 transition-all duration-300",
-          isScrolled ? "py-2 shadow-sm" : "py-3"
+          isScrolled ? "py-2 shadow-sm" : "py-3",
         )}
       >
         <div className="container flex items-center justify-between px-4 mx-auto">
           {/* Mobile Layout */}
           <div className="grid lg:hidden grid-cols-3 items-center w-full">
             {/* Left side - Menu */}
-            <div className={cn("flex", isRtl ? "justify-end" : "justify-start")}>
+            <div
+              className={cn("flex", isRtl ? "justify-end" : "justify-start")}
+            >
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
                   <Button
@@ -145,10 +165,27 @@ export default function Navbar() {
                     <IconMenu2 className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="top" className={cn("w-full h-auto max-h-[80vh] p-0", isRtl && "[&>[data-slot=close]]:left-2 [&>[data-slot=close]]:right-auto")}>
-                  <SheetHeader className={cn("border-b py-2", isRtl ? "pl-6 pr-12 text-right" : "pl-6 pr-12 text-left")}>
+                <SheetContent
+                  side="top"
+                  className={cn(
+                    "w-full h-auto max-h-[80vh] p-0",
+                    isRtl &&
+                      "[&>[data-slot=close]]:left-2 [&>[data-slot=close]]:right-auto",
+                  )}
+                >
+                  <SheetHeader
+                    className={cn(
+                      "border-b py-2",
+                      isRtl ? "pl-6 pr-12 text-right" : "pl-6 pr-12 text-left",
+                    )}
+                  >
                     <SheetTitle className="text-xl font-bold tracking-tight">
-                      <div className={cn("flex items-center gap-2", isRtl && "flex-row-reverse")}>
+                      <div
+                        className={cn(
+                          "flex items-center gap-2",
+                          isRtl && "flex-row-reverse",
+                        )}
+                      >
                         <Link
                           href="/"
                           className="border-2 border-primary flex items-center relative"
@@ -163,47 +200,56 @@ export default function Navbar() {
                             priority
                           />
                         </Link>
-                        <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
-
+                        <TypographyH3 className="flex">
+                          <TypographyH3 className="text-primary/70">
+                            Just
+                          </TypographyH3>
+                          Originale
+                        </TypographyH3>
                       </div>
                     </SheetTitle>
                   </SheetHeader>
                   <div className="pb-4">
                     <div className="p-4 space-y-1">
-                      {navLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          className={cn(
-                            "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
-                            pathname === link.href
-                              ? "bg-primary/10 text-primary"
-                              : "text-foreground/90 hover:bg-accent"
-                          )}
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                      
+                      {navLinks.map((link) => {
+                        const Icon = link.icon;
+                        return (
+                          <Link
+                            key={link.href}
+                            href={link.href}
+                            className={cn(
+                              "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                              pathname === link.href
+                                ? "bg-primary/10 text-primary"
+                                : "text-foreground/90 hover:bg-accent",
+                            )}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <Icon className="h-5 w-5" />
+                            {link.label}
+                          </Link>
+                        );
+                      })}
+
                       {/* Wishlist Link */}
                       <Link
                         href="/wishlist"
                         className={cn(
-                          "flex items-center px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                          "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors",
                           pathname === "/wishlist"
                             ? "bg-primary/10 text-primary"
-                            : "text-foreground/90 hover:bg-accent"
+                            : "text-foreground/90 hover:bg-accent",
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {t('navigation.wishlist')}
+                        <IconHeart className="h-5 w-5" />
+                        {t("navigation.wishlist")}
                       </Link>
-                      
+
                       {/* Language Switcher in Mobile Menu */}
                       <div className="px-3 py-3">
                         <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                          Language
+                          {t("common.language")}
                         </Label>
                         <LanguageSwitcher variant="compact" />
                       </div>
@@ -231,7 +277,14 @@ export default function Navbar() {
             </div>
 
             {/* Right side - Search & Cart */}
-            <div className={cn("flex items-center justify-end gap-1", isRtl ? "flex-row-reverse [&>*:nth-child(1)]:order-2 [&>*:nth-child(2)]:order-1" : "")}>
+            <div
+              className={cn(
+                "flex items-center justify-end gap-1",
+                isRtl
+                  ? "flex-row-reverse [&>*:nth-child(1)]:order-2 [&>*:nth-child(2)]:order-1"
+                  : "",
+              )}
+            >
               {/* Mobile Search Toggle */}
               <Sheet>
                 <SheetTrigger asChild>
@@ -239,11 +292,29 @@ export default function Navbar() {
                     <IconSearch className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="top" className={cn("p-0 h-auto", isRtl && "[&>button.absolute]:!left-4 [&>button.absolute]:!right-auto")}>
-                  <SheetHeader className={cn("px-4 pt-2.5 pb-0", isRtl ? "text-left pl-12 pr-5" : "text-left pr-12 pl-4")}>
-                    <SheetTitle className="text-lg font-semibold">{t('common.search')}</SheetTitle>
+                <SheetContent
+                  side="top"
+                  className={cn(
+                    "p-0 h-auto",
+                    isRtl &&
+                      "[&>button.absolute]:!left-4 [&>button.absolute]:!right-auto",
+                  )}
+                >
+                  <SheetHeader
+                    className={cn(
+                      "px-4 pt-2.5 pb-0",
+                      isRtl ? "text-left pl-12 pr-5" : "text-left pr-12 pl-4",
+                    )}
+                  >
+                    <SheetTitle className="text-lg font-semibold">
+                      {t("common.search")}
+                    </SheetTitle>
                   </SheetHeader>
-                  <SearchBar className="p-4 border-t" variant="expanded" autoFocus />
+                  <SearchBar
+                    className="p-4 border-t"
+                    variant="expanded"
+                    autoFocus
+                  />
                 </SheetContent>
               </Sheet>
 
@@ -291,7 +362,10 @@ export default function Navbar() {
                   priority
                   className="border-2 border-primary object-contain"
                 />
-                <TypographyH3 className="flex"><TypographyH3 className="text-primary/70">Just</TypographyH3>Originale</TypographyH3>
+                <TypographyH3 className="flex">
+                  <TypographyH3 className="text-primary/70">Just</TypographyH3>
+                  Originale
+                </TypographyH3>
               </Link>
             </div>
 
@@ -305,7 +379,7 @@ export default function Navbar() {
                     "relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
                     pathname === link.href
                       ? "text-primary bg-primary/10"
-                      : "text-foreground/80 hover:text-primary hover:bg-muted/50"
+                      : "text-foreground/80 hover:text-primary hover:bg-muted/50",
                   )}
                 >
                   {link.label}
@@ -325,11 +399,23 @@ export default function Navbar() {
             </div>
 
             {/* Right Actions */}
-            <div className={cn("flex items-center justify-end gap-2", isRtl ? "flex-row-reverse [&>*:nth-child(1)]:order-4 [&>*:nth-child(2)]:order-3 [&>*:nth-child(3)]:order-2 [&>*:nth-child(4)]:order-1" : "")}>
+            <div
+              className={cn(
+                "flex items-center justify-end gap-2",
+                isRtl
+                  ? "flex-row-reverse [&>*:nth-child(1)]:order-4 [&>*:nth-child(2)]:order-3 [&>*:nth-child(3)]:order-2 [&>*:nth-child(4)]:order-1"
+                  : "",
+              )}
+            >
               <SearchBar />
-              
+
               {/* Wishlist Button */}
-              <Button variant="ghost" size="icon" className="relative group" asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group"
+                asChild
+              >
                 <Link href="/wishlist">
                   <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
                   {isClient && wishlistCount > 0 && (
@@ -337,7 +423,11 @@ export default function Navbar() {
                       key={`wishlist-count-desktop-${wishlistCount}`}
                       initial={{ scale: 1.2, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 20,
+                      }}
                       className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
                     >
                       {wishlistCount > 9 ? "9+" : wishlistCount}
@@ -345,7 +435,7 @@ export default function Navbar() {
                   )}
                 </Link>
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -370,7 +460,7 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Button>
-              
+
               {/* Language Switcher */}
               <LanguageSwitcher variant="compact" />
             </div>

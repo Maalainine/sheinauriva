@@ -84,3 +84,29 @@ components/
 ### Testing & Quality
 - Run `npm run lint` before committing changes
 - TypeScript checking can be done via IDE or `tsc --noEmit`
+
+## Pending Modifications (To Do)
+
+### Phase 1: Icon Library Migration
+- **Replace all Lucide icons with Tabler equivalents** across all components (20+ files affected)
+- **Update `components.json`** to reflect Tabler as the icon library instead of "lucide"
+- **Remove lucide-react dependency** (if no longer needed after migration)
+- **Verify all icon imports** use @tabler/icons-react consistently
+
+### Phase 2: Configuration Cleanup
+- **Consolidate Next.js configuration** - remove duplicate config files (next.config.js vs next.config.ts)
+- **Verify shadcn/ui configuration** matches design system requirements
+- **Ensure consistent 0.35rem border radius** throughout all components
+- **Review and standardize component configurations**
+
+### Phase 3: Typography & Styling
+- **Verify font assignments** in CSS variables (Montserrat light mode, Inter dark mode)
+- **Ensure OKLCH color space** usage is consistent across all color tokens
+- **Check component `data-slot` attributes** implementation
+- **Validate CSS variable naming** matches design system specifications
+
+### Current Issues (In Progress)
+1. **Orders not processing** - investigate recent commits affecting order flow
+2. **Mobile navbar icons** - add icons to plain text buttons in mobile version
+3. **Language trigger translation** - mobile navbar language selector not translating
+4. **RTL dropdown positioning** - Arabic mode dropdown/combobox options misaligned

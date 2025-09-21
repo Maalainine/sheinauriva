@@ -11,6 +11,7 @@
     "search": "Search",
     "filter": "Filter",
     "clear": "Clear",
+    "language": "Language",
     "submit": "Submit",
     "back": "Back",
     "next": "Next",
@@ -433,7 +434,7 @@
     },
     "socialMedia": {
       "twitter": "Follow us on Twitter",
-      "facebook": "Follow us on Facebook", 
+      "facebook": "Follow us on Facebook",
       "instagram": "Follow us on Instagram"
     },
     "motto": "Quality products, delivered with care.",
