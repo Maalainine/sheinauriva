@@ -24,7 +24,8 @@ export function useTranslations() {
     const loadMessages = () => {
       setIsLoading(true);
       try {
-        const msgs = messageFiles[locale as keyof typeof messageFiles] || messageFiles.en;
+        const msgs =
+          messageFiles[locale as keyof typeof messageFiles] || messageFiles.en;
         setMessages(msgs);
         console.log(`Messages loaded for locale: ${locale}`);
       } catch (error) {
@@ -43,18 +44,18 @@ export function useTranslations() {
       return key; // Return key while loading
     }
 
-    const keys = key.split('.');
+    const keys = key.split(".");
     let value = messages;
 
     for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
+      if (value && typeof value === "object" && k in value) {
         value = value[k];
       } else {
         return key; // Return key if translation not found
       }
     }
 
-    if (typeof value !== 'string') {
+    if (typeof value !== "string") {
       return key;
     }
 
@@ -62,7 +63,11 @@ export function useTranslations() {
     if (params) {
       let result = String(value);
       Object.entries(params).forEach(([param, val]) => {
-        result = result.replace(new RegExp(`{${param}}`, 'g'), String(val));
+        // Escape special regex characters in param name and use simple string replacement
+        if (param && param.trim()) {
+          const placeholder = `{${param}}`;
+          result = result.split(placeholder).join(String(val));
+        }
       });
       return result;
     }
@@ -82,30 +87,30 @@ export function useCommonTranslations() {
     isLoading,
     locale,
     common: {
-      loading: t('common.loading'),
-      error: t('common.error'),
-      save: t('common.save'),
-      cancel: t('common.cancel'),
-      delete: t('common.delete'),
-      edit: t('common.edit'),
-      add: t('common.add'),
-      search: t('common.search'),
-      viewDetails: t('common.viewDetails'),
+      loading: t("common.loading"),
+      error: t("common.error"),
+      save: t("common.save"),
+      cancel: t("common.cancel"),
+      delete: t("common.delete"),
+      edit: t("common.edit"),
+      add: t("common.add"),
+      search: t("common.search"),
+      viewDetails: t("common.viewDetails"),
     },
     product: {
-      addToCart: t('product.addToCart'),
-      addToWishlist: t('product.addToWishlist'),
-      removeFromWishlist: t('product.removeFromWishlist'),
-      outOfStock: t('product.outOfStock'),
-      sale: t('product.sale'),
+      addToCart: t("product.addToCart"),
+      addToWishlist: t("product.addToWishlist"),
+      removeFromWishlist: t("product.removeFromWishlist"),
+      outOfStock: t("product.outOfStock"),
+      sale: t("product.sale"),
     },
     navigation: {
-      home: t('navigation.home'),
-      products: t('navigation.products'),
-      cart: t('navigation.cart'),
-      wishlist: t('navigation.wishlist'),
-      login: t('navigation.login'),
-      logout: t('navigation.logout'),
+      home: t("navigation.home"),
+      products: t("navigation.products"),
+      cart: t("navigation.cart"),
+      wishlist: t("navigation.wishlist"),
+      login: t("navigation.login"),
+      logout: t("navigation.logout"),
     },
   };
 }

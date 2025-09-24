@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +18,7 @@ model User {
   orders            Order[]
   shippingAddresses ShippingAddress[]
   wishlist          Product[]         @relation("Wishlist")
-  totalSpent        Decimal           @default(0) @db.Decimal(10, 2)
+  totalSpent        Float             @default(0)
   ordersCount       Int               @default(0)
   lastLogin         DateTime?
 
@@ -101,11 +101,11 @@ model Product {
   categoryId      Int
   brand           Brand?            @relation(fields: [brandId], references: [id])
   brandId         Int?
-  basePrice       Decimal           @db.Decimal(10, 2)
+  basePrice       Float
   status          Boolean           @default(true)
   featured        Boolean           @default(false)
   onSale          Boolean           @default(false)
-  images          String[]          // Array of image URLs
+  images          String?           // Comma-separated image URLs
   tags            Tag[]             @relation("ProductTags")
   allowedOptions  ProductOption[]   // which VariantOption values apply
   variants        ProductVariant[]  // specific SKU records
@@ -136,7 +136,7 @@ model ProductVariant {
   product      Product           @relation(fields: [productId], references: [id])
   productId    Int
   sku          String            @unique
-  price        Decimal           @db.Decimal(10, 2)
+  price        Float
   stock        Int               @default(0)
   orderItems   OrderItem[]
   selections   VariantSelection[]  // which options compose this variant
@@ -163,8 +163,8 @@ model Order {
   id                Int              @id @default(autoincrement())
   userId            Int?
   status            OrderStatus      @default(PENDING)
-  total             Decimal          @db.Decimal(10, 2)
-  shippingCost      Decimal          @db.Decimal(10, 2)
+  total             Float
+  shippingCost      Float
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
@@ -197,7 +197,7 @@ model OrderItem {
   productId        Int
   productVariantId Int?
   quantity         Int
-  price            Decimal        @db.Decimal(10, 2)
+  price            Float
   productName      String
   productDetails   String?
 

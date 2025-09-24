@@ -27,7 +27,21 @@
     "refresh": "Actualiser",
     "backToHome": "Retour à l'accueil",
     "nothingHere": "Rien ici pour le moment.",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "user": "Utilisateur",
+    "viewAll": "Voir tout",
+    "items": "articles",
+    "quantity": "Quantité",
+    "total": "Total",
+    "sale": "Promotion",
+    "outOfStock": "Rupture de stock",
+    "addToCart": "Ajouter au panier",
+    "adding": "Ajout...",
+    "startShopping": "Commencer les achats",
+    "goBack": "Retour",
+    "update": "Mettre à jour",
+    "updating": "Mise à jour...",
+    "saving": "Enregistrement..."
   },
   "navigation": {
     "home": "Accueil",
@@ -239,7 +253,89 @@
     "forgotPassword": "Mot de passe oublié ?",
     "loginRequired": "Veuillez vous connecter pour continuer",
     "invalidCredentials": "E-mail ou mot de passe invalide",
-    "accessDenied": "Accès refusé"
+    "accessDenied": "Accès refusé",
+    "login": {
+      "welcome": "Bon retour",
+      "subtitle": "Connectez-vous à votre compte",
+      "title": "Connexion",
+      "enterCredentials": "Entrez vos identifiants pour continuer",
+      "signingIn": "Connexion...",
+      "signIn": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas de compte ?",
+      "signUp": "S'inscrire",
+      "fields": {
+        "email": "E-mail",
+        "password": "Mot de passe"
+      },
+      "placeholders": {
+        "email": "votre@email.com",
+        "password": "Entrez votre mot de passe"
+      },
+      "validation": {
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Veuillez entrer une adresse e-mail valide",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères"
+      },
+      "errors": {
+        "invalidCredentials": "E-mail ou mot de passe invalide",
+        "checkCredentials": "Veuillez vérifier vos identifiants et réessayer",
+        "sessionExpired": "Votre session a expiré",
+        "loginAgain": "Veuillez vous reconnecter pour continuer",
+        "serverConfig": "Erreur de configuration serveur",
+        "serverConfigDetails": "Il y a eu un problème avec la configuration du serveur",
+        "accessDenied": "Accès refusé",
+        "noPermission": "Vous n'avez pas la permission d'accéder à cette ressource",
+        "authError": "Erreur d'authentification",
+        "unknownError": "Une erreur inconnue s'est produite lors de l'authentification",
+        "unexpectedError": "Une erreur inattendue s'est produite",
+        "tryAgainLater": "Veuillez réessayer plus tard",
+        "clientAccessOnly": "Cette connexion est réservée aux comptes clients",
+        "registerFirst": "Veuillez d'abord vous inscrire si vous n'avez pas de compte"
+      }
+    },
+    "register": {
+      "welcome": "Créer un compte",
+      "subtitle": "Rejoignez-nous et commencez vos achats",
+      "title": "Créer votre compte",
+      "createAccount": "Créer un compte",
+      "creating": "Création du compte...",
+      "hasAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter",
+      "fields": {
+        "name": "Nom complet",
+        "email": "Adresse e-mail",
+        "password": "Mot de passe",
+        "confirmPassword": "Confirmer le mot de passe"
+      },
+      "placeholders": {
+        "name": "Entrez votre nom complet",
+        "email": "votre@email.com",
+        "password": "Créez un mot de passe fort",
+        "confirmPassword": "Confirmez votre mot de passe"
+      },
+      "validation": {
+        "nameRequired": "Le nom est requis",
+        "nameMinLength": "Le nom doit contenir au moins 2 caractères",
+        "emailRequired": "L'e-mail est requis",
+        "emailInvalid": "Veuillez entrer une adresse e-mail valide",
+        "passwordRequired": "Le mot de passe est requis",
+        "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères",
+        "passwordStrength": "Le mot de passe doit contenir des majuscules, minuscules et un chiffre",
+        "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+        "passwordsDoNotMatch": "Les mots de passe ne correspondent pas"
+      },
+      "errors": {
+        "unexpectedError": "Une erreur inattendue s'est produite",
+        "tryAgainLater": "Veuillez réessayer plus tard"
+      },
+      "success": {
+        "title": "Compte créé !",
+        "message": "Votre compte a été créé avec succès",
+        "redirecting": "Redirection vers votre compte..."
+      }
+    }
   },
   "checkout": {
     "title": "Commande",
@@ -407,6 +503,117 @@
         "unknownError": "Une erreur inconnue s'est produite lors de l'authentification.",
         "unexpectedError": "Une erreur inattendue s'est produite",
         "tryAgainLater": "Veuillez réessayer plus tard."
+      }
+    }
+  },
+  "account": {
+    "navigation": {
+      "dashboard": "Tableau de bord",
+      "orders": "Commandes",
+      "wishlist": "Liste de souhaits",
+      "addresses": "Adresses",
+      "profile": "Profil",
+      "settings": "Paramètres",
+      "signOut": "Déconnexion"
+    },
+    "dashboard": {
+      "welcome": "Bon retour, {name} !",
+      "subtitle": "Gérez votre compte et suivez vos commandes",
+      "stats": {
+        "totalOrders": "Total des commandes",
+        "totalSpent": "Total dépensé",
+        "wishlistItems": "Articles favoris",
+        "addresses": "Adresses sauvegardées"
+      },
+      "recentOrders": "Commandes récentes",
+      "orderNumber": "Commande n°{number}",
+      "noOrders": "Aucune commande",
+      "noOrdersDesc": "Vous n'avez pas encore passé de commande",
+      "quickActions": "Actions rapides"
+    },
+    "orders": {
+      "title": "Historique des commandes",
+      "subtitle": "Consultez et suivez toutes vos commandes ({count} au total)",
+      "noOrders": "Aucune commande",
+      "noOrdersDesc": "Vous n'avez pas encore passé de commande. Commencez vos achats pour voir vos commandes ici !",
+      "orderNumber": "Commande n°{number}",
+      "orderDetails": "Détails de la commande n°{number}",
+      "placedOn": "Passée le",
+      "moreItems": "et {count} articles de plus",
+      "includesShipping": "inclut la livraison {amount}",
+      "viewDetails": "Voir les détails",
+      "reorder": "Recommander",
+      "subtotal": "Sous-total",
+      "shipping": "Livraison",
+      "total": "Total",
+      "orderItems": "Articles de la commande",
+      "customerInfo": "Informations client",
+      "shippingAddress": "Adresse de livraison",
+      "orderNotes": "Notes de commande",
+      "orderActions": "Actions de commande",
+      "cancelOrder": "Annuler la commande",
+      "downloadInvoice": "Télécharger la facture"
+    },
+    "wishlist": {
+      "title": "Ma liste de souhaits",
+      "subtitle": "Vous avez {count} articles dans votre liste de souhaits",
+      "empty": "Votre liste de souhaits est vide",
+      "emptyDesc": "Commencez à ajouter des produits que vous aimez pour les suivre",
+      "actions": "Actions de la liste de souhaits",
+      "actionsDesc": "Gérer les articles de votre liste de souhaits",
+      "addAllToCart": "Tout ajouter au panier",
+      "clearAll": "Vider la liste de souhaits",
+      "clearConfirm": "Êtes-vous sûr de vouloir vider entièrement votre liste de souhaits ?"
+    },
+    "profile": {
+      "title": "Paramètres du profil",
+      "subtitle": "Gérez vos informations personnelles et les paramètres de votre compte",
+      "personalInfo": "Informations personnelles",
+      "personalInfoDesc": "Mettez à jour vos informations de compte de base",
+      "updateProfile": "Mettre à jour le profil",
+      "updating": "Mise à jour...",
+      "updateSuccess": "Profil mis à jour avec succès",
+      "accountStats": "Statistiques du compte",
+      "memberSince": "Membre depuis",
+      "lastLogin": "Dernière connexion",
+      "changePassword": "Changer le mot de passe",
+      "changePasswordDesc": "Mettez à jour votre mot de passe pour sécuriser votre compte",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "changingPassword": "Changement du mot de passe...",
+      "passwordChangeSuccess": "Mot de passe changé avec succès",
+      "validation": {
+        "currentPasswordRequired": "Le mot de passe actuel est requis"
+      }
+    },
+    "addresses": {
+      "title": "Adresses de livraison",
+      "subtitle": "Gérez vos adresses de livraison sauvegardées",
+      "addNew": "Ajouter une nouvelle adresse",
+      "addFirst": "Ajoutez votre première adresse",
+      "noAddresses": "Aucune adresse sauvegardée",
+      "noAddressesDesc": "Ajoutez votre première adresse pour accélérer la commande",
+      "editAddress": "Modifier l'adresse",
+      "fillDetails": "Remplissez les détails de l'adresse ci-dessous",
+      "address1": "Ligne d'adresse 1",
+      "address2": "Ligne d'adresse 2 (optionnel)",
+      "city": "Ville",
+      "state": "État/Province",
+      "postalCode": "Code postal",
+      "country": "Pays",
+      "setAsDefault": "Définir comme adresse par défaut",
+      "address1Placeholder": "Adresse de rue, numéro de bâtiment",
+      "address2Placeholder": "Appartement, unité, étage",
+      "address": "Adresse",
+      "default": "Par défaut",
+      "makeDefault": "Définir par défaut",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette adresse ?",
+      "validation": {
+        "address1Required": "La ligne d'adresse 1 est requise",
+        "cityRequired": "La ville est requise",
+        "stateRequired": "L'état/province est requis",
+        "postalCodeRequired": "Le code postal est requis",
+        "countryRequired": "Le pays est requis"
       }
     }
   },

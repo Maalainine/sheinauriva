@@ -9,10 +9,8 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    // For unauthenticated users, return empty wishlist
-    // (they'll use localStorage)
     if (!session?.user || session.user.role !== "CLIENT") {
-      return NextResponse.json({ wishlist: [] });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const userId = parseInt(session.user.id);
@@ -37,9 +35,7 @@ export async function GET(request: NextRequest) {
             },
             brand: {
               select: {
-                id: true,
                 name: true,
-                logoUrl: true,
               },
             },
           },
@@ -49,26 +45,7 @@ export async function GET(request: NextRequest) {
 
     const wishlistProducts = user?.wishlist || [];
 
-    // Transform to match the frontend WishlistItem interface
-    const transformedWishlist = wishlistProducts.map((product) => ({
-      id: product.id.toString(),
-      name: product.name,
-      price: product.basePrice,
-      image: product.images?.split(",")[0] || "/images/placeholder.png",
-      description: product.description,
-      brand: product.brand
-        ? {
-            id: product.brand.id.toString(),
-            name: product.brand.name,
-            logoUrl: product.brand.logoUrl,
-          }
-        : null,
-      stock: 100, // Default stock value
-      hasVariants: false, // Default for now
-      variantCount: 0,
-    }));
-
-    return NextResponse.json({ wishlist: transformedWishlist });
+    return NextResponse.json(wishlistProducts);
   } catch (error) {
     console.error("Wishlist API error:", error);
     return NextResponse.json(
@@ -85,10 +62,7 @@ export async function POST(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session?.user || session.user.role !== "CLIENT") {
-      return NextResponse.json(
-        { message: "Please log in to save items to your wishlist" },
-        { status: 401 },
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const userId = parseInt(session.user.id);
@@ -152,14 +126,12 @@ export async function DELETE(request: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session?.user || session.user.role !== "CLIENT") {
-      return NextResponse.json(
-        { message: "Please log in to manage your wishlist" },
-        { status: 401 },
-      );
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const userId = parseInt(session.user.id);
-    const { productId } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const productId = searchParams.get("productId");
 
     if (!productId || isNaN(parseInt(productId))) {
       return NextResponse.json(

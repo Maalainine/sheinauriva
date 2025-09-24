@@ -27,7 +27,21 @@
     "refresh": "Refresh",
     "backToHome": "Back to home",
     "nothingHere": "Nothing here yet.",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "user": "User",
+    "viewAll": "View All",
+    "items": "items",
+    "quantity": "Quantity",
+    "total": "Total",
+    "sale": "Sale",
+    "outOfStock": "Out of Stock",
+    "addToCart": "Add to Cart",
+    "adding": "Adding...",
+    "startShopping": "Start Shopping",
+    "goBack": "Go Back",
+    "update": "Update",
+    "updating": "Updating...",
+    "saving": "Saving..."
   },
   "navigation": {
     "home": "Home",
@@ -239,7 +253,89 @@
     "forgotPassword": "Forgot Password?",
     "loginRequired": "Please log in to continue",
     "invalidCredentials": "Invalid email or password",
-    "accessDenied": "Access denied"
+    "accessDenied": "Access denied",
+    "login": {
+      "welcome": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "title": "Sign In",
+      "enterCredentials": "Enter your credentials to continue",
+      "signingIn": "Signing in...",
+      "signIn": "Sign In",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "Enter your password"
+      },
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 6 characters"
+      },
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "checkCredentials": "Please check your credentials and try again",
+        "sessionExpired": "Your session has expired",
+        "loginAgain": "Please log in again to continue",
+        "serverConfig": "Server configuration error",
+        "serverConfigDetails": "There was an issue with the server configuration",
+        "accessDenied": "Access denied",
+        "noPermission": "You don't have permission to access this resource",
+        "authError": "Authentication error",
+        "unknownError": "An unknown error occurred during authentication",
+        "unexpectedError": "An unexpected error occurred",
+        "tryAgainLater": "Please try again later",
+        "clientAccessOnly": "This login is for client accounts only",
+        "registerFirst": "Please register first if you don't have an account"
+      }
+    },
+    "register": {
+      "welcome": "Create Account",
+      "subtitle": "Join us and start shopping",
+      "title": "Create Your Account",
+      "createAccount": "Create Account",
+      "creating": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "fields": {
+        "name": "Full Name",
+        "email": "Email Address",
+        "password": "Password",
+        "confirmPassword": "Confirm Password"
+      },
+      "placeholders": {
+        "name": "Enter your full name",
+        "email": "your@email.com",
+        "password": "Create a strong password",
+        "confirmPassword": "Confirm your password"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "nameMinLength": "Name must be at least 2 characters",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Password must be at least 8 characters",
+        "passwordStrength": "Password must contain uppercase, lowercase, and number",
+        "confirmPasswordRequired": "Please confirm your password",
+        "passwordsDoNotMatch": "Passwords do not match"
+      },
+      "errors": {
+        "unexpectedError": "An unexpected error occurred",
+        "tryAgainLater": "Please try again later"
+      },
+      "success": {
+        "title": "Account Created!",
+        "message": "Your account has been created successfully",
+        "redirecting": "Redirecting to your account..."
+      }
+    }
   },
   "checkout": {
     "title": "Checkout",
@@ -407,6 +503,117 @@
         "unknownError": "An unknown error occurred during authentication.",
         "unexpectedError": "An unexpected error occurred",
         "tryAgainLater": "Please try again later."
+      }
+    }
+  },
+  "account": {
+    "navigation": {
+      "dashboard": "Dashboard",
+      "orders": "Orders",
+      "wishlist": "Wishlist",
+      "addresses": "Addresses",
+      "profile": "Profile",
+      "settings": "Settings",
+      "signOut": "Sign Out"
+    },
+    "dashboard": {
+      "welcome": "Welcome back, {name}!",
+      "subtitle": "Manage your account and track your orders",
+      "stats": {
+        "totalOrders": "Total Orders",
+        "totalSpent": "Total Spent",
+        "wishlistItems": "Wishlist Items",
+        "addresses": "Saved Addresses"
+      },
+      "recentOrders": "Recent Orders",
+      "orderNumber": "Order #{number}",
+      "noOrders": "No Orders Yet",
+      "noOrdersDesc": "You haven't placed any orders yet",
+      "quickActions": "Quick Actions"
+    },
+    "orders": {
+      "title": "Order History",
+      "subtitle": "View and track all your orders ({count} total)",
+      "noOrders": "No Orders Yet",
+      "noOrdersDesc": "You haven't placed any orders yet. Start shopping to see your orders here!",
+      "orderNumber": "Order #{number}",
+      "orderDetails": "Order #{number} Details",
+      "placedOn": "Placed on",
+      "moreItems": "and {count} more items",
+      "includesShipping": "includes shipping {amount}",
+      "viewDetails": "View Details",
+      "reorder": "Reorder",
+      "subtotal": "Subtotal",
+      "shipping": "Shipping",
+      "total": "Total",
+      "orderItems": "Order Items",
+      "customerInfo": "Customer Information",
+      "shippingAddress": "Shipping Address",
+      "orderNotes": "Order Notes",
+      "orderActions": "Order Actions",
+      "cancelOrder": "Cancel Order",
+      "downloadInvoice": "Download Invoice"
+    },
+    "wishlist": {
+      "title": "My Wishlist",
+      "subtitle": "You have {count} items in your wishlist",
+      "empty": "Your wishlist is empty",
+      "emptyDesc": "Start adding products you love to keep track of them",
+      "actions": "Wishlist Actions",
+      "actionsDesc": "Manage your wishlist items",
+      "addAllToCart": "Add All to Cart",
+      "clearAll": "Clear Wishlist",
+      "clearConfirm": "Are you sure you want to clear your entire wishlist?"
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "subtitle": "Manage your personal information and account settings",
+      "personalInfo": "Personal Information",
+      "personalInfoDesc": "Update your basic account information",
+      "updateProfile": "Update Profile",
+      "updating": "Updating...",
+      "updateSuccess": "Profile updated successfully",
+      "accountStats": "Account Statistics",
+      "memberSince": "Member since",
+      "lastLogin": "Last login",
+      "changePassword": "Change Password",
+      "changePasswordDesc": "Update your password to keep your account secure",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "changingPassword": "Changing password...",
+      "passwordChangeSuccess": "Password changed successfully",
+      "validation": {
+        "currentPasswordRequired": "Current password is required"
+      }
+    },
+    "addresses": {
+      "title": "Shipping Addresses",
+      "subtitle": "Manage your saved shipping addresses",
+      "addNew": "Add New Address",
+      "addFirst": "Add Your First Address",
+      "noAddresses": "No addresses saved",
+      "noAddressesDesc": "Add your first address to make checkout faster",
+      "editAddress": "Edit Address",
+      "fillDetails": "Fill in the address details below",
+      "address1": "Address Line 1",
+      "address2": "Address Line 2 (Optional)",
+      "city": "City",
+      "state": "State/Province",
+      "postalCode": "Postal Code",
+      "country": "Country",
+      "setAsDefault": "Set as default address",
+      "address1Placeholder": "Street address, building number",
+      "address2Placeholder": "Apartment, unit, floor",
+      "address": "Address",
+      "default": "Default",
+      "makeDefault": "Make Default",
+      "deleteConfirm": "Are you sure you want to delete this address?",
+      "validation": {
+        "address1Required": "Address line 1 is required",
+        "cityRequired": "City is required",
+        "stateRequired": "State/Province is required",
+        "postalCodeRequired": "Postal code is required",
+        "countryRequired": "Country is required"
       }
     }
   },

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useSession, signOut } from "next-auth/react";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,9 @@ import {
   IconCategory,
   IconMail,
   IconGlobe,
+  IconUser,
+  IconLogin,
+  IconLogout,
 } from "@tabler/icons-react";
 
 // Components
@@ -51,6 +55,7 @@ export default function Navbar() {
   const { wishlist } = useWishlist();
   const { t } = useTranslations();
   const { isRtl } = useLanguage();
+  const { data: session, status } = useSession();
 
   const navLinks = [
     { href: "/", label: t("navigation.home"), icon: IconHome },
@@ -231,6 +236,46 @@ export default function Navbar() {
                           </Link>
                         );
                       })}
+
+                      {/* Account/Auth Section */}
+                      <div className="border-t pt-4 mt-4">
+                        {session?.user ? (
+                          <>
+                            <Link
+                              href="/account"
+                              className={cn(
+                                "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors",
+                                pathname.startsWith("/account")
+                                  ? "bg-primary/10 text-primary"
+                                  : "text-foreground/90 hover:bg-accent",
+                              )}
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              <IconUser className="h-5 w-5" />
+                              {t("navigation.account")}
+                            </Link>
+                            <button
+                              onClick={() => {
+                                signOut({ callbackUrl: "/" });
+                                setMobileMenuOpen(false);
+                              }}
+                              className="flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors text-foreground/90 hover:bg-accent w-full"
+                            >
+                              <IconLogout className="h-5 w-5" />
+                              {t("auth.logout")}
+                            </button>
+                          </>
+                        ) : (
+                          <Link
+                            href="/login"
+                            className="flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors text-foreground/90 hover:bg-accent"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <IconLogin className="h-5 w-5" />
+                            {t("auth.login")}
+                          </Link>
+                        )}
+                      </div>
 
                       {/* Language Switcher in Mobile Menu */}
                       <LanguageSwitcher variant="drawer" />
@@ -468,6 +513,31 @@ export default function Navbar() {
                   </motion.span>
                 )}
               </Button>
+
+              {/* Account/Auth Button */}
+              {session?.user ? (
+                <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" asChild>
+                    <Link href="/account">
+                      <IconUser className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    title={t("auth.logout")}
+                  >
+                    <IconLogout className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href="/login">
+                    <IconLogin className="h-5 w-5" />
+                  </Link>
+                </Button>
+              )}
 
               {/* Language Switcher */}
               <LanguageSwitcher />

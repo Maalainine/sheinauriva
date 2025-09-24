@@ -27,7 +27,21 @@
     "refresh": "تحديث",
     "backToHome": "العودة للرئيسية",
     "nothingHere": "لا يوجد شيء هنا حتى الآن.",
-    "tryAgain": "حاول مرة أخرى"
+    "tryAgain": "حاول مرة أخرى",
+    "user": "المستخدم",
+    "viewAll": "عرض الكل",
+    "items": "عناصر",
+    "quantity": "الكمية",
+    "total": "المجموع",
+    "sale": "تخفيض",
+    "outOfStock": "نفد المخزون",
+    "addToCart": "أضف للسلة",
+    "adding": "جاري الإضافة...",
+    "startShopping": "ابدأ التسوق",
+    "goBack": "العودة",
+    "update": "تحديث",
+    "updating": "جاري التحديث...",
+    "saving": "جاري الحفظ..."
   },
   "navigation": {
     "home": "الرئيسية",
@@ -210,7 +224,89 @@
     "forgotPassword": "نسيت كلمة المرور؟",
     "loginRequired": "يرجى تسجيل الدخول للمتابعة",
     "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
-    "accessDenied": "تم رفض الوصول"
+    "accessDenied": "تم رفض الوصول",
+    "login": {
+      "welcome": "مرحباً بعودتك",
+      "subtitle": "سجل الدخول إلى حسابك",
+      "title": "تسجيل الدخول",
+      "enterCredentials": "أدخل بياناتك للمتابعة",
+      "signingIn": "جاري تسجيل الدخول...",
+      "signIn": "تسجيل الدخول",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ليس لديك حساب؟",
+      "signUp": "إنشاء حساب",
+      "fields": {
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور"
+      },
+      "placeholders": {
+        "email": "your@email.com",
+        "password": "أدخل كلمة المرور"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMinLength": "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      },
+      "errors": {
+        "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+        "checkCredentials": "يرجى التحقق من بياناتك والمحاولة مرة أخرى",
+        "sessionExpired": "انتهت صلاحية جلستك",
+        "loginAgain": "يرجى تسجيل الدخول مرة أخرى للمتابعة",
+        "serverConfig": "خطأ في إعدادات الخادم",
+        "serverConfigDetails": "حدث خطأ في إعدادات الخادم",
+        "accessDenied": "تم رفض الوصول",
+        "noPermission": "ليس لديك إذن للوصول إلى هذا المورد",
+        "authError": "خطأ في المصادقة",
+        "unknownError": "حدث خطأ غير معروف أثناء المصادقة",
+        "unexpectedError": "حدث خطأ غير متوقع",
+        "tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً",
+        "clientAccessOnly": "هذا تسجيل الدخول للعملاء فقط",
+        "registerFirst": "يرجى التسجيل أولاً إذا لم يكن لديك حساب"
+      }
+    },
+    "register": {
+      "welcome": "إنشاء حساب",
+      "subtitle": "انضم إلينا وابدأ التسوق",
+      "title": "إنشاء حسابك",
+      "createAccount": "إنشاء حساب",
+      "creating": "جاري إنشاء الحساب...",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "fields": {
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "confirmPassword": "تأكيد كلمة المرور"
+      },
+      "placeholders": {
+        "name": "أدخل اسمك الكامل",
+        "email": "your@email.com",
+        "password": "إنشاء كلمة مرور قوية",
+        "confirmPassword": "تأكيد كلمة المرور"
+      },
+      "validation": {
+        "nameRequired": "الاسم مطلوب",
+        "nameMinLength": "الاسم يجب أن يكون حرفين على الأقل",
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+        "passwordRequired": "كلمة المرور مطلوبة",
+        "passwordMinLength": "كلمة المرور يجب أن تكون 8 أحرف على الأقل",
+        "passwordStrength": "كلمة المرور يجب أن تحتوي على أحرف كبيرة وصغيرة ورقم",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+        "passwordsDoNotMatch": "كلمات المرور غير متطابقة"
+      },
+      "errors": {
+        "unexpectedError": "حدث خطأ غير متوقع",
+        "tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً"
+      },
+      "success": {
+        "title": "تم إنشاء الحساب!",
+        "message": "تم إنشاء حسابك بنجاح",
+        "redirecting": "جاري التوجيه إلى حسابك..."
+      }
+    }
   },
   "checkout": {
     "title": "إنهاء الطلب",
@@ -435,6 +531,117 @@
         "unknownError": "حدث خطأ غير معروف أثناء المصادقة.",
         "unexpectedError": "حدث خطأ غير متوقع",
         "tryAgainLater": "يرجى المحاولة مرة أخرى لاحقاً."
+      }
+    }
+  },
+  "account": {
+    "navigation": {
+      "dashboard": "لوحة التحكم",
+      "orders": "الطلبات",
+      "wishlist": "المفضلة",
+      "addresses": "العناوين",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "signOut": "تسجيل الخروج"
+    },
+    "dashboard": {
+      "welcome": "مرحباً بعودتك، {name}!",
+      "subtitle": "إدارة حسابك وتتبع طلباتك",
+      "stats": {
+        "totalOrders": "إجمالي الطلبات",
+        "totalSpent": "إجمالي المصروف",
+        "wishlistItems": "عناصر المفضلة",
+        "addresses": "العناوين المحفوظة"
+      },
+      "recentOrders": "الطلبات الأخيرة",
+      "orderNumber": "طلب رقم #{number}",
+      "noOrders": "لا توجد طلبات بعد",
+      "noOrdersDesc": "لم تقم بأي طلبات بعد",
+      "quickActions": "إجراءات سريعة"
+    },
+    "orders": {
+      "title": "سجل الطلبات",
+      "subtitle": "عرض وتتبع جميع طلباتك ({count} إجمالي)",
+      "noOrders": "لا توجد طلبات بعد",
+      "noOrdersDesc": "لم تقم بأي طلبات بعد. ابدأ التسوق لترى طلباتك هنا!",
+      "orderNumber": "طلب رقم #{number}",
+      "orderDetails": "تفاصيل طلب رقم #{number}",
+      "placedOn": "تم الطلب في",
+      "moreItems": "و {count} عناصر أخرى",
+      "includesShipping": "يشمل الشحن {amount}",
+      "viewDetails": "عرض التفاصيل",
+      "reorder": "إعادة طلب",
+      "subtotal": "المجموع الفرعي",
+      "shipping": "الشحن",
+      "total": "المجموع",
+      "orderItems": "عناصر الطلب",
+      "customerInfo": "معلومات العميل",
+      "shippingAddress": "عنوان الشحن",
+      "orderNotes": "ملاحظات الطلب",
+      "orderActions": "إجراءات الطلب",
+      "cancelOrder": "إلغاء الطلب",
+      "downloadInvoice": "تحميل الفاتورة"
+    },
+    "wishlist": {
+      "title": "قائمة المفضلة",
+      "subtitle": "لديك {count} عناصر في قائمة المفضلة",
+      "empty": "قائمة المفضلة فارغة",
+      "emptyDesc": "ابدأ بإضافة المنتجات التي تحبها لتتبعها",
+      "actions": "إجراءات قائمة المفضلة",
+      "actionsDesc": "إدارة عناصر قائمة المفضلة",
+      "addAllToCart": "أضف الكل للسلة",
+      "clearAll": "مسح قائمة المفضلة",
+      "clearConfirm": "هل أنت متأكد من أنك تريد مسح قائمة المفضلة بالكامل؟"
+    },
+    "profile": {
+      "title": "إعدادات الملف الشخصي",
+      "subtitle": "إدارة معلوماتك الشخصية وإعدادات الحساب",
+      "personalInfo": "المعلومات الشخصية",
+      "personalInfoDesc": "تحديث معلومات حسابك الأساسية",
+      "updateProfile": "تحديث الملف الشخصي",
+      "updating": "جاري التحديث...",
+      "updateSuccess": "تم تحديث الملف الشخصي بنجاح",
+      "accountStats": "إحصائيات الحساب",
+      "memberSince": "عضو منذ",
+      "lastLogin": "آخر تسجيل دخول",
+      "changePassword": "تغيير كلمة المرور",
+      "changePasswordDesc": "تحديث كلمة المرور للحفاظ على أمان حسابك",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "changingPassword": "جاري تغيير كلمة المرور...",
+      "passwordChangeSuccess": "تم تغيير كلمة المرور بنجاح",
+      "validation": {
+        "currentPasswordRequired": "كلمة المرور الحالية مطلوبة"
+      }
+    },
+    "addresses": {
+      "title": "عناوين الشحن",
+      "subtitle": "إدارة عناوين الشحن المحفوظة",
+      "addNew": "إضافة عنوان جديد",
+      "addFirst": "أضف عنوانك الأول",
+      "noAddresses": "لا توجد عناوين محفوظة",
+      "noAddressesDesc": "أضف عنوانك الأول لتسريع عملية الدفع",
+      "editAddress": "تعديل العنوان",
+      "fillDetails": "املأ تفاصيل العنوان أدناه",
+      "address1": "سطر العنوان الأول",
+      "address2": "سطر العنوان الثاني (اختياري)",
+      "city": "المدينة",
+      "state": "الولاية/المقاطعة",
+      "postalCode": "الرمز البريدي",
+      "country": "البلد",
+      "setAsDefault": "تعيين كعنوان افتراضي",
+      "address1Placeholder": "عنوان الشارع، رقم المبنى",
+      "address2Placeholder": "شقة، وحدة، طابق",
+      "address": "العنوان",
+      "default": "افتراضي",
+      "makeDefault": "جعله افتراضي",
+      "deleteConfirm": "هل أنت متأكد من أنك تريد حذف هذا العنوان؟",
+      "validation": {
+        "address1Required": "سطر العنوان الأول مطلوب",
+        "cityRequired": "المدينة مطلوبة",
+        "stateRequired": "الولاية/المقاطعة مطلوبة",
+        "postalCodeRequired": "الرمز البريدي مطلوب",
+        "countryRequired": "البلد مطلوب"
       }
     }
   },
