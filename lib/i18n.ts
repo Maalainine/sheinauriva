@@ -9,12 +9,6 @@ export const localeLabels: Record<Locale, string> = {
   fr: "Français",
 };
 
-export const localeFlags: Record<Locale, string> = {
-  en: "🇺🇸",
-  ar: "🇲🇦",
-  fr: "🇫🇷",
-};
-
 // RTL languages
 export const rtlLocales: Locale[] = ["ar"];
 

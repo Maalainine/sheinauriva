@@ -27,6 +27,7 @@ import {
   IconPackage,
   IconCategory,
   IconMail,
+  IconGlobe,
 } from "@tabler/icons-react";
 
 // Components
@@ -231,28 +232,8 @@ export default function Navbar() {
                         );
                       })}
 
-                      {/* Wishlist Link */}
-                      <Link
-                        href="/wishlist"
-                        className={cn(
-                          "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors",
-                          pathname === "/wishlist"
-                            ? "bg-primary/10 text-primary"
-                            : "text-foreground/90 hover:bg-accent",
-                        )}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <IconHeart className="h-5 w-5" />
-                        {t("navigation.wishlist")}
-                      </Link>
-
                       {/* Language Switcher in Mobile Menu */}
-                      <div className="px-3 py-3">
-                        <Label className="text-sm font-medium text-muted-foreground mb-2 block">
-                          {t("common.language")}
-                        </Label>
-                        <LanguageSwitcher variant="compact" />
-                      </div>
+                      <LanguageSwitcher variant="drawer" />
                     </div>
                   </div>
                 </SheetContent>
@@ -276,12 +257,12 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* Right side - Search & Cart */}
+            {/* Right side - Search, Wishlist & Cart */}
             <div
               className={cn(
                 "flex items-center justify-end gap-1",
                 isRtl
-                  ? "flex-row-reverse [&>*:nth-child(1)]:order-2 [&>*:nth-child(2)]:order-1"
+                  ? "flex-row-reverse [&>*:nth-child(1)]:order-3 [&>*:nth-child(2)]:order-2 [&>*:nth-child(3)]:order-1"
                   : "",
               )}
             >
@@ -317,6 +298,33 @@ export default function Navbar() {
                   />
                 </SheetContent>
               </Sheet>
+
+              {/* Wishlist Button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative group"
+                asChild
+              >
+                <Link href="/wishlist">
+                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  {isClient && wishlistCount > 0 && (
+                    <motion.span
+                      key={`wishlist-count-mobile-${wishlistCount}`}
+                      initial={{ scale: 1.2, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 20,
+                      }}
+                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                    >
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </motion.span>
+                  )}
+                </Link>
+              </Button>
 
               {/* Cart */}
               <Button
@@ -462,7 +470,7 @@ export default function Navbar() {
               </Button>
 
               {/* Language Switcher */}
-              <LanguageSwitcher variant="compact" />
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
