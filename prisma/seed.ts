@@ -298,7 +298,113 @@ async function main() {
     }
   }
 
-  // 9. Create settings (optional)
+  // 9. Create test orders for client users
+  const clientUser = await prisma.user.findFirst({
+    where: { email: "client@example.com" },
+  });
+
+  if (clientUser && tshirt && runningShoes) {
+    // Create a few test orders
+    const testOrders = [
+      {
+        userId: clientUser.id,
+        status: "DELIVERED" as const,
+        total: 159.98,
+        shippingCost: 10.0,
+        customerName: clientUser.name || "John Doe",
+        customerEmail: clientUser.email,
+        customerPhone: "+1234567890",
+        shippingLine1: "123 Main Street",
+        shippingLine2: "Apt 4B",
+        shippingCity: "New York",
+        shippingState: "NY",
+        shippingPostal: "10001",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+      },
+      {
+        userId: clientUser.id,
+        status: "SHIPPED" as const,
+        total: 29.99,
+        shippingCost: 5.0,
+        customerName: clientUser.name || "John Doe",
+        customerEmail: clientUser.email,
+        customerPhone: "+1234567890",
+        shippingLine1: "123 Main Street",
+        shippingLine2: "Apt 4B",
+        shippingCity: "New York",
+        shippingState: "NY",
+        shippingPostal: "10001",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      },
+      {
+        userId: clientUser.id,
+        status: "PROCESSING" as const,
+        total: 129.99,
+        shippingCost: 10.0,
+        customerName: clientUser.name || "John Doe",
+        customerEmail: clientUser.email,
+        customerPhone: "+1234567890",
+        shippingLine1: "123 Main Street",
+        shippingLine2: "Apt 4B",
+        shippingCity: "New York",
+        shippingState: "NY",
+        shippingPostal: "10001",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+      },
+    ];
+
+    for (const orderData of testOrders) {
+      const order = await prisma.order.create({
+        data: orderData,
+      });
+
+      // Add order items
+      if (order.total > 100) {
+        // Multi-item order
+        await prisma.orderItem.createMany({
+          data: [
+            {
+              orderId: order.id,
+              productId: tshirt.id,
+              quantity: 2,
+              price: 29.99,
+              productName: tshirt.name,
+              productDetails: "Size: M, Color: Red",
+            },
+            {
+              orderId: order.id,
+              productId: runningShoes.id,
+              quantity: 1,
+              price: 129.99,
+              productName: runningShoes.name,
+              productDetails: "Size: 10",
+            },
+          ],
+        });
+      } else {
+        // Single item order
+        await prisma.orderItem.create({
+          data: {
+            orderId: order.id,
+            productId: tshirt.id,
+            quantity: 1,
+            price: 29.99,
+            productName: tshirt.name,
+            productDetails: "Size: L, Color: Blue",
+          },
+        });
+      }
+    }
+
+    console.log(
+      `📦 Created ${testOrders.length} test orders for client account`,
+    );
+  }
+
+  // 10. Create settings (optional)
   try {
     await prisma.settings.upsert({
       where: { id: "main" },
@@ -323,6 +429,7 @@ async function main() {
   console.log(`📦 ${categories.length} categories created`);
   console.log(`🔖 ${tags.length} tags created`);
   console.log(`👕 ${products.length} products created with variants`);
+  console.log(`📦 Test orders created for client accounts`);
 }
 
 main()

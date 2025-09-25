@@ -427,6 +427,8 @@
     "orderError": "فشل في تقديم الطلب. يرجى المحاولة مرة أخرى.",
     "shippingTo": "الشحن إلى {city}",
     "selectCityShipping": "اختر مدينة لحساب الشحن",
+    "savedAddresses": "العناوين المحفوظة",
+    "selectAddress": "اختر عنواناً",
     "fields": {
       "fullName": "الاسم الكامل",
       "phone": "الهاتف",
@@ -434,6 +436,7 @@
       "country": "البلد",
       "city": "المدينة",
       "address": "العنوان الكامل",
+      "addressOrEdit": "العنوان (أو عدل أدناه)",
       "notes": "ملاحظات الطلب (اختياري)"
     },
     "placeholders": {
@@ -610,6 +613,9 @@
       "newPassword": "كلمة المرور الجديدة",
       "changingPassword": "جاري تغيير كلمة المرور...",
       "passwordChangeSuccess": "تم تغيير كلمة المرور بنجاح",
+      "languagePreferences": "تفضيلات اللغة",
+      "languagePreferencesDesc": "اختر لغتك المفضلة لواجهة المتجر",
+      "selectLanguage": "اختر لغتك المفضلة",
       "validation": {
         "currentPasswordRequired": "كلمة المرور الحالية مطلوبة"
       }

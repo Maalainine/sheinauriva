@@ -359,6 +359,8 @@
     "orderError": "Échec de la commande. Veuillez réessayer.",
     "shippingTo": "Livraison à {city}",
     "selectCityShipping": "Sélectionnez une ville pour calculer la livraison",
+    "savedAddresses": "Adresses Sauvegardées",
+    "selectAddress": "Sélectionner une adresse",
     "fields": {
       "fullName": "Nom Complet",
       "phone": "Téléphone",
@@ -366,6 +368,7 @@
       "country": "Pays",
       "city": "Ville",
       "address": "Adresse Complète",
+      "addressOrEdit": "Adresse (ou modifier ci-dessous)",
       "notes": "Notes de Commande (Optionnel)"
     },
     "placeholders": {
@@ -582,6 +585,9 @@
       "newPassword": "Nouveau mot de passe",
       "changingPassword": "Changement du mot de passe...",
       "passwordChangeSuccess": "Mot de passe changé avec succès",
+      "languagePreferences": "Préférences de langue",
+      "languagePreferencesDesc": "Choisissez votre langue préférée pour l'interface",
+      "selectLanguage": "Sélectionnez votre langue préférée",
       "validation": {
         "currentPasswordRequired": "Le mot de passe actuel est requis"
       }

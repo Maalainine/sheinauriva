@@ -359,6 +359,8 @@
     "orderError": "Failed to place order. Please try again.",
     "shippingTo": "Shipping to {city}",
     "selectCityShipping": "Select a city to calculate shipping",
+    "savedAddresses": "Saved Addresses",
+    "selectAddress": "Select an address",
     "fields": {
       "fullName": "Full Name",
       "phone": "Phone",
@@ -366,6 +368,7 @@
       "country": "Country",
       "city": "City",
       "address": "Full Address",
+      "addressOrEdit": "Address (or edit below)",
       "notes": "Order Notes (Optional)"
     },
     "placeholders": {
@@ -582,6 +585,9 @@
       "newPassword": "New Password",
       "changingPassword": "Changing password...",
       "passwordChangeSuccess": "Password changed successfully",
+      "languagePreferences": "Language Preferences",
+      "languagePreferencesDesc": "Choose your preferred language for the interface",
+      "selectLanguage": "Select your preferred language",
       "validation": {
         "currentPasswordRequired": "Current password is required"
       }

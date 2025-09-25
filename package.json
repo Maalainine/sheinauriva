@@ -7,7 +7,7 @@
   "homepage": "https://justoriginale.com",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --port 3000",
     "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
@@ -93,7 +93,7 @@
     "@prisma/ppg-tunnel": "^0.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.7",
-    "@types/node-fetch": "^2.6.12",
+    "@types/node-fetch": "^2.6.13",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "axios": "^1.10.0",

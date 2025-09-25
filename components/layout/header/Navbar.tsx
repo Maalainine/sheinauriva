@@ -16,6 +16,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 
 // Icons
@@ -32,6 +39,10 @@ import {
   IconUser,
   IconLogin,
   IconLogout,
+  IconDashboard,
+  IconShoppingBag,
+  IconSettings,
+  IconChevronDown,
 } from "@tabler/icons-react";
 
 // Components
@@ -345,31 +356,34 @@ export default function Navbar() {
               </Sheet>
 
               {/* Wishlist Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative group"
-                asChild
-              >
-                <Link href="/wishlist">
-                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                  {isClient && wishlistCount > 0 && (
-                    <motion.span
-                      key={`wishlist-count-mobile-${wishlistCount}`}
-                      initial={{ scale: 1.2, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 20,
-                      }}
-                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-                    >
-                      {wishlistCount > 9 ? "9+" : wishlistCount}
-                    </motion.span>
-                  )}
-                </Link>
-              </Button>
+              {/* Wishlist button - only show for guests */}
+              {!session?.user && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative group"
+                  asChild
+                >
+                  <Link href="/wishlist">
+                    <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                    {isClient && wishlistCount > 0 && (
+                      <motion.span
+                        key={`wishlist-count-mobile-${wishlistCount}`}
+                        initial={{ scale: 1.2, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 20,
+                        }}
+                        className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                      >
+                        {wishlistCount > 9 ? "9+" : wishlistCount}
+                      </motion.span>
+                    )}
+                  </Link>
+                </Button>
+              )}
 
               {/* Cart */}
               <Button
@@ -463,31 +477,34 @@ export default function Navbar() {
               <SearchBar />
 
               {/* Wishlist Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative group"
-                asChild
-              >
-                <Link href="/wishlist">
-                  <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
-                  {isClient && wishlistCount > 0 && (
-                    <motion.span
-                      key={`wishlist-count-desktop-${wishlistCount}`}
-                      initial={{ scale: 1.2, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 20,
-                      }}
-                      className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-                    >
-                      {wishlistCount > 9 ? "9+" : wishlistCount}
-                    </motion.span>
-                  )}
-                </Link>
-              </Button>
+              {/* Wishlist button - only show for guests */}
+              {!session?.user && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative group"
+                  asChild
+                >
+                  <Link href="/wishlist">
+                    <IconHeart className="h-5 w-5 transition-transform group-hover:scale-110" />
+                    {isClient && wishlistCount > 0 && (
+                      <motion.span
+                        key={`wishlist-count-desktop-${wishlistCount}`}
+                        initial={{ scale: 1.2, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 20,
+                        }}
+                        className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                      >
+                        {wishlistCount > 9 ? "9+" : wishlistCount}
+                      </motion.span>
+                    )}
+                  </Link>
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
@@ -514,23 +531,62 @@ export default function Navbar() {
                 )}
               </Button>
 
-              {/* Account/Auth Button */}
+              {/* Account/Auth Dropdown */}
               {session?.user ? (
-                <div className="flex items-center gap-1">
-                  <Button variant="ghost" size="icon" asChild>
-                    <Link href="/account">
-                      <IconUser className="h-5 w-5" />
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    title={t("auth.logout")}
-                  >
-                    <IconLogout className="h-4 w-4" />
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <IconUser className="h-4 w-4" />
+                      <span className="hidden md:inline">
+                        {session.user.name}
+                      </span>
+                      <IconChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem asChild>
+                      <Link href="/account" className="flex items-center gap-2">
+                        <IconDashboard className="h-4 w-4" />
+                        {t("account.navigation.dashboard")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/orders"
+                        className="flex items-center gap-2"
+                      >
+                        <IconShoppingBag className="h-4 w-4" />
+                        {t("account.navigation.orders")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/wishlist"
+                        className="flex items-center gap-2"
+                      >
+                        <IconHeart className="h-4 w-4" />
+                        {t("account.navigation.wishlist")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/profile"
+                        className="flex items-center gap-2"
+                      >
+                        <IconSettings className="h-4 w-4" />
+                        {t("account.navigation.profile")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                    >
+                      <IconLogout className="h-4 w-4" />
+                      {t("auth.logout")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <Button variant="ghost" size="icon" asChild>
                   <Link href="/login">

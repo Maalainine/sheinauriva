@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
 interface OrderItem {
-  productId: string;
+  productId: string | number;
   quantity: number;
   price: number;
-  variantId?: string;
+  variantId?: string | number;
 }
 
 interface OrderData {
@@ -31,6 +33,19 @@ interface OrderData {
 export async function POST(request: Request) {
   try {
     const orderData: OrderData = await request.json();
+
+    // Safely check for authenticated user (optional, won't break guest orders)
+    let userId: number | null = null;
+    try {
+      const session = await getServerSession(authOptions);
+      if (session?.user && session.user.role === "CLIENT" && session.user.id) {
+        userId = parseInt(session.user.id);
+        console.log("Order being created by authenticated user:", userId);
+      }
+    } catch (sessionError) {
+      console.log("Session check failed (continuing as guest):", sessionError);
+      // Continue as guest order - don't break the flow
+    }
 
     // Validate required fields
     if (
@@ -92,48 +107,84 @@ export async function POST(request: Request) {
       // Create a map of productId to product name
       const productMap = new Map(products.map((p) => [p.id, p.name]));
 
-      // Create the order
-      const order = await prisma.order.create({
-        data: {
-          customerName: orderData.customer.name,
-          customerEmail:
-            orderData.customer.email || `guest_${Date.now()}@justoriginale.com`,
-          customerPhone: orderData.customer.phone || null,
-          shippingLine1: orderData.customer.address,
-          shippingCity: orderData.customer.city,
-          shippingCountry: orderData.customer.country,
-          shippingPostal: orderData.customer.zipCode,
-          notes: orderData.customer.notes || null,
-          shippingCost: orderData.shipping,
-          total: orderData.total,
-          status: "PENDING",
-          orderItems: {
-            create: processedItems.map((item) => ({
-              productId: item.productId,
-              productVariantId: item.variantId || null,
-              productName: productMap.get(item.productId) || "Unknown Product",
-              quantity: item.quantity,
-              price: item.price,
-            })),
+      // Create the order and update user stats in a transaction
+      const result = await prisma.$transaction(async (tx) => {
+        // Create the order
+        const order = await tx.order.create({
+          data: {
+            userId: userId, // Will be null for guest orders, which is fine
+            customerName: orderData.customer.name,
+            customerEmail:
+              orderData.customer.email ||
+              `guest_${Date.now()}@justoriginale.com`,
+            customerPhone: orderData.customer.phone || null,
+            shippingLine1: orderData.customer.address,
+            shippingCity: orderData.customer.city,
+            shippingCountry: orderData.customer.country,
+            shippingPostal: orderData.customer.zipCode,
+            notes: orderData.customer.notes || null,
+            shippingCost: orderData.shipping,
+            total: orderData.total,
+            status: "PENDING",
+            orderItems: {
+              create: processedItems.map((item) => ({
+                productId: item.productId,
+                productVariantId: item.variantId || null,
+                productName:
+                  productMap.get(item.productId) || "Unknown Product",
+                quantity: item.quantity,
+                price: item.price,
+              })),
+            },
           },
-        },
-        include: {
-          orderItems: true,
-        },
+          include: {
+            orderItems: true,
+          },
+        });
+
+        // If this is an authenticated user, update their stats
+        if (userId) {
+          await tx.user.update({
+            where: { id: userId },
+            data: {
+              totalSpent: {
+                increment: orderData.total,
+              },
+              ordersCount: {
+                increment: 1,
+              },
+            },
+          });
+          console.log(
+            `Updated user ${userId} stats: +${orderData.total} spent, +1 order`,
+          );
+        }
+
+        return order;
       });
 
       return NextResponse.json({
         success: true,
-        orderId: order.id,
-        orderNumber: `ORD-${String(order.id).padStart(6, "0")}`,
+        orderId: result.id,
+        orderNumber: `ORD-${String(result.id).padStart(6, "0")}`,
       });
     } catch (error) {
       console.error("Error creating order:", error);
+      console.error(
+        "Order data that failed:",
+        JSON.stringify(orderData, null, 2),
+      );
       return NextResponse.json(
         {
           success: false,
           error: "Failed to create order",
           details: error instanceof Error ? error.message : "Unknown error",
+          ...(process.env.NODE_ENV === "development" && {
+            debug: {
+              orderData: orderData,
+              stack: error instanceof Error ? error.stack : undefined,
+            },
+          }),
         },
         { status: 500 },
       );

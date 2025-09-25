@@ -1,9 +1,15 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "@/hooks/useTranslations";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +23,7 @@ import {
   IconAlertCircle,
   IconLoader2,
   IconEye,
-  IconEyeOff
+  IconEyeOff,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
@@ -48,17 +54,17 @@ export default function ProfilePage() {
 
   // Profile form
   const [profileForm, setProfileForm] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
   });
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
 
   // Password form
   const [passwordForm, setPasswordForm] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [showPasswords, setShowPasswords] = useState({
     current: false,
@@ -76,19 +82,19 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('/api/account/profile');
+        const response = await fetch("/api/account/profile");
         if (!response.ok) {
-          throw new Error('Failed to fetch profile');
+          throw new Error("Failed to fetch profile");
         }
         const data = await response.json();
         setProfile(data);
         setProfileForm({
-          name: data.name || '',
-          email: data.email || '',
+          name: data.name || "",
+          email: data.email || "",
         });
       } catch (error) {
-        console.error('Failed to fetch profile:', error);
-        setError(error instanceof Error ? error.message : 'Unknown error');
+        console.error("Failed to fetch profile:", error);
+        setError(error instanceof Error ? error.message : "Unknown error");
       } finally {
         setIsLoading(false);
       }
@@ -104,18 +110,18 @@ export default function ProfilePage() {
     let isValid = true;
 
     if (!profileForm.name.trim()) {
-      errors.name = t('auth.register.validation.nameRequired');
+      errors.name = t("auth.register.validation.nameRequired");
       isValid = false;
     } else if (profileForm.name.trim().length < 2) {
-      errors.name = t('auth.register.validation.nameMinLength');
+      errors.name = t("auth.register.validation.nameMinLength");
       isValid = false;
     }
 
     if (!profileForm.email.trim()) {
-      errors.email = t('auth.register.validation.emailRequired');
+      errors.email = t("auth.register.validation.emailRequired");
       isValid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profileForm.email)) {
-      errors.email = t('auth.register.validation.emailInvalid');
+      errors.email = t("auth.register.validation.emailInvalid");
       isValid = false;
     }
 
@@ -128,26 +134,34 @@ export default function ProfilePage() {
     let isValid = true;
 
     if (!passwordForm.currentPassword) {
-      errors.currentPassword = t('account.profile.validation.currentPasswordRequired');
+      errors.currentPassword = t(
+        "account.profile.validation.currentPasswordRequired",
+      );
       isValid = false;
     }
 
     if (!passwordForm.newPassword) {
-      errors.newPassword = t('auth.register.validation.passwordRequired');
+      errors.newPassword = t("auth.register.validation.passwordRequired");
       isValid = false;
     } else if (passwordForm.newPassword.length < 8) {
-      errors.newPassword = t('auth.register.validation.passwordMinLength');
+      errors.newPassword = t("auth.register.validation.passwordMinLength");
       isValid = false;
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(passwordForm.newPassword)) {
-      errors.newPassword = t('auth.register.validation.passwordStrength');
+    } else if (
+      !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(passwordForm.newPassword)
+    ) {
+      errors.newPassword = t("auth.register.validation.passwordStrength");
       isValid = false;
     }
 
     if (!passwordForm.confirmPassword) {
-      errors.confirmPassword = t('auth.register.validation.confirmPasswordRequired');
+      errors.confirmPassword = t(
+        "auth.register.validation.confirmPasswordRequired",
+      );
       isValid = false;
     } else if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      errors.confirmPassword = t('auth.register.validation.passwordsDoNotMatch');
+      errors.confirmPassword = t(
+        "auth.register.validation.passwordsDoNotMatch",
+      );
       isValid = false;
     }
 
@@ -167,10 +181,10 @@ export default function ProfilePage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/account/profile', {
-        method: 'PUT',
+      const response = await fetch("/api/account/profile", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: profileForm.name.trim(),
@@ -180,7 +194,7 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Failed to update profile');
+        throw new Error(data.message || "Failed to update profile");
       }
 
       // Update the session with new data
@@ -191,10 +205,11 @@ export default function ProfilePage() {
 
       setProfileSuccess(true);
       setTimeout(() => setProfileSuccess(false), 5000);
-
     } catch (error) {
-      console.error('Profile update error:', error);
-      setError(error instanceof Error ? error.message : 'Failed to update profile');
+      console.error("Profile update error:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to update profile",
+      );
     } finally {
       setIsUpdatingProfile(false);
     }
@@ -212,10 +227,10 @@ export default function ProfilePage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/account/change-password', {
-        method: 'PUT',
+      const response = await fetch("/api/account/change-password", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
@@ -225,20 +240,21 @@ export default function ProfilePage() {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.message || 'Failed to change password');
+        throw new Error(data.message || "Failed to change password");
       }
 
       setPasswordForm({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
       });
       setPasswordSuccess(true);
       setTimeout(() => setPasswordSuccess(false), 5000);
-
     } catch (error) {
-      console.error('Password change error:', error);
-      setError(error instanceof Error ? error.message : 'Failed to change password');
+      console.error("Password change error:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to change password",
+      );
     } finally {
       setIsUpdatingPassword(false);
     }
@@ -275,9 +291,7 @@ export default function ProfilePage() {
         <h1 className="text-3xl font-bold text-foreground mb-2">
           {t("account.profile.title")}
         </h1>
-        <p className="text-muted-foreground">
-          {t("account.profile.subtitle")}
-        </p>
+        <p className="text-muted-foreground">{t("account.profile.subtitle")}</p>
       </div>
 
       {error && (
@@ -303,7 +317,9 @@ export default function ProfilePage() {
             {profileSuccess && (
               <Alert className="mb-4">
                 <IconCheck className="h-4 w-4" />
-                <AlertDescription>{t("account.profile.updateSuccess")}</AlertDescription>
+                <AlertDescription>
+                  {t("account.profile.updateSuccess")}
+                </AlertDescription>
               </Alert>
             )}
 
@@ -315,16 +331,24 @@ export default function ProfilePage() {
                   type="text"
                   value={profileForm.name}
                   onChange={(e) => {
-                    setProfileForm(prev => ({ ...prev, name: e.target.value }));
+                    setProfileForm((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }));
                     if (profileErrors.name) {
-                      setProfileErrors(prev => ({ ...prev, name: undefined }));
+                      setProfileErrors((prev) => ({
+                        ...prev,
+                        name: undefined,
+                      }));
                     }
                   }}
-                  className={cn(profileErrors.name && 'border-destructive')}
+                  className={cn(profileErrors.name && "border-destructive")}
                   disabled={isUpdatingProfile}
                 />
                 {profileErrors.name && (
-                  <p className="text-sm text-destructive">{profileErrors.name}</p>
+                  <p className="text-sm text-destructive">
+                    {profileErrors.name}
+                  </p>
                 )}
               </div>
 
@@ -335,20 +359,32 @@ export default function ProfilePage() {
                   type="email"
                   value={profileForm.email}
                   onChange={(e) => {
-                    setProfileForm(prev => ({ ...prev, email: e.target.value }));
+                    setProfileForm((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }));
                     if (profileErrors.email) {
-                      setProfileErrors(prev => ({ ...prev, email: undefined }));
+                      setProfileErrors((prev) => ({
+                        ...prev,
+                        email: undefined,
+                      }));
                     }
                   }}
-                  className={cn(profileErrors.email && 'border-destructive')}
+                  className={cn(profileErrors.email && "border-destructive")}
                   disabled={isUpdatingProfile}
                 />
                 {profileErrors.email && (
-                  <p className="text-sm text-destructive">{profileErrors.email}</p>
+                  <p className="text-sm text-destructive">
+                    {profileErrors.email}
+                  </p>
                 )}
               </div>
 
-              <Button type="submit" disabled={isUpdatingProfile} className="w-full">
+              <Button
+                type="submit"
+                disabled={isUpdatingProfile}
+                className="w-full"
+              >
                 {isUpdatingProfile ? (
                   <>
                     <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -369,23 +405,37 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("account.dashboard.stats.totalOrders")}</span>
+              <span className="text-muted-foreground">
+                {t("account.dashboard.stats.totalOrders")}
+              </span>
               <span className="font-medium">{profile?.ordersCount || 0}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("account.dashboard.stats.totalSpent")}</span>
-              <span className="font-medium">{profile?.totalSpent || 0} MAD</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("account.profile.memberSince")}</span>
+              <span className="text-muted-foreground">
+                {t("account.dashboard.stats.totalSpent")}
+              </span>
               <span className="font-medium">
-                {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : '-'}
+                {profile?.totalSpent || 0} MAD
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">{t("account.profile.lastLogin")}</span>
+              <span className="text-muted-foreground">
+                {t("account.profile.memberSince")}
+              </span>
               <span className="font-medium">
-                {profile?.lastLogin ? new Date(profile.lastLogin).toLocaleDateString() : '-'}
+                {profile?.createdAt
+                  ? new Date(profile.createdAt).toLocaleDateString()
+                  : "-"}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("account.profile.lastLogin")}
+              </span>
+              <span className="font-medium">
+                {profile?.lastLogin
+                  ? new Date(profile.lastLogin).toLocaleDateString()
+                  : "-"}
               </span>
             </div>
           </CardContent>
@@ -407,26 +457,38 @@ export default function ProfilePage() {
           {passwordSuccess && (
             <Alert className="mb-4">
               <IconCheck className="h-4 w-4" />
-              <AlertDescription>{t("account.profile.passwordChangeSuccess")}</AlertDescription>
+              <AlertDescription>
+                {t("account.profile.passwordChangeSuccess")}
+              </AlertDescription>
             </Alert>
           )}
 
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="grid md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="currentPassword">{t("account.profile.currentPassword")}</Label>
+                <Label htmlFor="currentPassword">
+                  {t("account.profile.currentPassword")}
+                </Label>
                 <div className="relative">
                   <Input
                     id="currentPassword"
-                    type={showPasswords.current ? 'text' : 'password'}
+                    type={showPasswords.current ? "text" : "password"}
                     value={passwordForm.currentPassword}
                     onChange={(e) => {
-                      setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }));
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }));
                       if (passwordErrors.currentPassword) {
-                        setPasswordErrors(prev => ({ ...prev, currentPassword: undefined }));
+                        setPasswordErrors((prev) => ({
+                          ...prev,
+                          currentPassword: undefined,
+                        }));
                       }
                     }}
-                    className={cn(passwordErrors.currentPassword && 'border-destructive')}
+                    className={cn(
+                      passwordErrors.currentPassword && "border-destructive",
+                    )}
                     disabled={isUpdatingPassword}
                   />
                   <Button
@@ -434,7 +496,12 @@ export default function ProfilePage() {
                     variant="ghost"
                     size="icon"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        current: !prev.current,
+                      }))
+                    }
                   >
                     {showPasswords.current ? (
                       <IconEyeOff className="h-4 w-4" />
@@ -444,24 +511,36 @@ export default function ProfilePage() {
                   </Button>
                 </div>
                 {passwordErrors.currentPassword && (
-                  <p className="text-sm text-destructive">{passwordErrors.currentPassword}</p>
+                  <p className="text-sm text-destructive">
+                    {passwordErrors.currentPassword}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="newPassword">{t("account.profile.newPassword")}</Label>
+                <Label htmlFor="newPassword">
+                  {t("account.profile.newPassword")}
+                </Label>
                 <div className="relative">
                   <Input
                     id="newPassword"
-                    type={showPasswords.new ? 'text' : 'password'}
+                    type={showPasswords.new ? "text" : "password"}
                     value={passwordForm.newPassword}
                     onChange={(e) => {
-                      setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }));
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }));
                       if (passwordErrors.newPassword) {
-                        setPasswordErrors(prev => ({ ...prev, newPassword: undefined }));
+                        setPasswordErrors((prev) => ({
+                          ...prev,
+                          newPassword: undefined,
+                        }));
                       }
                     }}
-                    className={cn(passwordErrors.newPassword && 'border-destructive')}
+                    className={cn(
+                      passwordErrors.newPassword && "border-destructive",
+                    )}
                     disabled={isUpdatingPassword}
                   />
                   <Button
@@ -469,7 +548,9 @@ export default function ProfilePage() {
                     variant="ghost"
                     size="icon"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
+                    onClick={() =>
+                      setShowPasswords((prev) => ({ ...prev, new: !prev.new }))
+                    }
                   >
                     {showPasswords.new ? (
                       <IconEyeOff className="h-4 w-4" />
@@ -479,24 +560,36 @@ export default function ProfilePage() {
                   </Button>
                 </div>
                 {passwordErrors.newPassword && (
-                  <p className="text-sm text-destructive">{passwordErrors.newPassword}</p>
+                  <p className="text-sm text-destructive">
+                    {passwordErrors.newPassword}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">{t("auth.register.fields.confirmPassword")}</Label>
+                <Label htmlFor="confirmPassword">
+                  {t("auth.register.fields.confirmPassword")}
+                </Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
-                    type={showPasswords.confirm ? 'text' : 'password'}
+                    type={showPasswords.confirm ? "text" : "password"}
                     value={passwordForm.confirmPassword}
                     onChange={(e) => {
-                      setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }));
+                      setPasswordForm((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }));
                       if (passwordErrors.confirmPassword) {
-                        setPasswordErrors(prev => ({ ...prev, confirmPassword: undefined }));
+                        setPasswordErrors((prev) => ({
+                          ...prev,
+                          confirmPassword: undefined,
+                        }));
                       }
                     }}
-                    className={cn(passwordErrors.confirmPassword && 'border-destructive')}
+                    className={cn(
+                      passwordErrors.confirmPassword && "border-destructive",
+                    )}
                     disabled={isUpdatingPassword}
                   />
                   <Button
@@ -504,7 +597,12 @@ export default function ProfilePage() {
                     variant="ghost"
                     size="icon"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        confirm: !prev.confirm,
+                      }))
+                    }
                   >
                     {showPasswords.confirm ? (
                       <IconEyeOff className="h-4 w-4" />
@@ -514,7 +612,9 @@ export default function ProfilePage() {
                   </Button>
                 </div>
                 {passwordErrors.confirmPassword && (
-                  <p className="text-sm text-destructive">{passwordErrors.confirmPassword}</p>
+                  <p className="text-sm text-destructive">
+                    {passwordErrors.confirmPassword}
+                  </p>
                 )}
               </div>
             </div>

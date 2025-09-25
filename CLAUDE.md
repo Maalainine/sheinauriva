@@ -4,12 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-- `npm run dev` - Start development server with Turbopack
+- `npm run dev` - Start development server with Turbopack on port 3000
+- `./scripts/dev-clean.sh` - Clean start development server (kills any existing servers first)
 - `npm run build` - Build for production (includes Prisma generate and migrate)
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint checks
 - `npm run db:seed` - Seed the database with initial data
 - `npm run db:reset` - Reset database and re-seed
+
+### Development Server Setup
+The development server is configured to **always run on port 3000** to avoid port conflicts. If you encounter issues with multiple servers or port conflicts:
+
+1. Use `./scripts/dev-clean.sh` to clean start the server
+2. Or manually kill processes: `pkill -f "next.*dev"` then `npm run dev`
+
+**Important**: Always ensure only one development server is running to avoid API endpoint conflicts.
 
 ## Architecture Overview
 
@@ -106,7 +115,7 @@ components/
 - **Validate CSS variable naming** matches design system specifications
 
 ### Current Issues (In Progress)
-*No current issues - all major mobile navigation and RTL improvements completed*
+*No current issues - all major UX/UI enhancements have been completed*
 
 ### Recently Completed ✅
 - **Complete Client Account System** - Full user authentication and account management
@@ -131,3 +140,22 @@ components/
 - **RTL dropdown positioning** - Fixed Arabic mode dropdown/combobox alignment issues
 - **Orders processing** - Resolved order flow issues from recent commits
 - **Improved accessibility** - Better keyboard navigation and meaningful visual indicators
+- **Client Account Integration Fix** - Fixed order creation to properly update user statistics
+  - Order creation now updates `totalSpent` and `ordersCount` fields for authenticated users
+  - Both public and admin order creation endpoints integrated with user stats
+  - Created migration script to recalculate stats for existing users
+  - Added transaction support to ensure data consistency
+  - User dashboard now accurately reflects order history and spending
+- **Order Creation 500 Error Fix** - Resolved frontend order creation failures
+  - **Root cause**: Corrupted cart data with `variantId: "undefined"` strings causing `NaN` conversion errors
+  - **Solution**: Enhanced data validation in checkout page to handle corrupted localStorage values
+  - **Result**: Order creation now works reliably from browser interface
+  - Added proper error handling for invalid productId and variantId values
+  - Improved cart data sanitization to prevent similar issues in future
+- **Context-Aware UX/UI Enhancements** - Personalized experience based on user authentication
+  - **Smart Checkout**: Auto-populated forms for registered users with saved address data
+  - **Multiple Address Support**: Dropdown selector for users with multiple saved addresses
+  - **Fixed Account Sidebar**: Full-screen height pinned navigation for better account management
+  - **Account Dropdown Menu**: Consolidated navbar with single dropdown containing all account actions
+  - **Context-Aware Wishlist**: Separate routes for guests (`/wishlist`) vs registered users (`/account/wishlist`)
+  - **Responsive Design**: Mobile-friendly layouts maintained across all enhancements
