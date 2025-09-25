@@ -56,11 +56,6 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Inventory",
-    href: "/admin/inventory",
-    icon: IconBoxMultiple,
-  },
-  {
     title: "Orders",
     href: "/admin/orders",
     icon: IconShoppingCart,
@@ -103,13 +98,16 @@ export function Sidebar({ user }: { user: User }) {
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 w-64 border-r bg-background transition-transform duration-300 ease-in-out md:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center border-b px-6">
-            <Link href="/admin" className="flex items-center gap-2 font-semibold">
+            <Link
+              href="/admin"
+              className="flex items-center gap-2 font-semibold"
+            >
               <span>Admin Panel</span>
             </Link>
           </div>
@@ -132,7 +130,7 @@ export function Sidebar({ user }: { user: User }) {
                             "flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground ml-2",
                             pathname === child.href
                               ? "bg-accent text-accent-foreground"
-                              : "text-muted-foreground"
+                              : "text-muted-foreground",
                           )}
                           onClick={() => setIsOpen(false)}
                         >
@@ -154,7 +152,7 @@ export function Sidebar({ user }: { user: User }) {
                         "flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                         pathname === item.href
                           ? "bg-accent text-accent-foreground"
-                          : "text-muted-foreground"
+                          : "text-muted-foreground",
                       )}
                       onClick={() => setIsOpen(false)}
                     >

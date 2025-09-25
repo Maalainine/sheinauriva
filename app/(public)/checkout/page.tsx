@@ -126,7 +126,8 @@ export default function CheckoutPage() {
 
           // Auto-populate with default address or first address
           const defaultAddress =
-            addresses.find((addr: any) => addr.isDefault) || addresses[0];
+            uniqueAddresses.find((addr: any) => addr.isDefault) ||
+            uniqueAddresses[0];
           if (defaultAddress) {
             setSelectedAddressId(defaultAddress.id);
 
@@ -467,95 +468,100 @@ export default function CheckoutPage() {
                         {t("checkout.shippingInfo")}
                       </h4>
                       <div className="grid gap-4 md:grid-cols-2">
-                        <FormField
-                          control={form.control}
-                          name="country"
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="text-xs">
-                                {t("checkout.fields.country")}
-                              </FormLabel>
-                              <Select
-                                onValueChange={(value) => {
-                                  handleCountryChange(value);
-                                  field.onChange(value);
-                                }}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className="h-9 text-sm w-full">
-                                    <SelectValue
-                                      placeholder={t(
-                                        "checkout.placeholders.selectCountry",
-                                      )}
-                                    />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {COUNTRIES.map((country) => (
-                                    <SelectItem
-                                      key={country.code}
-                                      value={country.code}
-                                      className="text-sm"
-                                    >
-                                      {locale === "ar" && country.nameAr
-                                        ? country.nameAr
-                                        : country.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage className="text-xs" />
-                            </FormItem>
-                          )}
-                        />
+                        {/* Hide country/city dropdowns for registered users with saved addresses */}
+                        {!(session?.user && userAddresses.length > 0) && (
+                          <>
+                            <FormField
+                              control={form.control}
+                              name="country"
+                              render={({ field }) => (
+                                <FormItem className="w-full">
+                                  <FormLabel className="text-xs">
+                                    {t("checkout.fields.country")}
+                                  </FormLabel>
+                                  <Select
+                                    onValueChange={(value) => {
+                                      handleCountryChange(value);
+                                      field.onChange(value);
+                                    }}
+                                    defaultValue={field.value}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger className="h-9 text-sm w-full">
+                                        <SelectValue
+                                          placeholder={t(
+                                            "checkout.placeholders.selectCountry",
+                                          )}
+                                        />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {COUNTRIES.map((country) => (
+                                        <SelectItem
+                                          key={country.code}
+                                          value={country.code}
+                                          className="text-sm"
+                                        >
+                                          {locale === "ar" && country.nameAr
+                                            ? country.nameAr
+                                            : country.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
 
-                        <FormField
-                          control={form.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="text-xs">
-                                {t("checkout.fields.city")}
-                              </FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                                disabled={!selectedCountry}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className="h-9 text-sm w-full">
-                                    <SelectValue
-                                      placeholder={
-                                        selectedCountry
-                                          ? t(
-                                              "checkout.placeholders.selectCity",
-                                            )
-                                          : t(
-                                              "checkout.placeholders.selectCountryFirst",
-                                            )
-                                      }
-                                    />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {cities.map((city) => (
-                                    <SelectItem
-                                      key={city.name}
-                                      value={city.name}
-                                      className="text-sm"
-                                    >
-                                      {locale === "ar" && city.nameAr
-                                        ? city.nameAr
-                                        : city.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage className="text-xs" />
-                            </FormItem>
-                          )}
-                        />
+                            <FormField
+                              control={form.control}
+                              name="city"
+                              render={({ field }) => (
+                                <FormItem className="w-full">
+                                  <FormLabel className="text-xs">
+                                    {t("checkout.fields.city")}
+                                  </FormLabel>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                    disabled={!selectedCountry}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger className="h-9 text-sm w-full">
+                                        <SelectValue
+                                          placeholder={
+                                            selectedCountry
+                                              ? t(
+                                                  "checkout.placeholders.selectCity",
+                                                )
+                                              : t(
+                                                  "checkout.placeholders.selectCountryFirst",
+                                                )
+                                          }
+                                        />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {cities.map((city) => (
+                                        <SelectItem
+                                          key={city.name}
+                                          value={city.name}
+                                          className="text-sm"
+                                        >
+                                          {locale === "ar" && city.nameAr
+                                            ? city.nameAr
+                                            : city.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage className="text-xs" />
+                                </FormItem>
+                              )}
+                            />
+                          </>
+                        )}
 
                         {/* Address selection for registered users with multiple addresses */}
                         {session?.user && userAddresses.length > 1 && (

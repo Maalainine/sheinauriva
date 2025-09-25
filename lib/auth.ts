@@ -230,6 +230,12 @@ export const authOptions: NextAuthOptions = {
       session: DefaultSession;
       token: CustomJWT;
     }) {
+      console.log("Session callback - Token data:", {
+        id: token.id,
+        role: token.role,
+        sub: token.sub,
+      });
+
       if (session?.user) {
         // Ensure we're working with a properly typed user object
         const user = session.user as DefaultSession["user"] & {
@@ -238,6 +244,11 @@ export const authOptions: NextAuthOptions = {
         };
         user.id = token.id || token.sub || "";
         user.role = token.role;
+
+        console.log("Session callback - Final session user:", {
+          id: user.id,
+          role: user.role,
+        });
       }
       return session;
     },
@@ -249,6 +260,8 @@ export const authOptions: NextAuthOptions = {
       user?: (NextAuthUser & { role?: UserRole }) | undefined;
     }): Promise<CustomJWT> {
       const customToken = token as CustomJWT;
+
+      // On initial sign in, user object is present
       if (user) {
         // Type assertion to handle the extended user type
         const extendedUser = user as NextAuthUser & {
@@ -256,19 +269,39 @@ export const authOptions: NextAuthOptions = {
           role?: UserRole;
         };
         customToken.id = extendedUser.id;
-        customToken.role = extendedUser.role || "USER"; // Default to 'USER' if role is not provided
-      } else if (!customToken.id && token.sub) {
-        // Ensure id is always set from the token sub if available
-        customToken.id = token.sub;
+        customToken.role = extendedUser.role || "CLIENT"; // Default to 'CLIENT' for new accounts
+        console.log("JWT callback - Initial login:", {
+          id: customToken.id,
+          role: customToken.role,
+        });
       }
+      // On subsequent requests, user object is not present, preserve existing token data
+      else {
+        // Ensure id is always set from the token sub if available
+        if (!customToken.id && token.sub) {
+          customToken.id = token.sub;
+        }
+        // Role should already be set from previous JWT callback, don't override
+        if (!customToken.role && token.sub) {
+          // This shouldn't happen, but if role is missing, try to fetch from database
+          console.warn(
+            "JWT callback - Missing role in token, this might indicate a session issue",
+          );
+        }
+        console.log("JWT callback - Subsequent request:", {
+          id: customToken.id,
+          role: customToken.role,
+        });
+      }
+
       return customToken;
     },
   },
 
-  // Pages configuration
+  // Pages configuration - dynamic handling in middleware
   pages: {
-    signIn: "/login", // Default to client login
-    error: "/login",
+    // Don't specify signIn here to avoid conflicts - let middleware handle routing
+    error: "/auth/error",
   },
 
   // Enable debug messages in the console if you're having problems

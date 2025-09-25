@@ -1,35 +1,35 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 // List of public paths that don't require authentication
 const publicPaths = [
-  '/',
-  '/products',
-  '/products/**',
-  '/categories',
-  '/categories/**',
-  '/brands',
-  '/brands/**',
-  '/contact',
-  '/wishlist',
-  '/cart',
-  '/checkout',
-  '/search',
-  '/admin/login',
-  '/api/auth/**',
-  '/api/public/**',
-  '/_next/**',
-  '/favicon.ico',
-  '/images/**',
+  "/",
+  "/products",
+  "/products/**",
+  "/categories",
+  "/categories/**",
+  "/brands",
+  "/brands/**",
+  "/contact",
+  "/wishlist",
+  "/cart",
+  "/checkout",
+  "/search",
+  "/admin/login",
+  "/api/auth/**",
+  "/api/public/**",
+  "/_next/**",
+  "/favicon.ico",
+  "/images/**",
 ];
 
 // Check if the current path is public
 const isPublicPath = (path: string) => {
-  return publicPaths.some(publicPath => {
+  return publicPaths.some((publicPath) => {
     // Handle wildcard paths
-    if (publicPath.endsWith('**')) {
-      const basePath = publicPath.replace(/\*\*$/, '');
+    if (publicPath.endsWith("**")) {
+      const basePath = publicPath.replace(/\*\*$/, "");
       return path.startsWith(basePath);
     }
     return path === publicPath;
@@ -38,36 +38,62 @@ const isPublicPath = (path: string) => {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip middleware for public paths
   if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
 
   // Check if the path is an admin route
-  const isAdminRoute = pathname.startsWith('/admin');
-  
-  if (isAdminRoute) {
+  const isAdminRoute = pathname.startsWith("/admin");
+  // Check if the path is a client account route
+  const isClientRoute =
+    pathname.startsWith("/account") ||
+    pathname === "/login" ||
+    pathname === "/register";
+
+  if (isAdminRoute && pathname !== "/admin/login") {
     // Get the token from the request
     const token = await getToken({ req: request });
-    
-    // If no token and trying to access admin route, redirect to login
+
+    // If no token and trying to access admin route, redirect to admin login
     if (!token) {
-      const loginUrl = new URL('/admin/login', request.url);
-      loginUrl.searchParams.set('callbackUrl', pathname);
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
-    
+
     // If user is not an admin, redirect to home
-    if (token.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL('/', request.url));
+    if (token.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
-  
+
+  if (
+    isClientRoute &&
+    !pathname.startsWith("/login") &&
+    !pathname.startsWith("/register")
+  ) {
+    // Get the token from the request
+    const token = await getToken({ req: request });
+
+    // If no token and trying to access client route, redirect to client login
+    if (!token) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // If user is not a client, redirect to home
+    if (token.role !== "CLIENT") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   // Add headers for the request
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-url', request.url);
-  
+  requestHeaders.set("x-url", request.url);
+
   return NextResponse.next({
     request: {
       headers: requestHeaders,
@@ -78,6 +104,6 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Exclude all API routes, especially /api/auth/*
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
   ],
 };

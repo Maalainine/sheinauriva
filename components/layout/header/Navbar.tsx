@@ -248,46 +248,6 @@ export default function Navbar() {
                         );
                       })}
 
-                      {/* Account/Auth Section */}
-                      <div className="border-t pt-4 mt-4">
-                        {session?.user ? (
-                          <>
-                            <Link
-                              href="/account"
-                              className={cn(
-                                "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors",
-                                pathname.startsWith("/account")
-                                  ? "bg-primary/10 text-primary"
-                                  : "text-foreground/90 hover:bg-accent",
-                              )}
-                              onClick={() => setMobileMenuOpen(false)}
-                            >
-                              <IconUser className="h-5 w-5" />
-                              {t("navigation.account")}
-                            </Link>
-                            <button
-                              onClick={() => {
-                                signOut({ callbackUrl: "/" });
-                                setMobileMenuOpen(false);
-                              }}
-                              className="flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors text-foreground/90 hover:bg-accent w-full"
-                            >
-                              <IconLogout className="h-5 w-5" />
-                              {t("auth.logout")}
-                            </button>
-                          </>
-                        ) : (
-                          <Link
-                            href="/login"
-                            className="flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-colors text-foreground/90 hover:bg-accent"
-                            onClick={() => setMobileMenuOpen(false)}
-                          >
-                            <IconLogin className="h-5 w-5" />
-                            {t("auth.login")}
-                          </Link>
-                        )}
-                      </div>
-
                       {/* Language Switcher in Mobile Menu */}
                       <LanguageSwitcher variant="drawer" />
                     </div>
@@ -381,6 +341,69 @@ export default function Navbar() {
                         {wishlistCount > 9 ? "9+" : wishlistCount}
                       </motion.span>
                     )}
+                  </Link>
+                </Button>
+              )}
+
+              {/* Account/Auth Dropdown - Mobile */}
+              {session?.user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <IconUser className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align={isRtl ? "start" : "end"}
+                    className="w-56"
+                  >
+                    <DropdownMenuItem asChild>
+                      <Link href="/account" className="flex items-center gap-2">
+                        <IconDashboard className="h-4 w-4" />
+                        {t("account.navigation.dashboard")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/orders"
+                        className="flex items-center gap-2"
+                      >
+                        <IconShoppingBag className="h-4 w-4" />
+                        {t("account.navigation.orders")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/wishlist"
+                        className="flex items-center gap-2"
+                      >
+                        <IconHeart className="h-4 w-4" />
+                        {t("account.navigation.wishlist")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/account/profile"
+                        className="flex items-center gap-2"
+                      >
+                        <IconSettings className="h-4 w-4" />
+                        {t("account.navigation.profile")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                    >
+                      <IconLogout className="h-4 w-4" />
+                      {t("auth.logout")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button variant="ghost" size="icon" asChild>
+                  <Link href="/login">
+                    <IconLogin className="h-5 w-5" />
                   </Link>
                 </Button>
               )}
