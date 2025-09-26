@@ -1,34 +1,29 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { PrismaClient } from '@prisma/client';
-import { authOptions } from '@/lib/auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { PrismaClient } from "@prisma/client";
+import { authOptions } from "@/lib/auth";
 
 const prisma = new PrismaClient({
-  log: ['query', 'info', 'warn', 'error'],
+  log: ["query", "info", "warn", "error"],
 });
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Verify admin access
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     // Ensure ID is a number
-    const tagId = Number(params.id);
+    const tagId = Number(id);
     if (isNaN(tagId)) {
-      return NextResponse.json(
-        { error: 'Invalid tag ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid tag ID" }, { status: 400 });
     }
 
     // Get the tag
@@ -42,57 +37,46 @@ export async function GET(
     });
 
     if (!tag) {
-      return NextResponse.json(
-        { error: 'Tag not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
 
     return NextResponse.json(tag);
   } catch (error) {
-    console.error('Error in GET /api/admin/tags/[id]:', error);
+    console.error("Error in GET /api/admin/tags/[id]:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch tag',
-        details: error instanceof Error ? error.message : 'Unknown error',
+      {
+        error: "Failed to fetch tag",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Verify admin access
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     // Ensure ID is a number
-    const tagId = Number(params.id);
+    const tagId = Number(id);
     if (isNaN(tagId)) {
-      return NextResponse.json(
-        { error: 'Invalid tag ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid tag ID" }, { status: 400 });
     }
 
     const data = await request.json();
-    
+
     // Validate required fields
     if (!data.name) {
-      return NextResponse.json(
-        { error: 'Name is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     // Check if tag exists
@@ -101,10 +85,7 @@ export async function PUT(
     });
 
     if (!existingTag) {
-      return NextResponse.json(
-        { error: 'Tag not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Tag not found" }, { status: 404 });
     }
 
     // Check if another tag with the same name already exists
@@ -117,8 +98,8 @@ export async function PUT(
 
     if (duplicateTag) {
       return NextResponse.json(
-        { error: 'A tag with this name already exists' },
-        { status: 400 }
+        { error: "A tag with this name already exists" },
+        { status: 400 },
       );
     }
 
@@ -132,39 +113,34 @@ export async function PUT(
 
     return NextResponse.json(updatedTag);
   } catch (error) {
-    console.error('Error in PUT /api/admin/tags/[id]:', error);
+    console.error("Error in PUT /api/admin/tags/[id]:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to update tag',
-        details: error instanceof Error ? error.message : 'Unknown error',
+      {
+        error: "Failed to update tag",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Verify admin access
     const session = await getServerSession(authOptions);
-    
+
     if (!session?.user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
     // Ensure ID is a number
-    const tagId = Number(params.id);
+    const tagId = Number(id);
     if (isNaN(tagId)) {
-      return NextResponse.json(
-        { error: 'Invalid tag ID' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid tag ID" }, { status: 400 });
     }
 
     // Use a transaction to ensure data consistency
@@ -180,12 +156,12 @@ export async function DELETE(
       });
 
       if (!tag) {
-        throw new Error('Tag not found');
+        throw new Error("Tag not found");
       }
 
       // Check if tag has associated products
       if (tag._count.products > 0) {
-        throw new Error('Cannot delete tag with associated products');
+        throw new Error("Cannot delete tag with associated products");
       }
 
       // Delete the tag
@@ -196,38 +172,36 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Tag deleted successfully',
+      message: "Tag deleted successfully",
       data: result,
     });
   } catch (error) {
-    console.error('Error in DELETE /api/admin/tags/[id]:', error);
-    
+    console.error("Error in DELETE /api/admin/tags/[id]:", error);
+
     // Handle specific error cases
     if (error instanceof Error) {
-      if (error.message === 'Tag not found') {
-        return NextResponse.json(
-          { error: 'Tag not found' },
-          { status: 404 }
-        );
+      if (error.message === "Tag not found") {
+        return NextResponse.json({ error: "Tag not found" }, { status: 404 });
       }
-      
-      if (error.message === 'Cannot delete tag with associated products') {
+
+      if (error.message === "Cannot delete tag with associated products") {
         return NextResponse.json(
-          { 
-            error: 'Cannot delete tag with associated products. Please remove all products from this tag first.'
+          {
+            error:
+              "Cannot delete tag with associated products. Please remove all products from this tag first.",
           },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
-    
+
     // Generic error response
     return NextResponse.json(
-      { 
-        error: 'Failed to delete tag',
-        details: error instanceof Error ? error.message : 'Unknown error',
+      {
+        error: "Failed to delete tag",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

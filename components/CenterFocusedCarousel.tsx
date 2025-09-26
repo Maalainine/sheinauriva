@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 
 interface CenterFocusedCarouselProps {
@@ -71,7 +71,7 @@ export function CenterFocusedCarousel({
       const diff = clientX - startX;
       setTranslateX(diff);
     },
-    [isDragging, startX]
+    [isDragging, startX],
   );
 
   const handleEnd = useCallback(() => {
@@ -96,14 +96,14 @@ export function CenterFocusedCarousel({
       e.preventDefault();
       handleStart(e.clientX);
     },
-    [handleStart]
+    [handleStart],
   );
 
   const handleGlobalMouseMove = useCallback(
     (e: MouseEvent) => {
       handleMove(e.clientX);
     },
-    [handleMove]
+    [handleMove],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -115,14 +115,14 @@ export function CenterFocusedCarousel({
     (e: React.TouchEvent) => {
       handleStart(e.touches[0].clientX);
     },
-    [handleStart]
+    [handleStart],
   );
 
   const handleGlobalTouchMove = useCallback(
     (e: TouchEvent) => {
       handleMove(e.touches[0].clientX);
     },
-    [handleMove]
+    [handleMove],
   );
 
   const handleTouchEnd = useCallback(() => {
@@ -144,27 +144,35 @@ export function CenterFocusedCarousel({
       document.removeEventListener("touchmove", handleGlobalTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDragging, handleGlobalMouseMove, handleMouseUp, handleGlobalTouchMove, handleTouchEnd]);
+  }, [
+    isDragging,
+    handleGlobalMouseMove,
+    handleMouseUp,
+    handleGlobalTouchMove,
+    handleTouchEnd,
+  ]);
 
   const getItemStyle = (index: number) => {
     const distance = Math.abs(index - currentIndex);
     const normalizedDistance = Math.min(distance, 2);
-    
+
     // Enhanced scaling and effects
     const scale = distance === 0 ? 1 : distance === 1 ? 0.9 : 0.8;
     const opacity = distance === 0 ? 1 : distance === 1 ? 0.7 : 0.4;
-    
+
     // Dynamic spacing based on card width with extra gap
     const gap = 60; // Even larger gap between cards (5rem)
     const baseOffset = (index - currentIndex) * (cardWidth * 0.8 + gap);
     const dragOffset = isDragging ? translateX : 0;
-    
+
     return {
       transform: `translateX(${baseOffset + dragOffset}px) scale(${scale})`,
       opacity: opacity,
       zIndex: 10 - distance,
-      transition: isDragging ? "none" : "all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)",
-      margin: '0 24px', // Even larger horizontal margin for maximum spacing
+      transition: isDragging
+        ? "none"
+        : "all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)",
+      margin: "0 24px", // Even larger horizontal margin for maximum spacing
     };
   };
 
@@ -177,13 +185,15 @@ export function CenterFocusedCarousel({
   }
 
   return (
-    <div className={`relative w-full max-w-7xl mx-auto ${className} overflow-hidden`}>
-      <div 
-        className="relative" 
-        style={{ 
+    <div
+      className={`relative w-full max-w-7xl mx-auto ${className} overflow-hidden`}
+    >
+      <div
+        className="relative"
+        style={{
           height: cardHeight + 100,
-          overflow: 'hidden',
-          width: '100%'
+          overflow: "hidden",
+          width: "100%",
         }}
         ref={containerRef}
         onMouseDown={handleMouseDown}
@@ -192,12 +202,12 @@ export function CenterFocusedCarousel({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div 
-          className="relative h-full flex items-center justify-center cursor-grab active:cursor-grabbing" 
-          style={{ 
+        <div
+          className="relative h-full flex items-center justify-center cursor-grab active:cursor-grabbing"
+          style={{
             userSelect: "none",
-            width: '100%',
-            overflow: 'hidden'
+            width: "100%",
+            overflow: "hidden",
           }}
         >
           {React.Children.map(children, (child, index) => (
@@ -225,7 +235,7 @@ export function CenterFocusedCarousel({
               className="flex absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Previous"
             >
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <IconChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
 
             <Button
@@ -235,7 +245,7 @@ export function CenterFocusedCarousel({
               className="flex absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg rounded-full items-center justify-center z-20 transition-all duration-200 hover:scale-110 opacity-80 hover:opacity-100"
               aria-label="Next"
             >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              <IconChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
           </>
         )}

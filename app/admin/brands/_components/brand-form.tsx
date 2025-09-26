@@ -1,20 +1,30 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const brandFormSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name must be at most 100 characters'),
-  logoUrl: z.string().url('Must be a valid URL').or(z.literal('')).optional(),
-  website: z.string().url('Must be a valid URL').or(z.literal('')).optional(),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(100, "Name must be at most 100 characters"),
+  logoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  website: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
 });
 
 type BrandFormValues = z.infer<typeof brandFormSchema>;
@@ -34,10 +44,10 @@ export function BrandForm({ initialData }: BrandFormProps) {
 
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandFormSchema),
-    defaultValues: initialData || {
-      name: '',
-      logoUrl: '',
-      website: '',
+    defaultValues: {
+      name: initialData?.name || "",
+      logoUrl: initialData?.logoUrl || "",
+      website: initialData?.website || "",
     },
   });
 
@@ -45,8 +55,8 @@ export function BrandForm({ initialData }: BrandFormProps) {
     if (initialData) {
       form.reset({
         name: initialData.name,
-        logoUrl: initialData.logoUrl || '',
-        website: initialData.website || '',
+        logoUrl: initialData.logoUrl || "",
+        website: initialData.website || "",
       });
     }
   }, [initialData, form]);
@@ -54,16 +64,16 @@ export function BrandForm({ initialData }: BrandFormProps) {
   const onSubmit = async (values: BrandFormValues) => {
     try {
       setLoading(true);
-      const url = initialData?.id 
+      const url = initialData?.id
         ? `/api/admin/brands/${initialData.id}`
-        : '/api/admin/brands';
-      
-      const method = initialData?.id ? 'PUT' : 'POST';
-      
+        : "/api/admin/brands";
+
+      const method = initialData?.id ? "PUT" : "POST";
+
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...values,
@@ -74,16 +84,22 @@ export function BrandForm({ initialData }: BrandFormProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to save brand');
+        throw new Error(error.error || "Failed to save brand");
       }
 
-      toast.success(initialData?.id ? 'Brand updated successfully' : 'Brand created successfully');
-      
-      router.push('/admin/brands');
+      toast.success(
+        initialData?.id
+          ? "Brand updated successfully"
+          : "Brand created successfully",
+      );
+
+      router.push("/admin/brands");
       router.refresh();
     } catch (error) {
-      console.error('Error saving brand:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to save brand');
+      console.error("Error saving brand:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save brand",
+      );
     } finally {
       setLoading(false);
     }
@@ -151,31 +167,33 @@ export function BrandForm({ initialData }: BrandFormProps) {
 
           <div className="flex flex-col items-center justify-center">
             <div className="w-48 h-48 border rounded-md flex items-center justify-center overflow-hidden bg-muted/50">
-              {form.watch('logoUrl') ? (
-                <img 
-                  src={form.watch('logoUrl')} 
-                  alt="Brand logo preview" 
+              {form.watch("logoUrl") ? (
+                <img
+                  src={form.watch("logoUrl")}
+                  alt="Brand logo preview"
                   className="max-w-full max-h-full object-contain p-2"
                 />
               ) : (
-                <span className="text-muted-foreground text-sm">Logo preview</span>
+                <span className="text-muted-foreground text-sm">
+                  Logo preview
+                </span>
               )}
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-end space-x-4">
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push('/admin/brands')}
+            onClick={() => router.push("/admin/brands")}
             disabled={loading}
           >
             Cancel
           </Button>
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {initialData?.id ? 'Update Brand' : 'Create Brand'}
+            {initialData?.id ? "Update Brand" : "Create Brand"}
           </Button>
         </div>
       </form>

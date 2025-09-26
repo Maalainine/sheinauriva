@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 type ErrorStateProps = {
   title?: string;
@@ -20,9 +20,14 @@ export function ErrorState({
   icon,
 }: ErrorStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center py-12 text-center", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center py-12 text-center",
+        className,
+      )}
+    >
       <div className="bg-destructive/10 p-3 rounded-full mb-4">
-        {icon || <AlertCircle className="h-10 w-10 text-destructive" />}
+        {icon || <IconAlertCircle className="h-10 w-10 text-destructive" />}
       </div>
       <h2 className="text-xl font-semibold tracking-tight mb-2">{title}</h2>
       <p className="text-muted-foreground mb-6 max-w-md">{message}</p>

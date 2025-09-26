@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { AlertCircle } from 'lucide-react';
+import React from "react";
+import { IconAlertCircle } from "@tabler/icons-react";
 
 export interface ProductVariant {
   id: number;
@@ -53,15 +53,18 @@ export interface StockSummary {
   inStockVariants: number;
   outOfStockVariants: number;
   lowStockVariants: number;
-  stockStatus: 'in_stock' | 'low_stock' | 'out_of_stock' | 'inactive';
+  stockStatus: "in_stock" | "low_stock" | "out_of_stock" | "inactive";
   stockDisplay: string;
-  stockLevel: 'high' | 'medium' | 'low' | 'out';
+  stockLevel: "high" | "medium" | "low" | "out";
 }
 
 /**
  * Calculate comprehensive stock information from product variants
  */
-export const calculateStockFromVariants = (product: Product, lowStockThreshold: number = 10): StockSummary => {
+export const calculateStockFromVariants = (
+  product: Product,
+  lowStockThreshold: number = 10,
+): StockSummary => {
   // If product is inactive, return inactive status
   if (!product.status) {
     return {
@@ -69,9 +72,9 @@ export const calculateStockFromVariants = (product: Product, lowStockThreshold: 
       inStockVariants: 0,
       outOfStockVariants: 0,
       lowStockVariants: 0,
-      stockStatus: 'inactive',
-      stockDisplay: 'Inactive',
-      stockLevel: 'out'
+      stockStatus: "inactive",
+      stockDisplay: "Inactive",
+      stockLevel: "out",
     };
   }
 
@@ -82,39 +85,48 @@ export const calculateStockFromVariants = (product: Product, lowStockThreshold: 
       inStockVariants: 0,
       outOfStockVariants: 0,
       lowStockVariants: 0,
-      stockStatus: 'out_of_stock',
-      stockDisplay: 'No variants',
-      stockLevel: 'out'
+      stockStatus: "out_of_stock",
+      stockDisplay: "No variants",
+      stockLevel: "out",
     };
   }
 
   // Calculate stock metrics from variants
-  const totalStock = product.variants.reduce((sum, variant) => sum + (variant.stock || 0), 0);
-  const inStockVariants = product.variants.filter(v => (v.stock || 0) > 0).length;
-  const outOfStockVariants = product.variants.filter(v => (v.stock || 0) === 0).length;
-  const lowStockVariants = product.variants.filter(v => (v.stock || 0) > 0 && (v.stock || 0) <= lowStockThreshold).length;
+  const totalStock = product.variants.reduce(
+    (sum, variant) => sum + (variant.stock || 0),
+    0,
+  );
+  const inStockVariants = product.variants.filter(
+    (v) => (v.stock || 0) > 0,
+  ).length;
+  const outOfStockVariants = product.variants.filter(
+    (v) => (v.stock || 0) === 0,
+  ).length;
+  const lowStockVariants = product.variants.filter(
+    (v) => (v.stock || 0) > 0 && (v.stock || 0) <= lowStockThreshold,
+  ).length;
 
   // Determine stock status
-  let stockStatus: StockSummary['stockStatus'];
+  let stockStatus: StockSummary["stockStatus"];
   let stockDisplay: string;
-  let stockLevel: StockSummary['stockLevel'];
+  let stockLevel: StockSummary["stockLevel"];
 
   if (totalStock === 0) {
-    stockStatus = 'out_of_stock';
-    stockDisplay = 'Out of Stock';
-    stockLevel = 'out';
+    stockStatus = "out_of_stock";
+    stockDisplay = "Out of Stock";
+    stockLevel = "out";
   } else if (totalStock <= lowStockThreshold) {
-    stockStatus = 'low_stock';
+    stockStatus = "low_stock";
     stockDisplay = `Low Stock (${totalStock})`;
-    stockLevel = 'low';
+    stockLevel = "low";
   } else if (totalStock <= lowStockThreshold * 2) {
-    stockStatus = 'in_stock';
+    stockStatus = "in_stock";
     stockDisplay = `In Stock (${totalStock})`;
-    stockLevel = 'medium';
+    stockLevel = "medium";
   } else {
-    stockStatus = 'in_stock';
+    stockStatus = "in_stock";
     stockDisplay = `In Stock (${totalStock})`;
-    stockLevel = 'high';
+    stockLevel = "high";
   }
 
   return {
@@ -124,39 +136,42 @@ export const calculateStockFromVariants = (product: Product, lowStockThreshold: 
     lowStockVariants,
     stockStatus,
     stockDisplay,
-    stockLevel
+    stockLevel,
   };
 };
 
 /**
  * Get stock badge color based on stock level
  */
-export const getStockBadgeColor = (stockLevel: StockSummary['stockLevel']) => {
+export const getStockBadgeColor = (stockLevel: StockSummary["stockLevel"]) => {
   switch (stockLevel) {
-    case 'high':
-      return 'bg-green-100 text-green-800 hover:bg-green-200';
-    case 'medium':
-      return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
-    case 'low':
-      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
-    case 'out':
-      return 'bg-red-100 text-red-800 hover:bg-red-200';
+    case "high":
+      return "bg-green-100 text-green-800 hover:bg-green-200";
+    case "medium":
+      return "bg-blue-100 text-blue-800 hover:bg-blue-200";
+    case "low":
+      return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
+    case "out":
+      return "bg-red-100 text-red-800 hover:bg-red-200";
     default:
-      return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+      return "bg-gray-100 text-gray-800 hover:bg-gray-200";
   }
 };
 
 /**
  * Enhanced render stock function for your component
  */
-export const renderEnhancedStock = (product: Product, lowStockThreshold: number = 10) => {
+export const renderEnhancedStock = (
+  product: Product,
+  lowStockThreshold: number = 10,
+) => {
   const stockSummary = calculateStockFromVariants(product, lowStockThreshold);
-  
+
   return {
     display: stockSummary.stockDisplay,
     level: stockSummary.stockLevel,
     summary: stockSummary,
-    badgeColor: getStockBadgeColor(stockSummary.stockLevel)
+    badgeColor: getStockBadgeColor(stockSummary.stockLevel),
   };
 };
 
@@ -165,15 +180,16 @@ export const renderEnhancedStock = (product: Product, lowStockThreshold: number 
  */
 export const getStockBreakdown = (product: Product): string => {
   if (!product.variants || product.variants.length === 0) {
-    return 'No variants available';
+    return "No variants available";
   }
 
-  const breakdown = product.variants.map(variant => {
-    const variantName = variant.selections
-      .map(s => s.option.value)
-      .join(', ') || variant.sku;
-    return `${variantName}: ${variant.stock || 0}`;
-  }).join('\n');
+  const breakdown = product.variants
+    .map((variant) => {
+      const variantName =
+        variant.selections.map((s) => s.option.value).join(", ") || variant.sku;
+      return `${variantName}: ${variant.stock || 0}`;
+    })
+    .join("\n");
 
   return breakdown;
 };
@@ -181,16 +197,27 @@ export const getStockBreakdown = (product: Product): string => {
 /**
  * Check if product needs restocking
  */
-export const needsRestocking = (product: Product, lowStockThreshold: number = 10): boolean => {
+export const needsRestocking = (
+  product: Product,
+  lowStockThreshold: number = 10,
+): boolean => {
   const stockSummary = calculateStockFromVariants(product, lowStockThreshold);
-  return stockSummary.stockStatus === 'low_stock' || stockSummary.stockStatus === 'out_of_stock';
+  return (
+    stockSummary.stockStatus === "low_stock" ||
+    stockSummary.stockStatus === "out_of_stock"
+  );
 };
 
 /**
  * Get products that need attention (low stock or out of stock)
  */
-export const getProductsNeedingAttention = (products: Product[], lowStockThreshold: number = 10): Product[] => {
-  return products.filter(product => needsRestocking(product, lowStockThreshold));
+export const getProductsNeedingAttention = (
+  products: Product[],
+  lowStockThreshold: number = 10,
+): Product[] => {
+  return products.filter((product) =>
+    needsRestocking(product, lowStockThreshold),
+  );
 };
 
 /**

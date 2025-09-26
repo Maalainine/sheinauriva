@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { AlertCircle, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { useEffect } from "react";
+import { IconAlertCircle, IconRefresh } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ErrorBoundaryProps {
   error: Error & { digest?: string };
@@ -17,43 +17,50 @@ interface ErrorBoundaryProps {
 export function ErrorBoundary({
   error,
   reset,
-  className = '',
+  className = "",
   fullScreen = false,
-  title = 'Something went wrong',
+  title = "Something went wrong",
   description,
 }: ErrorBoundaryProps) {
   useEffect(() => {
-    console.error('Error Boundary:', error);
+    console.error("Error Boundary:", error);
   }, [error]);
 
   const containerClasses = cn(
-    'rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-destructive dark:bg-destructive/10',
-    fullScreen ? 'flex min-h-screen w-full items-center justify-center' : 'w-full',
-    className
+    "rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-destructive dark:bg-destructive/10",
+    fullScreen
+      ? "flex min-h-screen w-full items-center justify-center"
+      : "w-full",
+    className,
   );
 
-  const contentClasses = cn('space-y-4', fullScreen ? 'max-w-md text-center' : '');
+  const contentClasses = cn(
+    "space-y-4",
+    fullScreen ? "max-w-md text-center" : "",
+  );
 
   return (
     <div className={containerClasses} role="alert">
       <div className={contentClasses}>
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5" />
+          <IconAlertCircle className="h-5 w-5" />
           <h2 className="text-lg font-semibold">{title}</h2>
         </div>
-        
+
         <p className="text-sm text-foreground/80">
-          {description || error.message || 'An unexpected error occurred. Please try again.'}
+          {description ||
+            error.message ||
+            "An unexpected error occurred. Please try again."}
         </p>
-        
+
         <div className="pt-2">
           <Button
             variant="outline"
-            size={fullScreen ? 'default' : 'sm'}
+            size={fullScreen ? "default" : "sm"}
             onClick={reset}
             className="gap-2"
           >
-            <RefreshCw className="h-4 w-4" />
+            <IconRefresh className="h-4 w-4" />
             <span>Try again</span>
           </Button>
         </div>
@@ -68,21 +75,21 @@ interface ErrorFallbackProps {
   className?: string;
 }
 
-export function ErrorFallback({ 
-  error, 
+export function ErrorFallback({
+  error,
   resetErrorBoundary,
-  className = '' 
+  className = "",
 }: ErrorFallbackProps) {
   return (
-    <div 
+    <div
       className={cn(
-        'border border-destructive/20 bg-destructive/5 p-4 destructive',
-        className
+        "border border-destructive/20 bg-destructive/5 p-4 destructive",
+        className,
       )}
       role="alert"
     >
       <div className="flex items-start gap-2">
-        <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+        <IconAlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
         <div>
           <p className="font-medium">An error occurred</p>
           <p className="mt-1 text-foreground/80">{error.message}</p>

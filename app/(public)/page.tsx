@@ -6,12 +6,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import {
-  ChevronRight,
-  Truck,
-  CheckCircle2,
-  Shield,
-  Headphones,
-} from "lucide-react";
+  IconChevronRight,
+  IconTruck,
+  IconCircleCheck,
+  IconShield,
+  IconHeadphones,
+} from "@tabler/icons-react";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -170,7 +170,7 @@ export default function Home() {
             const errorText = await productsRes.text();
             console.error("API Error Response:", errorText);
             throw new Error(
-              `Failed to fetch products: ${productsRes.status} ${productsRes.statusText}`
+              `Failed to fetch products: ${productsRes.status} ${productsRes.statusText}`,
             );
           }
 
@@ -214,13 +214,13 @@ export default function Home() {
                 stock = product.variants.reduce(
                   (
                     sum: number,
-                    variant: { stock?: number; price?: number | string }
+                    variant: { stock?: number; price?: number | string },
                   ) => {
                     const variantStock =
                       typeof variant.stock === "number" ? variant.stock : 0;
                     return sum + variantStock;
                   },
-                  0
+                  0,
                 );
               } else {
                 // Use product-level stock if no variants
@@ -262,7 +262,7 @@ export default function Home() {
                 hasVariants: (product.variants?.length || 0) > 0,
                 variantCount: product.variants?.length || 0,
               };
-            }
+            },
           );
 
           console.log("Formatted products:", formattedProducts);
@@ -283,7 +283,7 @@ export default function Home() {
             const errorText = await categoriesRes.text();
             console.error("Categories API error:", errorText);
             throw new Error(
-              `Failed to fetch categories: ${categoriesRes.status} ${categoriesRes.statusText}`
+              `Failed to fetch categories: ${categoriesRes.status} ${categoriesRes.statusText}`,
             );
           }
 
@@ -321,15 +321,18 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50 z-10 flex items-center">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <TypographyH1 className="mb-4 text-white font-bold drop-shadow-lg">
-              {t('home.hero.title')}
+              {t("home.hero.title")}
             </TypographyH1>
             <TypographyH4 className="mb-8 max-w-2xl text-white/90 drop-shadow-md">
-              {t('home.hero.subtitle')}
+              {t("home.hero.subtitle")}
             </TypographyH4>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/products">
-                <Button size="lg" className="bg-white text-black hover:bg-white/90 font-semibold shadow-lg">
-                  {t('home.hero.shopNow')}
+                <Button
+                  size="lg"
+                  className="bg-white text-black hover:bg-white/90 font-semibold shadow-lg"
+                >
+                  {t("home.hero.shopNow")}
                 </Button>
               </Link>
             </div>
@@ -353,24 +356,24 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
-                icon: Truck,
-                title: t('home.features.shipping.title'),
-                description: t('home.features.shipping.description'),
+                icon: IconTruck,
+                title: t("home.features.shipping.title"),
+                description: t("home.features.shipping.description"),
               },
               {
-                icon: CheckCircle2,
-                title: t('home.features.quality.title'),
-                description: t('home.features.quality.description'),
+                icon: IconCircleCheck,
+                title: t("home.features.quality.title"),
+                description: t("home.features.quality.description"),
               },
               {
-                icon: Shield,
-                title: t('home.features.payment.title'),
-                description: t('home.features.payment.description'),
+                icon: IconShield,
+                title: t("home.features.payment.title"),
+                description: t("home.features.payment.description"),
               },
               {
-                icon: Headphones,
-                title: t('home.features.support.title'),
-                description: t('home.features.support.description'),
+                icon: IconHeadphones,
+                title: t("home.features.support.title"),
+                description: t("home.features.support.description"),
               },
             ].map((feature, index) => (
               <Card key={index}>
@@ -396,12 +399,12 @@ export default function Home() {
       <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <TypographyH2>{t('home.sections.newArrivals')}</TypographyH2>
+            <TypographyH2>{t("home.sections.newArrivals")}</TypographyH2>
             <Link
               href="/products?featured=true&sort=newest"
               className="text-primary flex items-center gap-1"
             >
-              {t('home.viewAll')} <ChevronRight className="h-4 w-4" />
+              {t("home.viewAll")} <IconChevronRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -418,7 +421,7 @@ export default function Home() {
           ) : newArrivals.length === 0 ? (
             <div className="text-center py-12">
               <TypographyP className="text-muted-foreground">
-                {t('home.noProducts')}
+                {t("home.noProducts")}
               </TypographyP>
             </div>
           ) : (
@@ -455,12 +458,13 @@ export default function Home() {
         <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
-              <TypographyH2>{t('home.sections.categories')}</TypographyH2>
+              <TypographyH2>{t("home.sections.categories")}</TypographyH2>
               <Link
                 href="/categories"
                 className="text-primary flex items-center gap-1"
               >
-                {t('home.viewAllCategories')} <ChevronRight className="h-4 w-4" />
+                {t("home.viewAllCategories")}{" "}
+                <IconChevronRight className="h-4 w-4" />
               </Link>
             </div>
 
@@ -497,7 +501,7 @@ export default function Home() {
             ) : (
               <div className="text-center py-12">
                 <TypographyP className="text-muted-foreground">
-                  {t('home.noCategories')}
+                  {t("home.noCategories")}
                 </TypographyP>
               </div>
             )}

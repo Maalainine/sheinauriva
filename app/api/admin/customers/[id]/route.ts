@@ -21,23 +21,21 @@ async function checkAdminAuth() {
 // GET - Get customer details with full order history
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params;
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const customerId = params.id;
+    const customerId = id;
 
     if (!customerId) {
       return NextResponse.json(
         { error: "Customer ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,7 +44,7 @@ export async function GET(
       where: { id: customerId },
       include: {
         shippingAddresses: {
-          orderBy: { isDefault: 'desc' }
+          orderBy: { isDefault: "desc" },
         },
         orders: {
           include: {
@@ -59,14 +57,14 @@ export async function GET(
                         id: true,
                         name: true,
                         images: true,
-                      }
-                    }
-                  }
-                }
-              }
-            }
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
-          orderBy: { createdAt: 'desc' }
+          orderBy: { createdAt: "desc" },
         },
         wishlistItems: {
           include: {
@@ -76,17 +74,17 @@ export async function GET(
                 name: true,
                 images: true,
                 basePrice: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!customer) {
       return NextResponse.json(
         { error: "Customer not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -94,15 +92,16 @@ export async function GET(
     const orderStats = {
       totalOrders: customer.orders.length,
       totalSpent: Number(customer.totalSpent || 0),
-      averageOrderValue: customer.orders.length > 0
-        ? Number(customer.totalSpent || 0) / customer.orders.length
-        : 0,
-      firstOrderDate: customer.orders.length > 0
-        ? customer.orders[customer.orders.length - 1].createdAt
-        : null,
-      lastOrderDate: customer.orders.length > 0
-        ? customer.orders[0].createdAt
-        : null,
+      averageOrderValue:
+        customer.orders.length > 0
+          ? Number(customer.totalSpent || 0) / customer.orders.length
+          : 0,
+      firstOrderDate:
+        customer.orders.length > 0
+          ? customer.orders[customer.orders.length - 1].createdAt
+          : null,
+      lastOrderDate:
+        customer.orders.length > 0 ? customer.orders[0].createdAt : null,
     };
 
     // Order status breakdown
@@ -113,20 +112,20 @@ export async function GET(
 
     // Recent activity timeline
     const timeline = [
-      ...customer.orders.slice(0, 10).map(order => ({
-        type: 'order',
+      ...customer.orders.slice(0, 10).map((order) => ({
+        type: "order",
         date: order.createdAt,
         description: `Order #${order.id.substring(0, 8)} - ${order.status}`,
         amount: Number(order.total),
         orderId: order.id,
       })),
       {
-        type: 'registration',
+        type: "registration",
         date: customer.createdAt,
-        description: 'Customer registered',
+        description: "Customer registered",
         amount: null,
         orderId: null,
-      }
+      },
     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return NextResponse.json({
@@ -134,36 +133,37 @@ export async function GET(
         ...customer,
         // Convert Decimal to number for JSON serialization
         totalSpent: Number(customer.totalSpent || 0),
-        orders: customer.orders.map(order => ({
+        orders: customer.orders.map((order) => ({
           ...order,
           total: Number(order.total),
-          orderItems: order.orderItems.map(item => ({
+          orderItems: order.orderItems.map((item) => ({
             ...item,
             price: Number(item.price),
-            productVariant: item.productVariant ? {
-              ...item.productVariant,
-              price: Number(item.productVariant.price),
-            } : null,
-          }))
+            productVariant: item.productVariant
+              ? {
+                  ...item.productVariant,
+                  price: Number(item.productVariant.price),
+                }
+              : null,
+          })),
         })),
-        wishlistItems: customer.wishlistItems.map(item => ({
+        wishlistItems: customer.wishlistItems.map((item) => ({
           ...item,
           product: {
             ...item.product,
             basePrice: Number(item.product.basePrice),
-          }
-        }))
+          },
+        })),
       },
       stats: orderStats,
       statusBreakdown,
       timeline: timeline.slice(0, 20), // Limit to 20 most recent activities
     });
-
   } catch (error) {
     console.error("Error fetching customer:", error);
     return NextResponse.json(
       { error: "Failed to fetch customer details" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -171,41 +171,37 @@ export async function GET(
 // PATCH - Update customer information
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const customerId = params.id;
+    const { id } = await params;
+
+    const customerId = id;
     const body = await req.json();
     const { name, email, role } = body;
 
     if (!customerId) {
       return NextResponse.json(
         { error: "Customer ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Validate role if provided
     if (role && !["CLIENT", "ADMIN"].includes(role)) {
-      return NextResponse.json(
-        { error: "Invalid role" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid role" }, { status: 400 });
     }
 
     // Validate email format if provided
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
         { error: "Invalid email format" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -213,13 +209,13 @@ export async function PATCH(
     if (email) {
       const existingUser = await prisma.user.findUnique({
         where: { email },
-        select: { id: true }
+        select: { id: true },
       });
 
       if (existingUser && existingUser.id !== customerId) {
         return NextResponse.json(
           { error: "Email is already in use" },
-          { status: 400 }
+          { status: 400 },
         );
       }
     }
@@ -239,19 +235,18 @@ export async function PATCH(
         email: true,
         role: true,
         updatedAt: true,
-      }
+      },
     });
 
     return NextResponse.json({
       message: "Customer updated successfully",
-      customer: updatedCustomer
+      customer: updatedCustomer,
     });
-
   } catch (error) {
     console.error("Error updating customer:", error);
     return NextResponse.json(
       { error: "Failed to update customer" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

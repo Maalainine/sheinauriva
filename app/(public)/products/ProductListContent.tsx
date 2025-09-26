@@ -3,18 +3,18 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
-  Search,
-  X,
-  SlidersHorizontal,
-  Loader2,
-  ChevronDown,
-  ChevronUp,
-  ArrowLeft,
-} from "lucide-react";
-import { IconX, IconSearch, IconSortAscendingShapes} from '@tabler/icons-react';
+  IconSearch,
+  IconX,
+  IconAdjustmentsHorizontal,
+  IconLoader2,
+  IconChevronDown,
+  IconChevronUp,
+  IconArrowLeft,
+  IconSortAscendingShapes,
+} from "@tabler/icons-react";
 import ProductCard from "@/components/product/card/ProductCard";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { IconCheck } from "@tabler/icons-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -131,9 +131,9 @@ function FilterSection({
           )}
         </div>
         {isOpen ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground transition-transform group-hover:text-foreground" />
+          <IconChevronUp className="h-4 w-4 text-muted-foreground transition-transform group-hover:text-foreground" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-hover:text-foreground" />
+          <IconChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-hover:text-foreground" />
         )}
       </button>
 
@@ -157,7 +157,7 @@ function FilterSection({
                           "group flex items-center rounded-md p-2 transition-colors",
                           selected[0] === option.id
                             ? "bg-primary/5"
-                            : "hover:bg-accent/50"
+                            : "hover:bg-accent/50",
                         )}
                       >
                         <div className="group flex items-center">
@@ -178,7 +178,7 @@ function FilterSection({
                               "ml-3 flex w-full cursor-pointer items-center justify-between text-sm transition-colors",
                               selected[0] === option.id
                                 ? "text-foreground font-medium"
-                                : "text-muted-foreground group-hover:text-foreground"
+                                : "text-muted-foreground group-hover:text-foreground",
                             )}
                           >
                             <span className="truncate transition-colors group-hover:text-primary/90">
@@ -189,7 +189,7 @@ function FilterSection({
                                 "ml-2 rounded-full px-2 py-0.5 text-xs font-medium transition-colors",
                                 selected[0] === option.id
                                   ? "bg-primary/10 text-primary"
-                                  : "bg-muted/50 text-muted-foreground group-hover:bg-muted/80"
+                                  : "bg-muted/50 text-muted-foreground group-hover:bg-muted/80",
                               )}
                             >
                               {option.count}
@@ -201,7 +201,7 @@ function FilterSection({
                   </div>
                 ) : (
                   <div className="py-4 text-center text-sm text-muted-foreground">
-                    {t('search.noResults')}
+                    {t("search.noResults")}
                   </div>
                 )}
               </div>
@@ -252,7 +252,7 @@ function FilterChip({
         className="ml-1 p-0.5 rounded-full hover:bg-primary/20 transition-colors"
         aria-label={`Remove ${label} filter`}
       >
-        <X className="h-3.5 w-3.5 text-foreground/70 group-hover:text-foreground" />
+        <IconX className="h-3.5 w-3.5 text-foreground/70 group-hover:text-foreground" />
       </button>
     </motion.div>
   );
@@ -300,11 +300,11 @@ export default function ProductListContent() {
 
   // Dynamic sort options with translations
   const SORT_OPTIONS = [
-    { value: "createdAt-desc", label: t('filter.sortOptions.newest') },
-    { value: "price-asc", label: t('filter.sortOptions.priceLowHigh') },
-    { value: "price-desc", label: t('filter.sortOptions.priceHighLow') },
-    { value: "name-asc", label: t('filter.sortOptions.nameAZ') },
-    { value: "name-desc", label: t('filter.sortOptions.nameZA') },
+    { value: "createdAt-desc", label: t("filter.sortOptions.newest") },
+    { value: "price-asc", label: t("filter.sortOptions.priceLowHigh") },
+    { value: "price-desc", label: t("filter.sortOptions.priceHighLow") },
+    { value: "name-asc", label: t("filter.sortOptions.nameAZ") },
+    { value: "name-desc", label: t("filter.sortOptions.nameZA") },
   ];
 
   // State for filters
@@ -400,7 +400,6 @@ export default function ProductListContent() {
 
   // Fetch products when filters or search query changes
   const fetchProducts = useCallback(async () => {
-
     setLoading(true);
     try {
       // Build query parameters
@@ -532,7 +531,7 @@ export default function ProductListContent() {
   // Handle filter changes locally before applying
   const handleLocalFilterChange = (
     type: "categories" | "brands" | "tags",
-    id: string
+    id: string,
   ) => {
     setLocalFilters((prev) => ({
       ...prev,
@@ -571,7 +570,7 @@ export default function ProductListContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {t('pages.title')}
+          {t("pages.title")}
         </motion.h1>
         <motion.p
           className="text-muted-foreground text-lg text-center max-w-2xl mx-auto mb-4"
@@ -579,7 +578,7 @@ export default function ProductListContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {t('pages.description')}
+          {t("pages.description")}
         </motion.p>
 
         {/* Search is now only available in the navbar */}
@@ -608,12 +607,12 @@ export default function ProductListContent() {
                       setSkip(0);
                     }}
                   >
-                    <ArrowLeft className="h-4 w-4 mr-1" />
-                    {t('filter.clearAllFilters')}
+                    <IconArrowLeft className="h-4 w-4 mr-1" />
+                    {t("filter.clearAllFilters")}
                   </Button>
                 </div>
               ) : (
-                <span>{t('pages.allProducts')}</span>
+                <span>{t("pages.allProducts")}</span>
               )}
             </h1>
           </div>
@@ -631,8 +630,8 @@ export default function ProductListContent() {
                 <IconSortAscendingShapes className="h-4 w-4" />
                 <span>
                   {SORT_OPTIONS.find(
-                    (option) => option.value === filters.sortBy
-                  )?.label || t('filter.sortBy')}
+                    (option) => option.value === filters.sortBy,
+                  )?.label || t("filter.sortBy")}
                 </span>
               </Button>
 
@@ -646,7 +645,7 @@ export default function ProductListContent() {
                   }}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder={t('filter.sortBy')} />
+                    <SelectValue placeholder={t("filter.sortBy")} />
                   </SelectTrigger>
                   <SelectContent>
                     {SORT_OPTIONS.map((option) => (
@@ -666,8 +665,8 @@ export default function ProductListContent() {
               className="lg:hidden gap-2 flex-1 w-full"
               onClick={() => setMobileFiltersOpen(true)}
             >
-              <SlidersHorizontal className="h-4 w-4" />
-              <span>{t('filter.filters')}</span>
+              <IconAdjustmentsHorizontal className="h-4 w-4" />
+              <span>{t("filter.filters")}</span>
               {(filters.categories.length > 0 ||
                 filters.brands.length > 0 ||
                 filters.tags.length > 0) && (
@@ -698,21 +697,21 @@ export default function ProductListContent() {
               className="w-full max-h-[90vh] p-0 rounded-t-2xl"
             >
               <SheetHeader className="sr-only">
-                <SheetTitle>{t('filter.productFilters')}</SheetTitle>
+                <SheetTitle>{t("filter.productFilters")}</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col h-full">
                 {/* Sticky Header */}
                 <div className="sticky top-0 z-10 bg-background border-b p-4 flex items-center justify-between">
-                  <h2 className="text-xl font-bold">{t('filter.filters')}</h2>
+                  <h2 className="text-xl font-bold">{t("filter.filters")}</h2>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => setMobileFiltersOpen(false)}
                     className="rounded-full"
-                    aria-label={t('filter.closeFilters')}
+                    aria-label={t("filter.closeFilters")}
                   >
-                    <X className="h-5 w-5" />
-                    <span className="sr-only">{t('filter.closeFilters')}</span>
+                    <IconX className="h-5 w-5" />
+                    <span className="sr-only">{t("filter.closeFilters")}</span>
                   </Button>
                 </div>
 
@@ -721,7 +720,7 @@ export default function ProductListContent() {
                   <div className="space-y-2 py-2">
                     {/* Categories */}
                     <FilterSection
-                      title={t('filter.categories')}
+                      title={t("filter.categories")}
                       options={filterOptions.categories}
                       selected={localFilters.categories}
                       onToggle={(id) =>
@@ -733,7 +732,7 @@ export default function ProductListContent() {
 
                     {/* Brands */}
                     <FilterSection
-                      title={t('filter.brands')}
+                      title={t("filter.brands")}
                       options={filterOptions.brands}
                       selected={localFilters.brands}
                       onToggle={(id) => handleLocalFilterChange("brands", id)}
@@ -743,7 +742,7 @@ export default function ProductListContent() {
 
                     {/* Tags */}
                     <FilterSection
-                      title={t('filter.tags')}
+                      title={t("filter.tags")}
                       options={filterOptions.tags}
                       selected={localFilters.tags}
                       onToggle={(id) => handleLocalFilterChange("tags", id)}
@@ -760,10 +759,10 @@ export default function ProductListContent() {
                     className="flex-1"
                     onClick={resetFilters}
                   >
-                    {t('filter.resetAll')}
+                    {t("filter.resetAll")}
                   </Button>
                   <Button className="flex-1" onClick={applyFilters}>
-                    {t('filter.applyFilters')}
+                    {t("filter.applyFilters")}
                   </Button>
                 </div>
               </div>
@@ -780,12 +779,14 @@ export default function ProductListContent() {
                 {SORT_OPTIONS.map((option) => (
                   <Button
                     key={option.value}
-                    variant={filters.sortBy === option.value ? "default" : "ghost"}
+                    variant={
+                      filters.sortBy === option.value ? "default" : "ghost"
+                    }
                     className="w-full justify-start"
                     onClick={() => {
-                      setFilters(prev => ({
+                      setFilters((prev) => ({
                         ...prev,
-                        sortBy: option.value
+                        sortBy: option.value,
                       }));
                       setSkip(0);
                       setMobileSortOpen(false);
@@ -793,7 +794,7 @@ export default function ProductListContent() {
                   >
                     {option.label}
                     {filters.sortBy === option.value && (
-                      <Check className="ml-auto h-4 w-4" />
+                      <IconCheck className="ml-auto h-4 w-4" />
                     )}
                   </Button>
                 ))}
@@ -811,7 +812,7 @@ export default function ProductListContent() {
               <div className="rounded-lg bg-muted/30 p-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-foreground">
-                    {t('filter.filters')}
+                    {t("filter.filters")}
                   </h2>
                   {activeFilterCount > 0 && (
                     <Button
@@ -820,7 +821,7 @@ export default function ProductListContent() {
                       onClick={clearAllFilters}
                       className="h-7 text-xs text-primary hover:bg-transparent hover:text-primary/80"
                     >
-                      {t('filter.clearAll')}
+                      {t("filter.clearAll")}
                     </Button>
                   )}
                 </div>
@@ -830,7 +831,7 @@ export default function ProductListContent() {
                   <div className="flex flex-wrap gap-2">
                     {filters.categories.map((id) => {
                       const category = filterOptions.categories.find(
-                        (c) => c.id === id
+                        (c) => c.id === id,
                       );
                       return category ? (
                         <FilterChip
@@ -843,7 +844,7 @@ export default function ProductListContent() {
 
                     {filters.brands.map((id) => {
                       const brand = filterOptions.brands.find(
-                        (b) => b.id === id
+                        (b) => b.id === id,
                       );
                       return brand ? (
                         <FilterChip
@@ -871,7 +872,7 @@ export default function ProductListContent() {
               {/* Filter Sections */}
               <div className="rounded-lg bg-card p-4 shadow-sm">
                 <FilterSection
-                  title={t('filter.categories')}
+                  title={t("filter.categories")}
                   options={filterOptions.categories}
                   selected={filters.categories}
                   onToggle={(id) => toggleFilter("categories", id)}
@@ -880,7 +881,7 @@ export default function ProductListContent() {
                 />
 
                 <FilterSection
-                  title={t('filter.brands')}
+                  title={t("filter.brands")}
                   options={filterOptions.brands}
                   selected={filters.brands}
                   onToggle={(id) => toggleFilter("brands", id)}
@@ -889,7 +890,7 @@ export default function ProductListContent() {
                 />
 
                 <FilterSection
-                  title={t('filter.tags')}
+                  title={t("filter.tags")}
                   options={filterOptions.tags}
                   selected={filters.tags}
                   onToggle={(id) => toggleFilter("tags", id)}
@@ -918,7 +919,7 @@ export default function ProductListContent() {
               <div className="flex flex-wrap items-center gap-2">
                 {filters.categories.map((id) => {
                   const category = filterOptions.categories.find(
-                    (c) => c.id === id
+                    (c) => c.id === id,
                   );
                   return category ? (
                     <FilterChip
@@ -990,7 +991,7 @@ export default function ProductListContent() {
                       const variants = Array.isArray(product.variants)
                         ? product.variants
                         : [];
-                      
+
                       const stock =
                         variants.length > 0
                           ? variants.reduce((sum, v) => sum + (v.stock || 0), 0)
@@ -1072,11 +1073,11 @@ export default function ProductListContent() {
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading...
                       </>
                     ) : (
-                      t('filter.loadMoreProducts')
+                      t("filter.loadMoreProducts")
                     )}
                     {loading && (
                       <motion.div

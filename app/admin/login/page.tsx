@@ -16,7 +16,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Loader2, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import {
+  IconAlertCircle,
+  IconLoader2,
+  IconEye,
+  IconEyeOff,
+  IconLock,
+  IconMail,
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -199,7 +206,7 @@ function AdminLoginContent() {
 
     return (
       <Alert variant="destructive" className="mb-6">
-        <AlertCircle className="h-5 w-5" />
+        <IconAlertCircle className="h-5 w-5" />
         <div className="ml-2">
           <AlertTitle className="font-medium">{errorState.message}</AlertTitle>
           {errorState.details && (
@@ -234,7 +241,7 @@ function AdminLoginContent() {
         <Card className="overflow-hidden shadow-lg p-0">
           <div className="bg-primary p-6 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
-              <Lock className="h-8 w-8 text-white" />
+              <IconLock className="h-8 w-8 text-white" />
             </div>
             <CardTitle className="text-2xl font-bold text-white">
               {t("admin.login.title")}
@@ -312,7 +319,7 @@ function AdminLoginContent() {
                   </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-5 w-5 text-gray-400" />
+                      <IconLock className="h-5 w-5 text-gray-400" />
                     </div>
                     <Input
                       id="password"
@@ -344,9 +351,9 @@ function AdminLoginContent() {
                       tabIndex={-1} // Prevent tab focus on show/hide button
                     >
                       {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
+                        <IconEyeOff className="h-5 w-5" />
                       ) : (
-                        <Eye className="h-5 w-5" />
+                        <IconEye className="h-5 w-5" />
                       )}
                     </button>
                   </div>
@@ -365,7 +372,7 @@ function AdminLoginContent() {
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                     {t("admin.login.signingIn")}
                   </>
                 ) : (
@@ -407,7 +414,7 @@ export default function LoginPage() {
             <Card className="overflow-hidden shadow-lg p-0">
               <div className="bg-primary p-6 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
-                  <Lock className="h-8 w-8 text-white" />
+                  <IconLock className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-2xl font-bold text-white">
                   Loading...

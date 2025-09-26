@@ -19,22 +19,23 @@ async function checkAdminAuth() {
 }
 
 // GET - Get single order details
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = params.id;
+    const orderId = id;
 
     if (!orderId) {
       return NextResponse.json(
         { error: "Order ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -101,16 +102,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     });
 
     if (!order) {
-      return NextResponse.json(
-        { error: "Order not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     // Calculate order summary
     const itemsTotal = order.orderItems.reduce(
-      (sum, item) => sum + (item.price * item.quantity),
-      0
+      (sum, item) => sum + item.price * item.quantity,
+      0,
     );
 
     // Get order history (status changes) - simplified version
@@ -119,7 +117,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       {
         status: order.status,
         timestamp: order.updatedAt,
-        note: order.notes || `Order ${order.status.toLowerCase().replace('_', ' ')}`,
+        note:
+          order.notes ||
+          `Order ${order.status.toLowerCase().replace("_", " ")}`,
       },
     ];
 
@@ -139,11 +139,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         email: order.customerEmail,
         phone: order.customerPhone,
         isRegistered: !order.isGuestOrder,
-        profile: order.user ? {
-          totalSpent: order.user.totalSpent,
-          ordersCount: order.user.ordersCount,
-          memberSince: order.user.createdAt,
-        } : null,
+        profile: order.user
+          ? {
+              totalSpent: order.user.totalSpent,
+              ordersCount: order.user.ordersCount,
+              memberSince: order.user.createdAt,
+            }
+          : null,
       },
       shipping: {
         address: order.shippingAddress,
@@ -156,37 +158,37 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
       success: true,
       data: enhancedOrder,
     });
-
   } catch (error) {
     console.error("Error fetching order:", error);
     return NextResponse.json(
       {
         error: "Failed to fetch order",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 // PUT - Update single order (status, notes, etc.)
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = params.id;
+    const orderId = id;
     const { status, notes, trackingNumber, shippingCost } = await req.json();
 
     if (!orderId) {
       return NextResponse.json(
         { error: "Order ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -196,10 +198,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     });
 
     if (!existingOrder) {
-      return NextResponse.json(
-        { error: "Order not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     // Validate status if provided
@@ -209,13 +208,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         "CONFIRMED",
         "SHIPPED",
         "DELIVERED",
-        "CANCELLED"
+        "CANCELLED",
       ];
       if (!validStatuses.includes(status)) {
-        return NextResponse.json(
-          { error: "Invalid status" },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "Invalid status" }, { status: 400 });
       }
     }
 
@@ -271,36 +267,36 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       message: "Order updated successfully",
       data: updatedOrder,
     });
-
   } catch (error) {
     console.error("Error updating order:", error);
     return NextResponse.json(
       {
         error: "Failed to update order",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 // DELETE - Cancel/delete order (optional)
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = params.id;
+    const orderId = id;
 
     if (!orderId) {
       return NextResponse.json(
         { error: "Order ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -310,10 +306,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     });
 
     if (!existingOrder) {
-      return NextResponse.json(
-        { error: "Order not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
     // Only allow cancellation of certain statuses
@@ -321,7 +314,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     if (!cancellableStatuses.includes(existingOrder.status)) {
       return NextResponse.json(
         { error: "Order cannot be cancelled at this stage" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -342,15 +335,14 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
       message: "Order cancelled successfully",
       data: cancelledOrder,
     });
-
   } catch (error) {
     console.error("Error cancelling order:", error);
     return NextResponse.json(
       {
         error: "Failed to cancel order",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -70,7 +70,7 @@ export default function WishlistPage() {
     setRemovingIds((prev) => new Set(prev).add(productId));
 
     try {
-      await removeFromWishlist(productId);
+      await removeFromWishlist(productId.toString());
       setProducts((prev) => prev.filter((p) => p.id !== productId));
     } catch (error) {
       console.error("Failed to remove from wishlist:", error);

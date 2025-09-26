@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { TypographyH3, TypographyP } from "@/components/ui/typography";
 import {
@@ -39,7 +39,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
       onButtonClick,
       ...cardProps
     },
-    ref
+    ref,
   ) => {
     const router = useRouter();
 
@@ -49,7 +49,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         className={cn(
           "group relative flex w-full overflow-hidden",
           "hover:shadow-lg transition-shadow duration-300",
-          className
+          className,
         )}
         style={{
           height: "fit-content",
@@ -64,15 +64,18 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         }}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && (() => {
-          e.preventDefault();
-          router.push(`/products?categoryId=${encodeURIComponent(id)}`);
-          onClick?.(e as any);
-        })()}
+        onKeyDown={(e) =>
+          e.key === "Enter" &&
+          (() => {
+            e.preventDefault();
+            router.push(`/products?categoryId=${encodeURIComponent(id)}`);
+            onClick?.(e as any);
+          })()
+        }
         {...cardProps}
       >
         {/* Background Image */}
-        <div 
+        <div
           className="absolute inset-0 z-0"
           style={{
             backgroundImage: imageUrl ? `url(${imageUrl})` : "none",
@@ -84,7 +87,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         >
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-foreground/100 via-foreground/50 to-transparent" />
-          
+
           {/* Fallback content when no image */}
           {!imageUrl && (
             <div className="h-full w-full flex items-center justify-center text-muted-background">
@@ -115,12 +118,12 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
             }}
           >
             {buttonText || "View Collection"}
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <IconArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </CardFooter>
       </Card>
     );
-  }
+  },
 );
 
 CategoryCard.displayName = "CategoryCard";

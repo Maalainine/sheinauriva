@@ -10,13 +10,13 @@ import { useTranslations } from "@/hooks/useTranslations";
 import { useLanguage } from "@/context/LanguageContext";
 import * as z from "zod";
 import {
-  Loader2,
-  CheckCircle2,
-  Package,
-  Truck,
-  CheckCircle,
-  Clock,
-} from "lucide-react";
+  IconLoader2,
+  IconCircleCheck,
+  IconPackage,
+  IconTruck,
+  IconCheck,
+  IconClock,
+} from "@tabler/icons-react";
 import {
   TypographyH1,
   TypographyP,
@@ -383,7 +383,9 @@ export default function CheckoutPage() {
                   </CardTitle>
                   {session?.user && (
                     <div className="text-sm text-muted-foreground">
-                      {t("checkout.welcomeBack", { name: session.user.name })}
+                      {t("checkout.welcomeBack", {
+                        name: session.user.name || session.user.email || "User",
+                      })}
                       {userAddresses.length > 0 && (
                         <span className="ml-2 text-primary">
                           {t("checkout.usingAccountInfo")}
@@ -658,12 +660,12 @@ export default function CheckoutPage() {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                         {t("checkout.sendingOrder")}
                       </>
                     ) : (
                       <>
-                        <Package className="mr-2 h-4 w-4" />
+                        <IconPackage className="mr-2 h-4 w-4" />
                         {t("checkout.sendOrder")}
                       </>
                     )}
@@ -758,7 +760,7 @@ export default function CheckoutPage() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-              <CheckCircle2 className="h-10 w-10 text-green-600" />
+              <IconCircleCheck className="h-10 w-10 text-green-600" />
             </div>
             <CardTitle>{t("checkout.orderConfirmed")}</CardTitle>
             <TypographyP className="text-muted-foreground">
@@ -768,7 +770,7 @@ export default function CheckoutPage() {
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <IconClock className="h-4 w-4 text-muted-foreground" />
                 <span className="font-medium">{t("order.status")}:</span>
                 <span className="text-yellow-600 font-medium">
                   {t("order.statusOptions.pendingConfirmation")}
@@ -786,7 +788,7 @@ export default function CheckoutPage() {
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                    <Package className="h-5 w-5 text-blue-600" />
+                    <IconPackage className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h4 className="font-medium">
@@ -799,7 +801,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
-                    <Truck className="h-5 w-5 text-blue-600" />
+                    <IconTruck className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h4 className="font-medium">{t("checkout.shipping")}</h4>
@@ -814,7 +816,7 @@ export default function CheckoutPage() {
           <CardFooter className="flex flex-col gap-4">
             <Link href="/products" className="w-full">
               <Button variant="outline" className="w-full">
-                <Package className="mr-2 h-4 w-4" />
+                <IconPackage className="mr-2 h-4 w-4" />
                 {t("cart.continueShopping")}
               </Button>
             </Link>

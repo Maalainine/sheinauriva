@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
@@ -15,11 +15,15 @@ import { useLanguage } from "@/context/LanguageContext";
 
 interface SearchBarProps {
   className?: string;
-  variant?: 'default' | 'expanded';
+  variant?: "default" | "expanded";
   autoFocus?: boolean;
 }
 
-export default function SearchBar({ className, variant = 'default', autoFocus = false }: SearchBarProps) {
+export default function SearchBar({
+  className,
+  variant = "default",
+  autoFocus = false,
+}: SearchBarProps) {
   const router = useRouter();
   const { t } = useTranslations();
   const { isRtl } = useLanguage();
@@ -48,7 +52,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
         !inputRef.current?.contains(event.target as Node)
       ) {
         setIsOpen(false);
-        if (variant === 'default') {
+        if (variant === "default") {
           setExpanded(false);
         }
       }
@@ -73,12 +77,12 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
       type === "products"
         ? `/products?search=${encodeURIComponent(item.name)}`
         : type === "categories"
-        ? `/products?categoryId=${item.id}`
-        : type === "brands"
-        ? `/products?brandId=${item.id}`
-        : type === "tags"
-        ? `/products?tagId=${item.id}`
-        : "/products";
+          ? `/products?categoryId=${item.id}`
+          : type === "brands"
+            ? `/products?brandId=${item.id}`
+            : type === "tags"
+              ? `/products?tagId=${item.id}`
+              : "/products";
 
     router.push(href);
     resetSearch();
@@ -88,10 +92,10 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
   const renderSection = (
     titleKey: string,
     items: any[],
-    type: "products" | "categories" | "tags" | "brands"
+    type: "products" | "categories" | "tags" | "brands",
   ) => {
     if (!items.length) return null;
-    
+
     return (
       <div key={type} className="mb-4 last:mb-0">
         <h4 className="text-xs font-medium text-muted-foreground mb-2 px-2 uppercase tracking-wider">
@@ -132,7 +136,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
   };
 
   const toggleSearch = useCallback(() => {
-    setExpanded(prev => !prev);
+    setExpanded((prev) => !prev);
     if (!expanded) {
       // Only set focus if we're expanding
       setTimeout(() => inputRef.current?.focus(), 0);
@@ -141,45 +145,60 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
 
   // Auto-expand if variant is 'expanded'
   useEffect(() => {
-    if (variant === 'expanded') {
+    if (variant === "expanded") {
       setExpanded(true);
     }
   }, [variant]);
 
   return (
-    <div className={cn("relative", variant === 'expanded' ? 'w-full' : '', className)}>
+    <div
+      className={cn(
+        "relative",
+        variant === "expanded" ? "w-full" : "",
+        className,
+      )}
+    >
       {/* Toggle button & animated input */}
       <div className="flex items-center gap-2">
-        {variant !== 'expanded' && !expanded ? (
+        {variant !== "expanded" && !expanded ? (
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleSearch}
             type="button"
           >
-            <Search className="h-5 w-5" />
+            <IconSearch className="h-5 w-5" />
           </Button>
         ) : (
           <AnimatePresence>
             <motion.form
-              initial={variant === 'expanded' ? false : { width: 0, opacity: 0, marginRight: 0 }}
-              animate={variant === 'expanded' 
-                ? { width: '100%', opacity: 1 } 
-                : { width: '16rem', opacity: 1, marginRight: '0.5rem' }
+              initial={
+                variant === "expanded"
+                  ? false
+                  : { width: 0, opacity: 0, marginRight: 0 }
               }
-              exit={variant === 'expanded' 
-                ? { width: '100%', opacity: 0 } 
-                : { width: 0, opacity: 0, marginRight: 0 }
+              animate={
+                variant === "expanded"
+                  ? { width: "100%", opacity: 1 }
+                  : { width: "16rem", opacity: 1, marginRight: "0.5rem" }
+              }
+              exit={
+                variant === "expanded"
+                  ? { width: "100%", opacity: 0 }
+                  : { width: 0, opacity: 0, marginRight: 0 }
               }
               transition={{ duration: 0.2 }}
               onSubmit={handleSubmit}
-              className={cn("relative flex items-center", variant === 'expanded' ? 'w-full' : '')}
+              className={cn(
+                "relative flex items-center",
+                variant === "expanded" ? "w-full" : "",
+              )}
             >
               <Input
                 autoFocus={autoFocus}
                 ref={inputRef}
                 type="search"
-                placeholder={t('search.placeholder')}
+                placeholder={t("search.placeholder")}
                 className={cn("text-sm", isRtl ? "pr-3 pl-8" : "pl-3 pr-8")}
                 value={query}
                 onChange={(e) => {
@@ -197,7 +216,7 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                   setExpanded(false);
                 }}
               >
-                <X className="h-4 w-4" />
+                <IconX className="h-4 w-4" />
               </Button>
             </motion.form>
           </AnimatePresence>
@@ -220,23 +239,31 @@ export default function SearchBar({ className, variant = 'default', autoFocus = 
                 <div className="flex items-center justify-center p-8">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                   <span className="ml-2 text-sm text-muted-foreground">
-                    {t('common.loading')}
+                    {t("common.loading")}
                   </span>
                 </div>
               ) : hasResults ? (
                 <>
-                  {renderSection("navigation.products", results.products, "products")}
-                  {renderSection("navigation.categories", results.categories, "categories")}
+                  {renderSection(
+                    "navigation.products",
+                    results.products,
+                    "products",
+                  )}
+                  {renderSection(
+                    "navigation.categories",
+                    results.categories,
+                    "categories",
+                  )}
                   {renderSection("navigation.brands", results.brands, "brands")}
                   {renderSection("search.tags", results.tags, "tags")}
                 </>
               ) : query ? (
                 <div className="p-8 text-center text-sm text-muted-foreground">
-                  {t('search.noResults')}
+                  {t("search.noResults")}
                 </div>
               ) : (
                 <div className="p-4 text-center text-sm text-muted-foreground">
-                  {t('search.startTyping')}
+                  {t("search.startTyping")}
                 </div>
               )}
             </div>

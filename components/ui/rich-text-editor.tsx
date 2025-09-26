@@ -7,21 +7,21 @@ import Underline from "@tiptap/extension-underline";
 import { Toggle } from "@/components/ui/toggle";
 import { cn } from "@/lib/utils";
 import {
-  Bold,
-  Italic,
-  Underline as UnderlineIcon,
-  Strikethrough,
-  List,
-  ListOrdered,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  AlignJustify,
-} from "lucide-react";
+  IconBold,
+  IconItalic,
+  IconUnderline,
+  IconStrikethrough,
+  IconList,
+  IconListNumbers,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
+  IconAlignJustified,
+} from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 
 // Extend the TextAlign extension to include toggleTextAlign
-declare module '@tiptap/extension-text-align' {
+declare module "@tiptap/extension-text-align" {
   interface TextAlignOptions {
     types: string[];
     alignments: string[];
@@ -33,7 +33,7 @@ declare module '@tiptap/extension-text-align' {
   }
 }
 
-type TextAlignOption = 'left' | 'center' | 'right' | 'justify';
+type TextAlignOption = "left" | "center" | "right" | "justify";
 
 type RichTextEditorProps = {
   value: string;
@@ -76,17 +76,17 @@ export function RichTextEditor({
         },
       }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
-        alignments: ['left', 'center', 'right', 'justify'] as TextAlignOption[],
-        defaultAlignment: 'left',
+        types: ["heading", "paragraph"],
+        alignments: ["left", "center", "right", "justify"] as TextAlignOption[],
+        defaultAlignment: "left",
       }),
       Underline.configure({
         HTMLAttributes: {
-          class: 'underline',
+          class: "underline",
         },
       }),
     ],
-    content: value || '',
+    content: value || "",
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
@@ -101,13 +101,18 @@ export function RichTextEditor({
   // Update content when value prop changes
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value || '');
+      editor.commands.setContent(value || "");
     }
   }, [value, editor]);
 
   if (!isMounted) {
     return (
-      <div className={cn("min-h-[150px] rounded-md border p-3 prose prose-sm max-w-none", className)}>
+      <div
+        className={cn(
+          "min-h-[150px] rounded-md border p-3 prose prose-sm max-w-none",
+          className,
+        )}
+      >
         {value ? (
           <div dangerouslySetInnerHTML={{ __html: value }} />
         ) : (
@@ -119,7 +124,12 @@ export function RichTextEditor({
 
   if (!editor) {
     return (
-      <div className={cn("min-h-[150px] rounded-md border p-3 prose prose-sm max-w-none", className)}>
+      <div
+        className={cn(
+          "min-h-[150px] rounded-md border p-3 prose prose-sm max-w-none",
+          className,
+        )}
+      >
         {value ? (
           <div dangerouslySetInnerHTML={{ __html: value }} />
         ) : (
@@ -134,86 +144,114 @@ export function RichTextEditor({
       <div className="flex flex-wrap gap-1 p-1 border rounded-t-md bg-muted/50">
         <Toggle
           size="sm"
-          pressed={editor.isActive('bold')}
+          pressed={editor.isActive("bold")}
           onPressedChange={() => editor.chain().focus().toggleBold().run()}
           disabled={!editor.can().chain().focus().toggleBold().run()}
         >
-          <Bold className="h-4 w-4" />
+          <IconBold className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive('italic')}
+          pressed={editor.isActive("italic")}
           onPressedChange={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editor.can().chain().focus().toggleItalic().run()}
         >
-          <Italic className="h-4 w-4" />
+          <IconItalic className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive('underline')}
+          pressed={editor.isActive("underline")}
           onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
           disabled={!editor.can().chain().focus().toggleUnderline().run()}
         >
-          <UnderlineIcon className="h-4 w-4" />
+          <IconUnderline className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive('strike')}
+          pressed={editor.isActive("strike")}
           onPressedChange={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editor.can().chain().focus().toggleStrike().run()}
         >
-          <Strikethrough className="h-4 w-4" />
+          <IconStrikethrough className="h-4 w-4" />
         </Toggle>
         <div className="h-6 w-px bg-border mx-1" />
         <Toggle
           size="sm"
-          pressed={editor.isActive('bulletList')}
-          onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+          pressed={editor.isActive("bulletList")}
+          onPressedChange={() =>
+            editor.chain().focus().toggleBulletList().run()
+          }
         >
-          <List className="h-4 w-4" />
+          <IconList className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive('orderedList')}
-          onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+          pressed={editor.isActive("orderedList")}
+          onPressedChange={() =>
+            editor.chain().focus().toggleOrderedList().run()
+          }
         >
-          <ListOrdered className="h-4 w-4" />
+          <IconListNumbers className="h-4 w-4" />
         </Toggle>
         <div className="h-6 w-px bg-border mx-1" />
         <Toggle
           size="sm"
-          pressed={editor.isActive({ textAlign: 'left' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('left' as const).run()}
+          pressed={editor.isActive({ textAlign: "left" })}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .setTextAlign("left" as const)
+              .run()
+          }
         >
-          <AlignLeft className="h-4 w-4" />
+          <IconAlignLeft className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive({ textAlign: 'center' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('center' as const).run()}
+          pressed={editor.isActive({ textAlign: "center" })}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .setTextAlign("center" as const)
+              .run()
+          }
         >
-          <AlignCenter className="h-4 w-4" />
+          <IconAlignCenter className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive({ textAlign: 'right' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('right' as const).run()}
+          pressed={editor.isActive({ textAlign: "right" })}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .setTextAlign("right" as const)
+              .run()
+          }
         >
-          <AlignRight className="h-4 w-4" />
+          <IconAlignRight className="h-4 w-4" />
         </Toggle>
         <Toggle
           size="sm"
-          pressed={editor.isActive({ textAlign: 'justify' })}
-          onPressedChange={() => editor.chain().focus().setTextAlign('justify' as const).run()}
+          pressed={editor.isActive({ textAlign: "justify" })}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .setTextAlign("justify" as const)
+              .run()
+          }
         >
-          <AlignJustify className="h-4 w-4" />
+          <IconAlignJustified className="h-4 w-4" />
         </Toggle>
       </div>
-      <div ref={editorContainerRef} className="border rounded-b-md overflow-hidden">
-        <EditorContent 
-          editor={editor} 
-          className="min-h-[150px]"
-        />
+      <div
+        ref={editorContainerRef}
+        className="border rounded-b-md overflow-hidden"
+      >
+        <EditorContent editor={editor} className="min-h-[150px]" />
       </div>
     </div>
   );

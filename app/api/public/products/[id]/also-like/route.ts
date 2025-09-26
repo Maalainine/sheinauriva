@@ -1,19 +1,20 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const productId = parseInt(params.id, 10);
-    
+    const { id } = await params;
+    const productId = parseInt(id, 10);
+
     if (isNaN(productId)) {
       return NextResponse.json(
-        { error: 'Invalid product ID' },
-        { status: 400 }
+        { error: "Invalid product ID" },
+        { status: 400 },
       );
     }
 
@@ -22,15 +23,12 @@ export async function GET(
       where: { id: productId },
       select: {
         categoryId: true,
-        id: true
-      }
+        id: true,
+      },
     });
 
     if (!currentProduct) {
-      return NextResponse.json(
-        { error: 'Product not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
     // Find other products in the same category, excluding the current product
@@ -38,27 +36,27 @@ export async function GET(
       where: {
         categoryId: currentProduct.categoryId,
         id: { not: productId },
-        status: true // Only include active products
+        status: true, // Only include active products
       },
       take: 4, // Limit to 4 related products
       include: {
         category: true,
         brand: true,
-        tags: true
+        tags: true,
       },
       orderBy: {
-        createdAt: 'desc' // Show newest products first
-      }
+        createdAt: "desc", // Show newest products first
+      },
     });
 
     return NextResponse.json({
-      products: alsoLikeProducts
+      products: alsoLikeProducts,
     });
   } catch (error) {
-    console.error('Error fetching related products:', error);
+    console.error("Error fetching related products:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch related products' },
-      { status: 500 }
+      { error: "Failed to fetch related products" },
+      { status: 500 },
     );
   } finally {
     await prisma.$disconnect();
