@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useTranslations } from "@/hooks/useTranslations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ type LoginError = {
   details?: string;
 };
 
-export default function LoginPage() {
+function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslations();
@@ -395,5 +395,33 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <Card className="overflow-hidden shadow-lg p-0">
+              <div className="bg-primary p-6 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-4">
+                  <Lock className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl font-bold text-white">
+                  Loading...
+                </CardTitle>
+                <CardDescription className="text-white/90 mt-1">
+                  Please wait while we prepare the admin login.
+                </CardDescription>
+              </div>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <AdminLoginContent />
+    </Suspense>
   );
 }
