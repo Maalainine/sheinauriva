@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { AlertCircle } from 'lucide-react';
-import { 
-  Product, 
-  StockSummary, 
-  calculateStockFromVariants, 
-  getStockBreakdown 
-} from '@/lib/stockUtils';
+import React from "react";
+import { IconAlertCircle } from "@tabler/icons-react";
+import {
+  Product,
+  StockSummary,
+  calculateStockFromVariants,
+  getStockBreakdown,
+} from "@/lib/stockUtils";
 
 interface StockBadgeProps {
   product: Product;
@@ -15,14 +15,14 @@ interface StockBadgeProps {
   showTooltip?: boolean;
 }
 
-export const StockBadge: React.FC<StockBadgeProps> = ({ 
-  product, 
+export const StockBadge: React.FC<StockBadgeProps> = ({
+  product,
   lowStockThreshold = 10,
-  showTooltip = false 
+  showTooltip = false,
 }) => {
   const stockInfo = calculateStockFromVariants(product, lowStockThreshold);
   const breakdown = getStockBreakdown(product);
-  
+
   return (
     <div className="relative group">
       <span
@@ -43,7 +43,7 @@ export const StockBadge: React.FC<StockBadgeProps> = ({
 export const renderStock = (product: Product): React.ReactNode => {
   const stockInfo = calculateStockFromVariants(product, 10);
   const breakdown = getStockBreakdown(product);
-  
+
   return (
     <div className="flex items-center gap-2">
       <span
@@ -52,27 +52,27 @@ export const renderStock = (product: Product): React.ReactNode => {
       >
         {stockInfo.stockDisplay}
       </span>
-      {stockInfo.stockStatus === 'low_stock' && (
+      {stockInfo.stockStatus === "low_stock" && (
         <AlertCircle className="h-4 w-4 text-yellow-500" />
       )}
-      {stockInfo.stockStatus === 'out_of_stock' && (
+      {stockInfo.stockStatus === "out_of_stock" && (
         <AlertCircle className="h-4 w-4 text-red-500" />
       )}
     </div>
   );
 };
 
-const getStockBadgeColor = (stockLevel: 'high' | 'medium' | 'low' | 'out') => {
+const getStockBadgeColor = (stockLevel: "high" | "medium" | "low" | "out") => {
   switch (stockLevel) {
-    case 'high':
-      return 'bg-green-100 text-green-800 hover:bg-green-200';
-    case 'medium':
-      return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
-    case 'low':
-      return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
-    case 'out':
-      return 'bg-red-100 text-red-800 hover:bg-red-200';
+    case "high":
+      return "bg-green-100 text-green-800 hover:bg-green-200";
+    case "medium":
+      return "bg-blue-100 text-blue-800 hover:bg-blue-200";
+    case "low":
+      return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
+    case "out":
+      return "bg-red-100 text-red-800 hover:bg-red-200";
     default:
-      return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+      return "bg-gray-100 text-gray-800 hover:bg-gray-200";
   }
 };

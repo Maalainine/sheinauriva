@@ -115,6 +115,23 @@ components/
 - **Validate CSS variable naming** matches design system specifications
 
 ### Current Issues (In Progress)
+
+- **🚨 CRITICAL: Database Configuration Issue (In Progress)**
+  - **Problem**: Local development was configured for SQLite but deployment uses PostgreSQL
+  - **Impact**: Products, orders, and customers not fetching due to database mismatch
+  - **Status**: Prisma schema updated back to PostgreSQL provider
+  - **Next Steps**: 
+    - Install PostgreSQL locally
+    - Configure proper DATABASE_URL connection string
+    - Run migration and seed database
+    - Test all API endpoints (/api/public/products, /api/admin/orders, /api/admin/customers)
+
+- **🔄 Icon Library Migration (Phase 1 - Partially Complete)**
+  - **Completed**: CartDrawer.tsx, VariantEditor.tsx (2/24 files)
+  - **Remaining**: 22 files with Lucide icons need conversion to Tabler
+  - **Files**: ProductActions.tsx, ProductsTable.tsx, SearchDrawer.tsx, admin components, etc.
+  - **Next Steps**: Complete systematic replacement of all Lucide → Tabler icons
+
 - **Admin Panel Completion** - Essential admin dashboard features implementation
   
   **✅ Already Complete:**
@@ -147,6 +164,19 @@ components/
   - Email templates and notification settings
 
 ### Recently Completed ✅
+- **Database Schema Fix (2025-09-26)** - Resolved SQLite/PostgreSQL mismatch
+  - **Root cause**: Local dev was using SQLite (`file:./dev.db`) but deployment requires PostgreSQL
+  - **Solution**: Updated Prisma schema from `provider = "sqlite"` to `provider = "postgresql"`
+  - **Impact**: Fixed products, orders, and customers not fetching from API endpoints
+  - **Status**: Schema corrected, pending PostgreSQL installation and proper DATABASE_URL configuration
+- **Icon Migration Progress (2025-09-26)** - Started Lucide to Tabler conversion
+  - **Progress**: 2 of 24 files completed (CartDrawer.tsx, VariantEditor.tsx)
+  - **Icons converted**: X→IconX, Plus→IconPlus, Minus→IconMinus, Trash2→IconTrash, etc.
+  - **Remaining**: 22 files still using Lucide icons need systematic conversion
+  - **API Endpoint Discovery** - Identified correct API structure
+  - **Products API**: `/api/public/products` (not `/api/products`)
+  - **Response format**: `{products: Product[], total: number}` - correctly structured
+  - **Admin APIs**: `/api/admin/orders`, `/api/admin/customers` - endpoints exist and properly configured
 - **Complete Client Account System** - Full user authentication and account management
   - Client login/registration with separate auth provider from admin
   - Account dashboard with order stats, spending history, and quick actions

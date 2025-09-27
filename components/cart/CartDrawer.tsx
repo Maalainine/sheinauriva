@@ -14,7 +14,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import Image from "next/image";
-import { X, Plus, Minus, ShoppingCart, ArrowLeft, Trash2 } from "lucide-react";
+import {
+  IconX,
+  IconPlus,
+  IconMinus,
+  IconShoppingCart,
+  IconArrowLeft,
+  IconTrash,
+} from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/hooks/useTranslations";
@@ -74,12 +81,12 @@ const CartItem = ({
             className="object-cover w-full h-full"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
+              target.style.display = "none";
             }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-muted">
-            <ShoppingCart className="h-6 w-6 text-muted-foreground" />
+            <IconShoppingCart className="h-6 w-6 text-muted-foreground" />
           </div>
         )}
       </div>
@@ -94,7 +101,7 @@ const CartItem = ({
             aria-label="Remove from cart"
             className="text-muted-foreground hover:text-destructive transition-colors p-1 -m-1"
           >
-            <X className="h-4 w-4" />
+            <IconX className="h-4 w-4" />
           </button>
         </div>
 
@@ -113,11 +120,13 @@ const CartItem = ({
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => onUpdateQuantity(item.id, item.quantity - 1, item.variantId)}
+              onClick={() =>
+                onUpdateQuantity(item.id, item.quantity - 1, item.variantId)
+              }
               disabled={item.quantity <= 1}
               aria-label="Decrease quantity"
             >
-              <Minus className="h-3.5 w-3.5" />
+              <IconMinus className="h-3.5 w-3.5" />
             </Button>
             <span className="text-sm font-medium w-6 text-center">
               {item.quantity}
@@ -126,10 +135,12 @@ const CartItem = ({
               variant="outline"
               size="sm"
               className="h-8 w-8 p-0"
-              onClick={() => onUpdateQuantity(item.id, item.quantity + 1, item.variantId)}
+              onClick={() =>
+                onUpdateQuantity(item.id, item.quantity + 1, item.variantId)
+              }
               aria-label="Increase quantity"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <IconPlus className="h-3.5 w-3.5" />
             </Button>
           </div>
           <span className="text-sm font-medium">MAD {itemTotal}</span>
@@ -151,30 +162,34 @@ export default function CartDrawer({
   const { isRtl } = useLanguage();
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Calculate subtotal
   const subtotal = cart.reduce(
     (sum, item) => sum + (Number(item.price) || 0) * item.quantity,
-    0
+    0,
   );
 
   // Handle client-side only rendering
   useEffect(() => {
     setIsClient(true);
-    
+
     // Check if mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024); // lg breakpoint
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Handle quantity update with debounce
-  const handleUpdateQuantity = (id: string, newQuantity: number, variantId?: string) => {
+  const handleUpdateQuantity = (
+    id: string,
+    newQuantity: number,
+    variantId?: string,
+  ) => {
     if (newQuantity < 1) return;
     updateQuantity(id, newQuantity, variantId);
   };
@@ -189,8 +204,8 @@ export default function CartDrawer({
   };
 
   // Determine drawer direction and styling based on screen size and language
-  const direction = isMobile ? "top" : (isRtl ? "left" : "right");
-  const contentClassName = isMobile 
+  const direction = isMobile ? "top" : isRtl ? "left" : "right";
+  const contentClassName = isMobile
     ? "h-[85vh] max-h-[85vh] w-full rounded-b-lg"
     : "h-full w-96 max-w-96";
 
@@ -200,7 +215,7 @@ export default function CartDrawer({
         <DrawerHeader className="px-4 sm:px-6 border-b">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-lg font-semibold">
-              {t('cart.title')}
+              {t("cart.title")}
               {cart.length > 0 && (
                 <span className="text-muted-foreground font-normal ml-2">
                   ({cart.reduce((sum, item) => sum + item.quantity, 0)})
@@ -215,14 +230,14 @@ export default function CartDrawer({
                   onClick={handleClearCart}
                   className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  {t('cart.clearCart')}
+                  <IconTrash className="h-4 w-4 mr-1" />
+                  {t("cart.clearCart")}
                 </Button>
               )}
               <DrawerClose asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
                   <X className="h-4 w-4" />
-                  <span className="sr-only">{t('common.close')}</span>
+                  <span className="sr-only">{t("common.close")}</span>
                 </Button>
               </DrawerClose>
             </div>
@@ -233,15 +248,15 @@ export default function CartDrawer({
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-8">
               <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">{t('cart.empty')}</h3>
+              <h3 className="text-lg font-medium mb-2">{t("cart.empty")}</h3>
               <p className="text-sm text-muted-foreground mb-6">
-                {t('cart.noItems')}
+                {t("cart.noItems")}
               </p>
               <DrawerClose asChild>
                 <Button asChild>
                   <Link href="/products" className="flex items-center gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    {t('cart.continueShopping')}
+                    <IconArrowLeft className="h-4 w-4" />
+                    {t("cart.continueShopping")}
                   </Link>
                 </Button>
               </DrawerClose>
@@ -265,7 +280,7 @@ export default function CartDrawer({
               >
                 {cart.map((item) => (
                   <CartItem
-                    key={`${item.id}-${item.variantId || 'no-variant'}`}
+                    key={`${item.id}-${item.variantId || "no-variant"}`}
                     item={item}
                     onRemove={handleRemoveItem}
                     onUpdateQuantity={handleUpdateQuantity}
@@ -280,23 +295,23 @@ export default function CartDrawer({
           <DrawerFooter className="border-t p-4 sm:p-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between text-lg font-semibold">
-                <span>{t('cart.total')}</span>
+                <span>{t("cart.total")}</span>
                 <span>MAD {subtotal.toFixed(2)}</span>
               </div>
             </div>
 
-            <Button 
-              asChild 
-              size="lg" 
+            <Button
+              asChild
+              size="lg"
               className="mt-4"
               onClick={() => onOpenChange(false)}
             >
-              <Link href="/checkout">{t('cart.checkout')}</Link>
+              <Link href="/checkout">{t("cart.checkout")}</Link>
             </Button>
 
             <DrawerClose asChild>
               <Button variant="outline" className="mt-2">
-                {t('cart.continueShopping')}
+                {t("cart.continueShopping")}
               </Button>
             </DrawerClose>
           </DrawerFooter>
