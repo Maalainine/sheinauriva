@@ -23,10 +23,7 @@ export async function GET(req: Request) {
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -46,12 +43,19 @@ export async function GET(req: Request) {
 
     // Search by order ID, customer name, or email
     if (search) {
-      whereClause.OR = [
-        { id: { contains: search } },
+      const searchConditions = [
         { customerName: { contains: search, mode: "insensitive" } },
         { customerEmail: { contains: search, mode: "insensitive" } },
         { customerPhone: { contains: search, mode: "insensitive" } },
       ];
+
+      // Only add ID search if search term is a valid number
+      const searchAsNumber = parseInt(search);
+      if (!isNaN(searchAsNumber)) {
+        searchConditions.push({ id: searchAsNumber });
+      }
+
+      whereClause.OR = searchConditions;
     }
 
     // Filter by status
@@ -99,11 +103,11 @@ export async function GET(req: Request) {
                 images: true,
               },
             },
-            variant: {
+            productVariant: {
               select: {
                 id: true,
                 sku: true,
-                name: true,
+                price: true,
               },
             },
           },
@@ -121,16 +125,19 @@ export async function GET(req: Request) {
 
     // Get status counts for filters
     const statusCounts = await prisma.order.groupBy({
-      by: ['status'],
+      by: ["status"],
       _count: {
         id: true,
       },
     });
 
-    const statusSummary = statusCounts.reduce((acc, curr) => {
-      acc[curr.status] = curr._count.id;
-      return acc;
-    }, {} as Record<string, number>);
+    const statusSummary = statusCounts.reduce(
+      (acc, curr) => {
+        acc[curr.status] = curr._count.id;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     // Calculate total revenue
     const revenueResult = await prisma.order.aggregate({
@@ -143,7 +150,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        orders: orders.map(order => ({
+        orders: orders.map((order) => ({
           ...order,
           itemsCount: order._count.orderItems,
         })),
@@ -161,15 +168,14 @@ export async function GET(req: Request) {
         },
       },
     });
-
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json(
       {
         error: "Failed to fetch orders",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -179,10 +185,7 @@ export async function PUT(req: Request) {
   try {
     const authCheck = await checkAdminAuth();
     if (!authCheck.authorized) {
-      return NextResponse.json(
-        { error: authCheck.error },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
     const { orderIds, status, notes } = await req.json();
@@ -190,30 +193,29 @@ export async function PUT(req: Request) {
     if (!orderIds || !Array.isArray(orderIds) || orderIds.length === 0) {
       return NextResponse.json(
         { error: "Order IDs are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!status) {
       return NextResponse.json(
         { error: "Status is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // Validate status
+    // Validate status - must match Prisma schema enum
     const validStatuses = [
-      "PENDING_CONFIRMATION",
+      "PENDING",
       "CONFIRMED",
+      "PROCESSING",
       "SHIPPED",
       "DELIVERED",
-      "CANCELLED"
+      "CANCELLED",
+      "REFUNDED",
     ];
     if (!validStatuses.includes(status)) {
-      return NextResponse.json(
-        { error: "Invalid status" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
     // Update orders
@@ -240,15 +242,14 @@ export async function PUT(req: Request) {
       message: `Successfully updated ${updatedOrders.count} orders`,
       updatedCount: updatedOrders.count,
     });
-
   } catch (error) {
     console.error("Error updating orders:", error);
     return NextResponse.json(
       {
         error: "Failed to update orders",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

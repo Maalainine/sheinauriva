@@ -236,7 +236,7 @@ export default function CartDrawer({
               )}
               <DrawerClose asChild>
                 <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <X className="h-4 w-4" />
+                  <IconX className="h-4 w-4" />
                   <span className="sr-only">{t("common.close")}</span>
                 </Button>
               </DrawerClose>
@@ -247,7 +247,7 @@ export default function CartDrawer({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-8">
-              <ShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
+              <IconShoppingCart className="h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">{t("cart.empty")}</h3>
               <p className="text-sm text-muted-foreground mb-6">
                 {t("cart.noItems")}
