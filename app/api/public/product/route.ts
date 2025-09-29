@@ -1,16 +1,20 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient({
-  log: ['query', 'error', 'warn'],
+  log: ["query", "error", "warn"],
 });
 
 // Helper function to handle errors
 function handleError(error: unknown, message: string) {
   console.error(message, error);
   return NextResponse.json(
-    { success: false, error: message, details: error instanceof Error ? error.message : String(error) },
-    { status: 500 }
+    {
+      success: false,
+      error: message,
+      details: error instanceof Error ? error.message : String(error),
+    },
+    { status: 500 },
   );
 }
 
@@ -69,21 +73,21 @@ interface ProductResponse {
 }
 
 export async function GET(request: Request) {
-  console.log('Received request to /api/public/product');
+  console.log("Received request to /api/public/product");
   try {
     const { searchParams } = new URL(request.url);
-    const sortBy = searchParams.get('sortBy') || 'createdAt';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
-    const take = parseInt(searchParams.get('take') || '10');
-    const skip = parseInt(searchParams.get('skip') || '0');
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+    const take = parseInt(searchParams.get("take") || "10");
+    const skip = parseInt(searchParams.get("skip") || "0");
 
     // Validate sort fields to prevent SQL injection
-    const validSortFields = ['name', 'price', 'createdAt', 'updatedAt'];
-    const sortField = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
-    const categoryId = searchParams.get('categoryId');
-    const brandId = searchParams.get('brandId');
-    const tagId = searchParams.get('tagId');
-    const featured = searchParams.get('featured');
+    const validSortFields = ["name", "price", "createdAt", "updatedAt"];
+    const sortField = validSortFields.includes(sortBy) ? sortBy : "createdAt";
+    const categoryId = searchParams.get("categoryId");
+    const brandId = searchParams.get("brandId");
+    const tagId = searchParams.get("tagId");
+    const featured = searchParams.get("featured");
 
     // Build the where clause
     const where: any = {
@@ -106,28 +110,28 @@ export async function GET(request: Request) {
       };
     }
 
-    if (featured === 'true') {
+    if (featured === "true") {
       where.featured = true;
     }
 
     // Build the orderBy clause
     let orderBy: any = { [sortBy]: sortOrder };
-    if (sortBy === 'price') {
+    if (sortBy === "price") {
       orderBy = {
         basePrice: sortOrder,
       };
-    } else if (sortBy === 'name') {
+    } else if (sortBy === "name") {
       orderBy = {
         name: sortOrder,
       };
     } else {
       orderBy = {
-        createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
+        createdAt: sortOrder === "asc" ? "asc" : "desc",
       };
     }
 
-    console.log('Query parameters:', { sortBy, sortOrder, take, skip, where });
-    
+    console.log("Query parameters:", { sortBy, sortOrder, take, skip, where });
+
     // Fetch products with pagination, sorting, and filtering
     const [dbProducts, totalCount] = await Promise.all([
       prisma.product.findMany({
@@ -145,22 +149,22 @@ export async function GET(request: Request) {
                 include: {
                   option: {
                     include: {
-                      variantType: true
-                    }
-                  }
-                }
-              }
-            }
+                      variantType: true,
+                    },
+                  },
+                },
+              },
+            },
           },
           allowedOptions: {
             include: {
               option: {
                 include: {
-                  variantType: true
-                }
-              }
-            }
-          }
+                  variantType: true,
+                },
+              },
+            },
+          },
         },
       }),
       prisma.product.count({ where }),
@@ -173,25 +177,31 @@ export async function GET(request: Request) {
     for (const product of dbProducts) {
       // Safely access variants or default to empty array
       const variants = Array.isArray(product.variants) ? product.variants : [];
-      
+
       // Calculate total stock from variants
-      const stock = variants.reduce((sum, variant) => sum + (variant.stock || 0), 0);
-      
+      const stock = variants.reduce(
+        (sum, variant) => sum + (variant.stock || 0),
+        0,
+      );
+
       // Process variant types and values
-      const variantTypesMap = new Map<number, { 
-        id: number; 
-        name: string; 
-        values: Array<{ id: number; value: string }> 
-      }>();
+      const variantTypesMap = new Map<
+        number,
+        {
+          id: number;
+          name: string;
+          values: Array<{ id: number; value: string }>;
+        }
+      >();
 
       // Process allowed options first to get all possible variant types
       if (Array.isArray(product.allowedOptions)) {
         for (const allowedOption of product.allowedOptions) {
           if (!allowedOption?.option?.variantType) continue;
-          
+
           const typeId = allowedOption.option.variantType.id;
           const typeName = allowedOption.option.variantType.name;
-          
+
           if (!variantTypesMap.has(typeId)) {
             variantTypesMap.set(typeId, {
               id: typeId,
@@ -201,20 +211,20 @@ export async function GET(request: Request) {
           }
         }
       }
-      
+
       // Process each variant's selections
       for (const variant of variants) {
         if (!Array.isArray(variant.selections)) continue;
-        
+
         for (const selection of variant.selections) {
           if (!selection?.option?.variantType) continue;
-          
+
           const typeId = selection.option.variantType.id;
           const valueId = selection.option.id;
           const value = selection.option.value;
-          
+
           const type = variantTypesMap.get(typeId);
-          if (type && !type.values.some(v => v.id === valueId)) {
+          if (type && !type.values.some((v) => v.id === valueId)) {
             type.values.push({
               id: valueId,
               value,
@@ -222,7 +232,7 @@ export async function GET(request: Request) {
           }
         }
       }
-      
+
       // Format the product response
       const formattedProduct: ProductResponse = {
         id: product.id,
@@ -234,34 +244,47 @@ export async function GET(request: Request) {
         sku: product.variants[0]?.sku || `PROD-${product.id}`,
         isActive: product.status,
         categoryId: product.categoryId,
-        category: product.category ? {
-          id: product.category.id,
-          name: product.category.name,
-        } : null,
+        category: product.category
+          ? {
+              id: product.category.id,
+              name: product.category.name,
+            }
+          : null,
         stock,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt,
-        brand: product.brand ? {
-          id: product.brand.id,
-          name: product.brand.name,
-          logoUrl: product.brand.logoUrl || null,
-        } : null,
-        tags: Array.isArray(product.tags) 
-          ? product.tags.map(tag => ({
+        brand: product.brand
+          ? {
+              id: product.brand.id,
+              name: product.brand.name,
+              logoUrl: product.brand.logoUrl || null,
+            }
+          : null,
+        tags: Array.isArray(product.tags)
+          ? product.tags.map((tag) => ({
               id: tag.id,
               name: tag.name,
             }))
           : [],
-        images: Array.isArray(product.images) ? product.images : [],
-        variants: variants.map(variant => ({
+        images: (() => {
+          // Handle both array format (production) and comma-separated string format (schema)
+          if (Array.isArray(product.images)) {
+            return product.images;
+          } else if (typeof product.images === "string" && product.images) {
+            return product.images.split(",").map((img) => img.trim());
+          } else {
+            return [];
+          }
+        })(),
+        variants: variants.map((variant) => ({
           id: variant.id,
           sku: variant.sku || `VAR-${variant.id}`,
           price: Number(variant.price || product.basePrice),
           stock: variant.stock || 0,
           values: Array.isArray(variant.selections)
             ? variant.selections
-                .filter(sel => sel?.option?.variantType)
-                .map(sel => ({
+                .filter((sel) => sel?.option?.variantType)
+                .map((sel) => ({
                   id: sel.option.id,
                   value: sel.option.value,
                   variantType: {
@@ -275,7 +298,7 @@ export async function GET(request: Request) {
         hasVariants: variants.length > 0,
         variantCount: variants.length,
       };
-      
+
       formattedProducts.push(formattedProduct);
     }
 
@@ -290,16 +313,16 @@ export async function GET(request: Request) {
         totalPages: Math.ceil(totalCount / take),
       },
     };
-      
-    console.log('Sending response with', formattedProducts.length, 'products');
+
+    console.log("Sending response with", formattedProducts.length, "products");
     return NextResponse.json(response);
   } catch (error) {
-    return handleError(error, 'Failed to fetch products');
+    return handleError(error, "Failed to fetch products");
   } finally {
     try {
       await prisma.$disconnect();
     } catch (e) {
-      console.error('Error disconnecting from Prisma:', e);
+      console.error("Error disconnecting from Prisma:", e);
     }
   }
 }
