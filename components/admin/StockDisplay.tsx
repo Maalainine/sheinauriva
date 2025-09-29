@@ -53,10 +53,10 @@ export const renderStock = (product: Product): React.ReactNode => {
         {stockInfo.stockDisplay}
       </span>
       {stockInfo.stockStatus === "low_stock" && (
-        <AlertCircle className="h-4 w-4 text-yellow-500" />
+        <IconAlertCircle className="h-4 w-4 text-yellow-500" />
       )}
       {stockInfo.stockStatus === "out_of_stock" && (
-        <AlertCircle className="h-4 w-4 text-red-500" />
+        <IconAlertCircle className="h-4 w-4 text-red-500" />
       )}
     </div>
   );

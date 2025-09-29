@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/select";
 import {
   IconTrash,
-  IconPackageOpen,
   IconPlus,
   IconAlertCircle,
+  IconPackage,
 } from "@tabler/icons-react";
 import type { VariantType } from "@prisma/client";
 
@@ -451,7 +451,7 @@ export const VariantEditor: React.FC<
 
           {value.length === 0 ? (
             <div className="rounded-lg border border-dashed p-8 text-center bg-muted/20">
-              <IconPackageOpen className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
+              <IconPackage className="mx-auto h-10 w-10 text-muted-foreground mb-3" />
               <h4 className="font-medium">No variants added yet</h4>
               <p className="text-sm text-muted-foreground mb-4">
                 Use the form above to create your first variant
