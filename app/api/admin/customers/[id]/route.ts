@@ -62,9 +62,7 @@ export async function GET(
                   select: {
                     id: true,
                     sku: true,
-                    name: true,
                     price: true,
-                    images: true,
                   },
                 },
               },
@@ -72,16 +70,12 @@ export async function GET(
           },
           orderBy: { createdAt: "desc" },
         },
-        wishlistItems: {
-          include: {
-            product: {
-              select: {
-                id: true,
-                name: true,
-                images: true,
-                basePrice: true,
-              },
-            },
+        wishlist: {
+          select: {
+            id: true,
+            name: true,
+            images: true,
+            basePrice: true,
           },
         },
       },
@@ -94,13 +88,24 @@ export async function GET(
       );
     }
 
-    // Calculate customer statistics
+    // Calculate customer statistics considering order statuses
+    // Only count confirmed/completed orders for spending statistics
+    const confirmedStatuses = ["CONFIRMED", "SHIPPED", "DELIVERED"];
+    const confirmedOrders = customer.orders.filter((order) =>
+      confirmedStatuses.includes(order.status),
+    );
+    const actualTotalSpent = confirmedOrders.reduce(
+      (total, order) => total + Number(order.total),
+      0,
+    );
+
     const orderStats = {
-      totalOrders: customer.orders.length,
-      totalSpent: Number(customer.totalSpent || 0),
+      totalOrders: customer.orders.length, // All orders
+      confirmedOrders: confirmedOrders.length, // Only confirmed/completed orders
+      totalSpent: actualTotalSpent, // Only from confirmed orders
       averageOrderValue:
-        customer.orders.length > 0
-          ? Number(customer.totalSpent || 0) / customer.orders.length
+        confirmedOrders.length > 0
+          ? actualTotalSpent / confirmedOrders.length
           : 0,
       firstOrderDate:
         customer.orders.length > 0
@@ -153,12 +158,9 @@ export async function GET(
               : null,
           })),
         })),
-        wishlistItems: customer.wishlistItems.map((item) => ({
-          ...item,
-          product: {
-            ...item.product,
-            basePrice: Number(item.product.basePrice),
-          },
+        wishlist: customer.wishlist.map((product) => ({
+          ...product,
+          basePrice: Number(product.basePrice),
         })),
       },
       stats: orderStats,
@@ -187,16 +189,16 @@ export async function PATCH(
 
     const { id } = await params;
 
-    const customerId = id;
-    const body = await req.json();
-    const { name, email, role } = body;
+    const customerId = parseInt(id, 10);
 
-    if (!customerId) {
+    if (!customerId || isNaN(customerId)) {
       return NextResponse.json(
-        { error: "Customer ID is required" },
+        { error: "Invalid customer ID" },
         { status: 400 },
       );
     }
+    const body = await req.json();
+    const { name, email, role } = body;
 
     // Validate role if provided
     if (role && !["CLIENT", "ADMIN"].includes(role)) {

@@ -141,17 +141,18 @@ components/
 **✅ Phase 2: Customer Management (COMPLETED)**
 - `/admin/customers` - Professional customer listing with search, filters, and analytics dashboard
 - `/admin/customers/[id]` - Comprehensive customer profiles with order history and insights  
-- Customer analytics with spending patterns, order frequency, and registration trends
+- Status-aware customer analytics with spending patterns and order frequency (only counts confirmed orders)
 - Full API endpoints with admin authentication and validation
 - Customer activity timeline with order history and wishlist tracking
 - Shipping address management and customer demographics
 
-**🎯 Phase 3: Enhanced Order Management (PRIORITY 1)**
-- **Order Status Management**: Ability to change order statuses directly from admin panel
-- **Order Details Enhancement**: Improved order detail views with full edit capabilities
-- **Cross-Navigation**: Direct order access from customer profiles and vice versa
-- **Admin Notifications**: Real-time notifications when new orders are placed
-- **Order Workflow**: Complete order lifecycle management with proper state transitions
+**✅ Phase 3: Enhanced Order Management (COMPLETED)**
+- **✅ Order Status Management**: Ability to change order statuses directly from admin panel
+- **✅ Order Details Enhancement**: Improved order detail views with full edit capabilities and schema fixes
+- **✅ Cross-Navigation**: Direct order access from customer profiles and vice versa
+- **✅ Admin Notifications**: Real-time notifications when new orders are placed
+- **✅ Order Workflow**: Complete order lifecycle management with proper state transitions
+- **✅ Schema Validation**: All Prisma schema mismatches resolved for order and customer detail pages
 
 **🎯 Phase 4: Settings & Configuration (Priority 2)**
 - **Fix `/admin/settings` 404 error**: Create proper settings page and routing
@@ -166,6 +167,24 @@ components/
 - **Notification Preferences**: Customizable notification settings per admin user
 
 ### Recently Completed ✅
+- **Admin Detail Pages Schema Fix (2025-09-30)** - Fixed all Prisma schema mismatches in admin detail pages
+  - **✅ Order Detail API**: Fixed schema validation errors preventing order detail pages from loading
+    - Fixed `items` → `orderItems` relation name mismatch
+    - Removed non-existent `phone` field from User model selection
+    - Corrected `variant` → `productVariant` relation reference
+    - Fixed ProductVariant field selections (removed non-existent `name`, `stock`, `images`)
+  - **✅ Customer Detail API**: Resolved wishlist and variant schema issues
+    - Fixed `wishlistItems` → `wishlist` relation name
+    - Corrected ProductVariant selections to use existing fields only
+    - Fixed ID type conversion from string to integer
+  - **✅ Status Configuration**: Added missing PENDING and PROCESSING status configs with proper icons
+  - **✅ Frontend Component Updates**: Updated TypeScript interfaces and component references
+  - **✅ Customer Statistics Enhancement**: Status-aware order statistics for meaningful business metrics
+    - Only counts CONFIRMED, SHIPPED, and DELIVERED orders toward spending calculations
+    - Excludes PENDING, PROCESSING, and CANCELLED orders from revenue statistics
+    - Clear UI indicators showing total vs confirmed orders breakdown
+    - Accurate average order value based on completed transactions only
+  - **Result**: All admin detail pages (`/admin/orders/[id]`, `/admin/customers/[id]`) now fully functional
 - **Admin Panel Enhancement System (2025-09-30)** - Completed comprehensive admin panel improvements
   - **✅ Order Status Management**: Full order status update functionality with dropdown selection in order detail pages
   - **✅ Cross-Navigation**: Seamless navigation between orders and customers (customers can view orders, orders link to customer profiles)

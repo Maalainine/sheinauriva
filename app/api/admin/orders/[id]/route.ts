@@ -133,7 +133,7 @@ export async function GET(
         name: order.customerName,
         email: order.customerEmail,
         phone: order.customerPhone,
-        isRegistered: !order.isGuestOrder,
+        isRegistered: order.userId !== null,
         profile: order.user
           ? {
               totalSpent: order.user.totalSpent,
@@ -238,10 +238,11 @@ export async function PUT(
                 name: true,
               },
             },
-            variant: {
+            productVariant: {
               select: {
                 id: true,
-                name: true,
+                sku: true,
+                price: true,
               },
             },
           },
