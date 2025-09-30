@@ -350,50 +350,61 @@ export default function Home() {
       {/* Brand Logos Section */}
       <BrandLogos />
 
-      {/* Features Section */}
-      <section className="py-12 border-t">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: IconTruck,
-                title: t("home.features.shipping.title"),
-                description: t("home.features.shipping.description"),
-              },
-              {
-                icon: IconCircleCheck,
-                title: t("home.features.quality.title"),
-                description: t("home.features.quality.description"),
-              },
-              {
-                icon: IconShield,
-                title: t("home.features.payment.title"),
-                description: t("home.features.payment.description"),
-              },
-              {
-                icon: IconHeadphones,
-                title: t("home.features.support.title"),
-                description: t("home.features.support.description"),
-              },
-            ].map((feature, index) => (
-              <Card key={index}>
-                <CardHeader className="flex flex-col items-center">
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
+      {/* Categories Section - Only render when mounted */}
+      {mounted && (
+        <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-8">
+              <TypographyH2>{t("home.sections.categories")}</TypographyH2>
+              <Link
+                href="/categories"
+                className="text-primary flex items-center gap-1"
+              >
+                {t("home.viewAllCategories")}{" "}
+                <IconChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
 
-                  <CardTitle>{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center">
-                  <CardDescription className="text-center">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="rounded-lg overflow-hidden shadow-sm">
+                    <Skeleton className="aspect-square w-full" />
+                    <div className="p-4">
+                      <Skeleton className="h-5 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : categories.length > 0 ? (
+              <div className="m-0">
+                <CenterFocusedCarousel
+                  autoPlay={true}
+                  autoPlayInterval={5000}
+                  cardHeight={140}
+                >
+                  {categories.map((category) => (
+                    <CategoryCard
+                      key={category.id}
+                      id={category.id}
+                      title={category.name}
+                      imageUrl={category.images?.[0]?.url}
+                      className="h-full w-full aspect-auto"
+                    />
+                  ))}
+                </CenterFocusedCarousel>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <TypographyP className="text-muted-foreground">
+                  {t("home.noCategories")}
+                </TypographyP>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* New Arrivals Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
@@ -453,61 +464,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Categories Section - Only render when mounted */}
-      {mounted && (
-        <section className="py-12 px-4 sm:px-6 lg:px-8 border-t">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
-              <TypographyH2>{t("home.sections.categories")}</TypographyH2>
-              <Link
-                href="/categories"
-                className="text-primary flex items-center gap-1"
-              >
-                {t("home.viewAllCategories")}{" "}
-                <IconChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            {isLoading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="rounded-lg overflow-hidden shadow-sm">
-                    <Skeleton className="aspect-square w-full" />
-                    <div className="p-4">
-                      <Skeleton className="h-5 w-3/4 mb-2" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </div>
+      {/* Features Section */}
+      <section className="py-12 border-t">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: IconTruck,
+                title: t("home.features.shipping.title"),
+                description: t("home.features.shipping.description"),
+              },
+              {
+                icon: IconCircleCheck,
+                title: t("home.features.quality.title"),
+                description: t("home.features.quality.description"),
+              },
+              {
+                icon: IconShield,
+                title: t("home.features.payment.title"),
+                description: t("home.features.payment.description"),
+              },
+              {
+                icon: IconHeadphones,
+                title: t("home.features.support.title"),
+                description: t("home.features.support.description"),
+              },
+            ].map((feature, index) => (
+              <Card key={index}>
+                <CardHeader className="flex flex-col items-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center">
+                    <feature.icon className="h-6 w-6 text-primary" />
                   </div>
-                ))}
-              </div>
-            ) : categories.length > 0 ? (
-              <div className="m-0">
-                <CenterFocusedCarousel
-                  autoPlay={true}
-                  autoPlayInterval={5000}
-                  cardHeight={140}
-                >
-                  {categories.map((category) => (
-                    <CategoryCard
-                      key={category.id}
-                      id={category.id}
-                      title={category.name}
-                      imageUrl={category.images?.[0]?.url}
-                      className="h-full w-full aspect-auto"
-                    />
-                  ))}
-                </CenterFocusedCarousel>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <TypographyP className="text-muted-foreground">
-                  {t("home.noCategories")}
-                </TypographyP>
-              </div>
-            )}
+
+                  <CardTitle>{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col items-center">
+                  <CardDescription className="text-center">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </main>
   );
 }
