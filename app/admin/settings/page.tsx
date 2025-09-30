@@ -63,10 +63,10 @@ interface NotificationSettings {
 }
 
 const defaultSettings: SiteSettings = {
-  siteName: "Sheinauriva Store",
+  siteName: "JustOriginale Store",
   siteDescription: "Premium fashion and lifestyle products",
-  contactEmail: "contact@sheinauriva.com",
-  supportEmail: "support@sheinauriva.com",
+  contactEmail: "contact@JustOriginale.com",
+  supportEmail: "support@JustOriginale.com",
   currency: "MAD",
   taxRate: 20,
   freeShippingThreshold: 500,
@@ -91,7 +91,8 @@ const defaultNotifications: NotificationSettings = {
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
-  const [notifications, setNotifications] = useState<NotificationSettings>(defaultNotifications);
+  const [notifications, setNotifications] =
+    useState<NotificationSettings>(defaultNotifications);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -109,8 +110,8 @@ export default function SettingsPage() {
 
       // In a real implementation, you would fetch from an API
       // For now, we'll use localStorage or default values
-      const savedSettings = localStorage.getItem('adminSettings');
-      const savedNotifications = localStorage.getItem('adminNotifications');
+      const savedSettings = localStorage.getItem("adminSettings");
+      const savedNotifications = localStorage.getItem("adminNotifications");
 
       if (savedSettings) {
         setSettings(JSON.parse(savedSettings));
@@ -120,7 +121,7 @@ export default function SettingsPage() {
         setNotifications(JSON.parse(savedNotifications));
       }
     } catch (err) {
-      setError('Failed to load settings');
+      setError("Failed to load settings");
     } finally {
       setLoading(false);
     }
@@ -134,18 +135,18 @@ export default function SettingsPage() {
 
       // In a real implementation, you would save to an API
       // For now, we'll use localStorage
-      localStorage.setItem('adminSettings', JSON.stringify(settings));
-      localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+      localStorage.setItem("adminSettings", JSON.stringify(settings));
+      localStorage.setItem("adminNotifications", JSON.stringify(notifications));
 
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      setSuccess('Settings saved successfully!');
+      setSuccess("Settings saved successfully!");
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
-      setError('Failed to save settings');
+      setError("Failed to save settings");
     } finally {
       setSaving(false);
     }
@@ -316,13 +317,18 @@ export default function SettingsPage() {
                 step="0.1"
                 value={settings.taxRate}
                 onChange={(e) =>
-                  setSettings({ ...settings, taxRate: parseFloat(e.target.value) || 0 })
+                  setSettings({
+                    ...settings,
+                    taxRate: parseFloat(e.target.value) || 0,
+                  })
                 }
               />
             </div>
 
             <div>
-              <Label htmlFor="freeShippingThreshold">Free Shipping Threshold</Label>
+              <Label htmlFor="freeShippingThreshold">
+                Free Shipping Threshold
+              </Label>
               <Input
                 id="freeShippingThreshold"
                 type="number"
@@ -330,7 +336,10 @@ export default function SettingsPage() {
                 step="10"
                 value={settings.freeShippingThreshold}
                 onChange={(e) =>
-                  setSettings({ ...settings, freeShippingThreshold: parseFloat(e.target.value) || 0 })
+                  setSettings({
+                    ...settings,
+                    freeShippingThreshold: parseFloat(e.target.value) || 0,
+                  })
                 }
               />
             </div>
@@ -344,7 +353,10 @@ export default function SettingsPage() {
                 step="1"
                 value={settings.defaultShippingCost}
                 onChange={(e) =>
-                  setSettings({ ...settings, defaultShippingCost: parseFloat(e.target.value) || 0 })
+                  setSettings({
+                    ...settings,
+                    defaultShippingCost: parseFloat(e.target.value) || 0,
+                  })
                 }
               />
             </div>
@@ -358,7 +370,10 @@ export default function SettingsPage() {
                 max="1000"
                 value={settings.maxOrderItems}
                 onChange={(e) =>
-                  setSettings({ ...settings, maxOrderItems: parseInt(e.target.value) || 1 })
+                  setSettings({
+                    ...settings,
+                    maxOrderItems: parseInt(e.target.value) || 1,
+                  })
                 }
               />
             </div>
@@ -372,14 +387,14 @@ export default function SettingsPage() {
               <IconShield className="h-5 w-5" />
               Feature Settings
             </CardTitle>
-            <CardDescription>
-              Enable or disable store features
-            </CardDescription>
+            <CardDescription>Enable or disable store features</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="enableNotifications">Enable Notifications</Label>
+                <Label htmlFor="enableNotifications">
+                  Enable Notifications
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Allow system notifications
                 </p>
@@ -395,7 +410,9 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="enableEmailNotifications">Email Notifications</Label>
+                <Label htmlFor="enableEmailNotifications">
+                  Email Notifications
+                </Label>
                 <p className="text-sm text-muted-foreground">
                   Send email notifications to users
                 </p>
@@ -404,7 +421,10 @@ export default function SettingsPage() {
                 id="enableEmailNotifications"
                 checked={settings.enableEmailNotifications}
                 onCheckedChange={(checked) =>
-                  setSettings({ ...settings, enableEmailNotifications: checked })
+                  setSettings({
+                    ...settings,
+                    enableEmailNotifications: checked,
+                  })
                 }
               />
             </div>
@@ -486,7 +506,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.adminNewOrder}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, adminNewOrder: checked })
+                      setNotifications({
+                        ...notifications,
+                        adminNewOrder: checked,
+                      })
                     }
                   />
                 </div>
@@ -501,7 +524,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.adminLowStock}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, adminLowStock: checked })
+                      setNotifications({
+                        ...notifications,
+                        adminLowStock: checked,
+                      })
                     }
                   />
                 </div>
@@ -516,7 +542,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.adminOrderStatusChange}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, adminOrderStatusChange: checked })
+                      setNotifications({
+                        ...notifications,
+                        adminOrderStatusChange: checked,
+                      })
                     }
                   />
                 </div>
@@ -538,7 +567,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.customerOrderConfirmation}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, customerOrderConfirmation: checked })
+                      setNotifications({
+                        ...notifications,
+                        customerOrderConfirmation: checked,
+                      })
                     }
                   />
                 </div>
@@ -553,7 +585,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.customerOrderStatusUpdate}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, customerOrderStatusUpdate: checked })
+                      setNotifications({
+                        ...notifications,
+                        customerOrderStatusUpdate: checked,
+                      })
                     }
                   />
                 </div>
@@ -568,7 +603,10 @@ export default function SettingsPage() {
                   <Switch
                     checked={notifications.customerShippingUpdate}
                     onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, customerShippingUpdate: checked })
+                      setNotifications({
+                        ...notifications,
+                        customerShippingUpdate: checked,
+                      })
                     }
                   />
                 </div>
