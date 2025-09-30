@@ -189,13 +189,17 @@ components/
   - **✅ Order Status Management**: Full order status update functionality with dropdown selection in order detail pages
   - **✅ Cross-Navigation**: Seamless navigation between orders and customers (customers can view orders, orders link to customer profiles)
   - **✅ Settings Page**: Created comprehensive `/admin/settings` page with general, commerce, feature, and notification preferences
-  - **✅ Admin Notification System**: Real-time notification system for new orders and status changes
-    - Notification bell component in admin sidebar with unread badges
-    - Automatic notifications for new orders (guest and registered customers)
-    - Status change notifications when orders are updated
-    - Configurable notification preferences in settings
-    - Clean notification management (mark as read, delete, clear all)
-    - Smart linking to relevant admin pages from notifications
+  - **✅ Admin Notification System**: Complete database-backed notification system for admin panel
+    - **Database Storage**: Migrated from in-memory to PostgreSQL with AdminNotification model
+    - **Fixed Default Notifications**: Removed problematic `initializeDemoNotifications()` function
+    - **Order Notifications**: Automatic notifications for new orders (guest and registered customers)
+    - **User Registration Notifications**: Admin notifications when new users register
+    - **Notification Bell Component**: Real-time notification display with unread badges in admin sidebar
+    - **Protected API Endpoints**: `/api/admin/notifications` with proper authentication
+    - **Notification Management**: Mark as read, delete individual, clear all functionality
+    - **Notification Types**: NEW_ORDER, NEW_USER_REGISTRATION, LOW_STOCK, ORDER_STATUS_CHANGE
+    - **Smart Linking**: Notifications link to relevant admin pages (orders, customers)
+    - **Configurable Preferences**: Settings for different notification types
 - **Development Database Full Reset & Comprehensive Seeding (2025-09-30)** - Complete dev environment setup
   - **Database Reset**: Fresh PostgreSQL database with proper schema sync
   - **Comprehensive Seed Data**: 15 total orders (9 guest orders + 6 registered client orders)

@@ -92,7 +92,7 @@ export default function WishlistPage() {
         productName: product.name,
         price: product.basePrice,
         quantity: 1,
-        image: product.images?.split(",")[0] || "/images/placeholder.png",
+        image: product.images?.[0] || "/images/placeholder.png",
       });
 
       // Optionally remove from wishlist after adding to cart
@@ -187,9 +187,7 @@ export default function WishlistPage() {
                 {/* Product Image */}
                 <div className="relative aspect-square overflow-hidden rounded-t-lg">
                   <Image
-                    src={
-                      product.images?.split(",")[0] || "/images/placeholder.png"
-                    }
+                    src={product.images?.[0] || "/images/placeholder.png"}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"

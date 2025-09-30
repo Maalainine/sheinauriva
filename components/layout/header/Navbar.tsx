@@ -43,6 +43,7 @@ import {
   IconShoppingBag,
   IconSettings,
   IconChevronDown,
+  IconShield,
 } from "@tabler/icons-react";
 
 // Components
@@ -316,8 +317,8 @@ export default function Navbar() {
               </Sheet>
 
               {/* Wishlist Button */}
-              {/* Wishlist button - only show for guests */}
-              {!session?.user && (
+              {/* Wishlist button - only show for guests and clients, not admins */}
+              {(!session?.user || session.user.role === "CLIENT") && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -357,47 +358,76 @@ export default function Navbar() {
                     align={isRtl ? "start" : "end"}
                     className="w-56"
                   >
-                    <DropdownMenuItem asChild>
-                      <Link href="/account" className="flex items-center gap-2">
-                        <IconDashboard className="h-4 w-4" />
-                        {t("account.navigation.dashboard")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/orders"
-                        className="flex items-center gap-2"
-                      >
-                        <IconShoppingBag className="h-4 w-4" />
-                        {t("account.navigation.orders")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/wishlist"
-                        className="flex items-center gap-2"
-                      >
-                        <IconHeart className="h-4 w-4" />
-                        {t("account.navigation.wishlist")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/profile"
-                        className="flex items-center gap-2"
-                      >
-                        <IconSettings className="h-4 w-4" />
-                        {t("account.navigation.profile")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => signOut({ callbackUrl: "/" })}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600"
-                    >
-                      <IconLogout className="h-4 w-4" />
-                      {t("auth.logout")}
-                    </DropdownMenuItem>
+                    {session.user.role === "ADMIN" ? (
+                      // Admin navigation
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-2"
+                          >
+                            <IconShield className="h-4 w-4" />
+                            Admin Panel
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                        >
+                          <IconLogout className="h-4 w-4" />
+                          {t("auth.logout")}
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      // Client navigation
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account"
+                            className="flex items-center gap-2"
+                          >
+                            <IconDashboard className="h-4 w-4" />
+                            {t("account.navigation.dashboard")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/orders"
+                            className="flex items-center gap-2"
+                          >
+                            <IconShoppingBag className="h-4 w-4" />
+                            {t("account.navigation.orders")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/wishlist"
+                            className="flex items-center gap-2"
+                          >
+                            <IconHeart className="h-4 w-4" />
+                            {t("account.navigation.wishlist")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/profile"
+                            className="flex items-center gap-2"
+                          >
+                            <IconSettings className="h-4 w-4" />
+                            {t("account.navigation.profile")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                        >
+                          <IconLogout className="h-4 w-4" />
+                          {t("auth.logout")}
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
@@ -500,8 +530,8 @@ export default function Navbar() {
               <SearchBar />
 
               {/* Wishlist Button */}
-              {/* Wishlist button - only show for guests */}
-              {!session?.user && (
+              {/* Wishlist button - only show for guests and clients, not admins */}
+              {(!session?.user || session.user.role === "CLIENT") && (
                 <Button
                   variant="ghost"
                   size="icon"
@@ -558,56 +588,81 @@ export default function Navbar() {
               {session?.user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="gap-2">
-                      <IconUser className="h-4 w-4" />
-                      <span className="hidden md:inline">
-                        {session.user.name}
-                      </span>
-                      <IconChevronDown className="h-3 w-3" />
+                    <Button variant="ghost" size="icon">
+                      <IconUser className="h-5 w-5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem asChild>
-                      <Link href="/account" className="flex items-center gap-2">
-                        <IconDashboard className="h-4 w-4" />
-                        {t("account.navigation.dashboard")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/orders"
-                        className="flex items-center gap-2"
-                      >
-                        <IconShoppingBag className="h-4 w-4" />
-                        {t("account.navigation.orders")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/wishlist"
-                        className="flex items-center gap-2"
-                      >
-                        <IconHeart className="h-4 w-4" />
-                        {t("account.navigation.wishlist")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/account/profile"
-                        className="flex items-center gap-2"
-                      >
-                        <IconSettings className="h-4 w-4" />
-                        {t("account.navigation.profile")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => signOut({ callbackUrl: "/" })}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600"
-                    >
-                      <IconLogout className="h-4 w-4" />
-                      {t("auth.logout")}
-                    </DropdownMenuItem>
+                    {session.user.role === "ADMIN" ? (
+                      // Admin navigation
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/admin"
+                            className="flex items-center gap-2"
+                          >
+                            <IconShield className="h-4 w-4" />
+                            Admin Panel
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                        >
+                          <IconLogout className="h-4 w-4" />
+                          {t("auth.logout")}
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      // Client navigation
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account"
+                            className="flex items-center gap-2"
+                          >
+                            <IconDashboard className="h-4 w-4" />
+                            {t("account.navigation.dashboard")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/orders"
+                            className="flex items-center gap-2"
+                          >
+                            <IconShoppingBag className="h-4 w-4" />
+                            {t("account.navigation.orders")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/wishlist"
+                            className="flex items-center gap-2"
+                          >
+                            <IconHeart className="h-4 w-4" />
+                            {t("account.navigation.wishlist")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href="/account/profile"
+                            className="flex items-center gap-2"
+                          >
+                            <IconSettings className="h-4 w-4" />
+                            {t("account.navigation.profile")}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => signOut({ callbackUrl: "/" })}
+                          className="flex items-center gap-2 text-red-600 focus:text-red-600"
+                        >
+                          <IconLogout className="h-4 w-4" />
+                          {t("auth.logout")}
+                        </DropdownMenuItem>
+                      </>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (

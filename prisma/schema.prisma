@@ -105,7 +105,7 @@ model Product {
   status          Boolean           @default(true)
   featured        Boolean           @default(false)
   onSale          Boolean           @default(false)
-  images          String?           // Comma-separated image URLs
+  images          String[]          // Array of image URLs
   tags            Tag[]             @relation("ProductTags")
   allowedOptions  ProductOption[]   // which VariantOption values apply
   variants        ProductVariant[]  // specific SKU records
@@ -233,4 +233,27 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
   REFUNDED
+}
+
+enum NotificationType {
+  NEW_ORDER
+  LOW_STOCK
+  ORDER_STATUS_CHANGE
+  SYSTEM_ALERT
+  NEW_USER_REGISTRATION
+}
+
+model AdminNotification {
+  id        Int              @id @default(autoincrement())
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?            // Store additional data as JSON
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  expiresAt DateTime?        // Optional expiration time
+
+  @@index([read])
+  @@index([createdAt])
+  @@index([type])
 }

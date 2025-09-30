@@ -45,7 +45,11 @@ interface ProductResponse {
     id: number;
     name: string;
   }>;
-  images: string[];
+  images: Array<{
+    id: string;
+    url: string;
+    alt: string;
+  }>;
   variants: Array<{
     id: number;
     sku: string;
@@ -266,16 +270,13 @@ export async function GET(request: Request) {
               name: tag.name,
             }))
           : [],
-        images: (() => {
-          // Handle both array format (production) and comma-separated string format (schema)
-          if (Array.isArray(product.images)) {
-            return product.images;
-          } else if (typeof product.images === "string" && product.images) {
-            return product.images.split(",").map((img) => img.trim());
-          } else {
-            return [];
-          }
-        })(),
+        images: (product.images || []).map(
+          (imageUrl: string, index: number) => ({
+            id: `img-${product.id}-${index}`,
+            url: imageUrl,
+            alt: `${product.name} - Image ${index + 1}`,
+          }),
+        ),
         variants: variants.map((variant) => ({
           id: variant.id,
           sku: variant.sku || `VAR-${variant.id}`,

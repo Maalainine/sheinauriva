@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import { notifyNewUserRegistration } from "@/lib/notifications";
 
 const prisma = new PrismaClient();
 
@@ -67,6 +68,21 @@ export async function POST(request: NextRequest) {
         createdAt: true,
       },
     });
+
+    // Send admin notification for new user registration
+    try {
+      await notifyNewUserRegistration({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      });
+      console.log(
+        `Admin notification sent for new user registration: ${user.email}`,
+      );
+    } catch (notificationError) {
+      console.error("Failed to send admin notification:", notificationError);
+      // Don't fail the registration if notification fails
+    }
 
     return NextResponse.json(
       {

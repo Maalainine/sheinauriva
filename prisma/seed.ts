@@ -167,7 +167,10 @@ async function main() {
       brandId: nike.id,
       basePrice: 29.99,
       featured: true,
-      images: "/images/tshirt-1.jpg,/images/tshirt-2.jpg",
+      images: [
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=800&fit=crop",
+      ],
     },
     {
       name: "Running Shoes",
@@ -176,7 +179,10 @@ async function main() {
       brandId: nike.id,
       basePrice: 129.99,
       featured: true,
-      images: "/images/shoes-1.jpg,/images/shoes-2.jpg",
+      images: [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&h=800&fit=crop",
+      ],
     },
     {
       name: "Sports Cap",
@@ -185,7 +191,90 @@ async function main() {
       brandId: nike.id,
       basePrice: 24.99,
       onSale: true,
-      images: "/images/cap-1.jpg",
+      images: [
+        "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1575428652377-a4d1d5e3e2ff?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Wireless Headphones",
+      description: "Premium wireless headphones with noise cancellation",
+      categoryId: accessories.id,
+      brandId: nike.id,
+      basePrice: 199.99,
+      featured: true,
+      images: [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Denim Jacket",
+      description: "Classic denim jacket with modern fit",
+      categoryId: clothing.id,
+      brandId: nike.id,
+      basePrice: 89.99,
+      images: [
+        "https://images.unsplash.com/photo-1544966503-7cc5841c75d6?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Basketball Sneakers",
+      description: "High-performance basketball shoes with ankle support",
+      categoryId: shoes.id,
+      brandId: nike.id,
+      basePrice: 159.99,
+      images: [
+        "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Sunglasses",
+      description: "Stylish sunglasses with UV protection",
+      categoryId: accessories.id,
+      brandId: nike.id,
+      basePrice: 79.99,
+      onSale: true,
+      images: [
+        "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Cotton Hoodie",
+      description: "Comfortable cotton hoodie for casual wear",
+      categoryId: clothing.id,
+      brandId: nike.id,
+      basePrice: 69.99,
+      images: [
+        "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Smart Watch",
+      description: "Fitness tracking smart watch with heart rate monitor",
+      categoryId: accessories.id,
+      brandId: nike.id,
+      basePrice: 299.99,
+      featured: true,
+      images: [
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800&h=800&fit=crop",
+      ],
+    },
+    {
+      name: "Cargo Pants",
+      description: "Durable cargo pants with multiple pockets",
+      categoryId: clothing.id,
+      brandId: nike.id,
+      basePrice: 79.99,
+      images: [
+        "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800&h=800&fit=crop",
+        "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800&h=800&fit=crop",
+      ],
     },
   ];
 

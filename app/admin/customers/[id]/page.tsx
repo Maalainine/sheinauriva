@@ -665,7 +665,7 @@ export default function CustomerProfilePage() {
                       <div className="w-16 h-16 bg-muted rounded flex items-center justify-center">
                         {product.images && product.images.length > 0 ? (
                           <img
-                            src={product.images.split(",")[0]}
+                            src={product.images[0]}
                             alt={product.name}
                             className="w-full h-full object-cover rounded"
                           />

@@ -1,16 +1,16 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, NotificationType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export interface AdminNotification {
-  id: string;
-  type: 'NEW_ORDER' | 'LOW_STOCK' | 'ORDER_STATUS_CHANGE' | 'SYSTEM_ALERT';
+  id: number;
+  type: NotificationType;
   title: string;
   message: string;
   data?: any;
   read: boolean;
   createdAt: Date;
-  expiresAt?: Date;
+  expiresAt?: Date | null;
 }
 
 export interface NotificationPreferences {
@@ -22,7 +22,7 @@ export interface NotificationPreferences {
 
 // Get notification preferences from localStorage or defaults
 export function getNotificationPreferences(): NotificationPreferences {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side defaults
     return {
       adminNewOrder: true,
@@ -33,12 +33,12 @@ export function getNotificationPreferences(): NotificationPreferences {
   }
 
   try {
-    const saved = localStorage.getItem('adminNotifications');
+    const saved = localStorage.getItem("adminNotifications");
     if (saved) {
       return JSON.parse(saved);
     }
   } catch (error) {
-    console.error('Failed to parse notification preferences:', error);
+    console.error("Failed to parse notification preferences:", error);
   }
 
   // Client-side defaults
@@ -50,40 +50,27 @@ export function getNotificationPreferences(): NotificationPreferences {
   };
 }
 
-// In-memory notification store (in production, use Redis or database)
-let notifications: AdminNotification[] = [];
-
-// Generate unique ID
-function generateId(): string {
-  return `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
-
 // Create a new admin notification
 export async function createAdminNotification(
-  type: AdminNotification['type'],
+  type: NotificationType,
   title: string,
   message: string,
   data?: any,
-  expiresInHours?: number
+  expiresInHours?: number,
 ): Promise<AdminNotification> {
-  const notification: AdminNotification = {
-    id: generateId(),
-    type,
-    title,
-    message,
-    data,
-    read: false,
-    createdAt: new Date(),
-    expiresAt: expiresInHours ? new Date(Date.now() + expiresInHours * 60 * 60 * 1000) : undefined,
-  };
+  const expiresAt = expiresInHours
+    ? new Date(Date.now() + expiresInHours * 60 * 60 * 1000)
+    : null;
 
-  // Add to in-memory store
-  notifications.unshift(notification);
-
-  // Keep only last 100 notifications
-  if (notifications.length > 100) {
-    notifications = notifications.slice(0, 100);
-  }
+  const notification = await prisma.adminNotification.create({
+    data: {
+      type,
+      title,
+      message,
+      data: data || null,
+      expiresAt,
+    },
+  });
 
   console.log(`Admin notification created: ${type} - ${title}`);
 
@@ -91,49 +78,74 @@ export async function createAdminNotification(
 }
 
 // Get all admin notifications
-export function getAdminNotifications(unreadOnly: boolean = false): AdminNotification[] {
+export async function getAdminNotifications(
+  unreadOnly: boolean = false,
+): Promise<AdminNotification[]> {
   const now = new Date();
 
-  // Filter out expired notifications
-  const activeNotifications = notifications.filter(
-    n => !n.expiresAt || n.expiresAt > now
-  );
+  const whereClause: any = {
+    OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+  };
 
   if (unreadOnly) {
-    return activeNotifications.filter(n => !n.read);
+    whereClause.read = false;
   }
 
-  return activeNotifications;
+  const notifications = await prisma.adminNotification.findMany({
+    where: whereClause,
+    orderBy: { createdAt: "desc" },
+    take: 100, // Limit to 100 most recent
+  });
+
+  return notifications.map((n) => ({
+    id: n.id,
+    type: n.type,
+    title: n.title,
+    message: n.message,
+    data: n.data,
+    read: n.read,
+    createdAt: n.createdAt,
+    expiresAt: n.expiresAt,
+  }));
 }
 
 // Mark notification as read
-export function markNotificationAsRead(id: string): boolean {
-  const notification = notifications.find(n => n.id === id);
-  if (notification) {
-    notification.read = true;
+export async function markNotificationAsRead(id: number): Promise<boolean> {
+  try {
+    await prisma.adminNotification.update({
+      where: { id },
+      data: { read: true },
+    });
     return true;
+  } catch (error) {
+    console.error("Failed to mark notification as read:", error);
+    return false;
   }
-  return false;
 }
 
 // Mark all notifications as read
-export function markAllNotificationsAsRead(): void {
-  notifications.forEach(n => n.read = true);
+export async function markAllNotificationsAsRead(): Promise<void> {
+  await prisma.adminNotification.updateMany({
+    data: { read: true },
+  });
 }
 
 // Delete a notification
-export function deleteNotification(id: string): boolean {
-  const index = notifications.findIndex(n => n.id === id);
-  if (index !== -1) {
-    notifications.splice(index, 1);
+export async function deleteNotification(id: number): Promise<boolean> {
+  try {
+    await prisma.adminNotification.delete({
+      where: { id },
+    });
     return true;
+  } catch (error) {
+    console.error("Failed to delete notification:", error);
+    return false;
   }
-  return false;
 }
 
 // Clear all notifications
-export function clearAllNotifications(): void {
-  notifications = [];
+export async function clearAllNotifications(): Promise<void> {
+  await prisma.adminNotification.deleteMany({});
 }
 
 // Specific notification creators
@@ -147,16 +159,16 @@ export async function notifyNewOrder(orderData: {
   const preferences = getNotificationPreferences();
 
   if (!preferences.adminNewOrder) {
-    console.log('New order notifications disabled, skipping...');
+    console.log("New order notifications disabled, skipping...");
     return;
   }
 
-  const orderNumber = `#${orderData.id.toString().padStart(6, '0')}`;
-  const customerType = orderData.isGuestOrder ? 'Guest' : 'Registered';
+  const orderNumber = `#${orderData.id.toString().padStart(6, "0")}`;
+  const customerType = orderData.isGuestOrder ? "Guest" : "Registered";
 
   await createAdminNotification(
-    'NEW_ORDER',
-    'New Order Received',
+    NotificationType.NEW_ORDER,
+    "New Order Received",
     `${customerType} customer ${orderData.customerName} placed order ${orderNumber} for ${formatCurrency(orderData.total)} (${orderData.itemCount} items)`,
     {
       orderId: orderData.id,
@@ -165,7 +177,7 @@ export async function notifyNewOrder(orderData: {
       itemCount: orderData.itemCount,
       isGuestOrder: orderData.isGuestOrder,
     },
-    24 // Expire after 24 hours
+    24, // Expire after 24 hours
   );
 }
 
@@ -182,8 +194,8 @@ export async function notifyLowStock(productData: {
   }
 
   await createAdminNotification(
-    'LOW_STOCK',
-    'Low Stock Alert',
+    NotificationType.LOW_STOCK,
+    "Low Stock Alert",
     `Product "${productData.name}" is running low on stock (${productData.currentStock} remaining)`,
     {
       productId: productData.id,
@@ -191,7 +203,7 @@ export async function notifyLowStock(productData: {
       currentStock: productData.currentStock,
       threshold: productData.threshold,
     },
-    72 // Expire after 72 hours
+    72, // Expire after 72 hours
   );
 }
 
@@ -207,11 +219,11 @@ export async function notifyOrderStatusChange(orderData: {
     return;
   }
 
-  const orderNumber = `#${orderData.id.toString().padStart(6, '0')}`;
+  const orderNumber = `#${orderData.id.toString().padStart(6, "0")}`;
 
   await createAdminNotification(
-    'ORDER_STATUS_CHANGE',
-    'Order Status Updated',
+    NotificationType.ORDER_STATUS_CHANGE,
+    "Order Status Updated",
     `Order ${orderNumber} for ${orderData.customerName} changed from ${orderData.oldStatus} to ${orderData.newStatus}`,
     {
       orderId: orderData.id,
@@ -219,37 +231,43 @@ export async function notifyOrderStatusChange(orderData: {
       oldStatus: orderData.oldStatus,
       newStatus: orderData.newStatus,
     },
-    48 // Expire after 48 hours
+    48, // Expire after 48 hours
   );
 }
 
 // Helper function to format currency
 function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'MAD',
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "MAD",
     minimumFractionDigits: 2,
   }).format(amount);
 }
 
-// Initialize with some demo notifications for testing
-export function initializeDemoNotifications(): void {
-  if (notifications.length === 0) {
-    createAdminNotification(
-      'SYSTEM_ALERT',
-      'Admin Panel Ready',
-      'The admin notification system is now active and ready to receive alerts.',
-      {},
-      24
-    );
-  }
+// Create a notification for new user registration
+export async function notifyNewUserRegistration(userData: {
+  id: string | number;
+  name: string;
+  email: string;
+}): Promise<void> {
+  await createAdminNotification(
+    NotificationType.NEW_USER_REGISTRATION,
+    "New User Registration",
+    `New user ${userData.name} (${userData.email}) has registered`,
+    {
+      userId: userData.id,
+      userName: userData.name,
+      userEmail: userData.email,
+    },
+    48, // Expire after 48 hours
+  );
 }
 
 // Email notification helper (placeholder for future implementation)
 export async function sendEmailNotification(
   to: string,
   subject: string,
-  htmlContent: string
+  htmlContent: string,
 ): Promise<boolean> {
   // TODO: Implement email sending with your preferred service (SendGrid, AWS SES, etc.)
   console.log(`Email notification would be sent to ${to}: ${subject}`);

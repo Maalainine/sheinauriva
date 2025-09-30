@@ -102,13 +102,15 @@ export async function GET(request: Request) {
       prisma.product.count({ where }),
     ]);
 
-    // Add hasVariants and variantCount fields to each product and transform images
+    // Add hasVariants and variantCount fields to each product
     const enhancedProducts = products.map((product) => ({
       ...product,
-      // Transform images from comma-separated string to array for frontend compatibility
-      images: product.images
-        ? product.images.split(",").map((url) => url.trim())
-        : [],
+      // Transform images array to object format for frontend compatibility
+      images: (product.images || []).map((imageUrl: string, index: number) => ({
+        id: `img-${product.id}-${index}`,
+        url: imageUrl,
+        alt: `${product.name} - Image ${index + 1}`,
+      })),
       hasVariants: product.variants && product.variants.length > 0,
       variantCount: product.variants ? product.variants.length : 0,
     }));

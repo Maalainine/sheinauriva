@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       id: product.id.toString(),
       name: product.name,
       price: product.basePrice,
-      image: product.images?.split(",")[0] || "/images/placeholder.png",
+      image: product.images?.[0] || "/images/placeholder.png",
       description: product.description,
       brand: product.brand
         ? {
