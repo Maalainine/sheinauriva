@@ -1,6 +1,6 @@
 [build]
   publish = ".next"
-  command = "npm run build:netlify"
+  command = "npm run build"
 
 [build.environment]
   NPM_FLAGS = "--production=false"
@@ -11,12 +11,6 @@
 
 [functions]
   node_bundler = "esbuild"
-
-# Redirect all requests to Next.js
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # API routes should be handled by Next.js
 [[redirects]]
