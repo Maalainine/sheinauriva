@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
 import {
   IconSearch,
   IconFilter,
@@ -18,19 +18,20 @@ import {
   IconTruck,
   IconPackage,
   IconX,
-  IconAlertTriangle
-} from '@tabler/icons-react';
+  IconAlertTriangle,
+  IconLoader,
+} from "@tabler/icons-react";
 
 // UI Components
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -38,22 +39,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+} from "@/components/ui/dropdown-menu";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Types
 interface OrderItem {
   id: string;
-  status: 'PENDING_CONFIRMATION' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+  status:
+    | "PENDING_CONFIRMATION"
+    | "CONFIRMED"
+    | "SHIPPED"
+    | "DELIVERED"
+    | "CANCELLED";
   total: number;
   customerName: string;
   customerEmail: string;
@@ -87,30 +93,40 @@ interface OrdersData {
 
 // Status configuration
 const statusConfig = {
+  PENDING: {
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    icon: IconClock,
+  },
+  PROCESSING: {
+    label: "Processing",
+    color: "bg-orange-100 text-orange-800 border-orange-200",
+    icon: IconLoader,
+  },
   PENDING_CONFIRMATION: {
-    label: 'Pending',
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    icon: IconClock
+    label: "Pending Confirmation",
+    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    icon: IconClock,
   },
   CONFIRMED: {
-    label: 'Confirmed',
-    color: 'bg-blue-100 text-blue-800 border-blue-200',
-    icon: IconCheck
+    label: "Confirmed",
+    color: "bg-blue-100 text-blue-800 border-blue-200",
+    icon: IconCheck,
   },
   SHIPPED: {
-    label: 'Shipped',
-    color: 'bg-purple-100 text-purple-800 border-purple-200',
-    icon: IconTruck
+    label: "Shipped",
+    color: "bg-purple-100 text-purple-800 border-purple-200",
+    icon: IconTruck,
   },
   DELIVERED: {
-    label: 'Delivered',
-    color: 'bg-green-100 text-green-800 border-green-200',
-    icon: IconPackage
+    label: "Delivered",
+    color: "bg-green-100 text-green-800 border-green-200",
+    icon: IconPackage,
   },
   CANCELLED: {
-    label: 'Cancelled',
-    color: 'bg-red-100 text-red-800 border-red-200',
-    icon: IconX
+    label: "Cancelled",
+    color: "bg-red-100 text-red-800 border-red-200",
+    icon: IconX,
   },
 };
 
@@ -123,11 +139,11 @@ export default function OrdersPage() {
   const [bulkUpdating, setBulkUpdating] = useState(false);
 
   // Filters and search
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortBy, setSortBy] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Fetch orders function
   const fetchOrders = async () => {
@@ -137,25 +153,25 @@ export default function OrdersPage() {
 
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        limit: '10',
+        limit: "10",
         sortBy,
         sortOrder,
       });
 
-      if (search.trim()) params.append('search', search.trim());
-      if (statusFilter !== 'all') params.append('status', statusFilter);
+      if (search.trim()) params.append("search", search.trim());
+      if (statusFilter !== "all") params.append("status", statusFilter);
 
       const response = await fetch(`/api/admin/orders?${params}`);
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to fetch orders');
+        throw new Error(result.error || "Failed to fetch orders");
       }
 
       setOrdersData(result.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-      console.error('Error fetching orders:', err);
+      setError(err instanceof Error ? err.message : "Unknown error");
+      console.error("Error fetching orders:", err);
     } finally {
       setLoading(false);
     }
@@ -179,6 +195,34 @@ export default function OrdersPage() {
     return () => clearTimeout(timeoutId);
   }, [search]);
 
+  // Handle individual order status update
+  const handleOrderStatusUpdate = async (
+    orderId: string,
+    newStatus: string,
+  ) => {
+    try {
+      setError(null);
+
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || "Failed to update order status");
+      }
+
+      // Refresh the orders list
+      await fetchOrders();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to update order status",
+      );
+    }
+  };
+
   // Handle bulk status update
   const handleBulkStatusUpdate = async (newStatus: string) => {
     if (selectedOrders.length === 0) return;
@@ -186,9 +230,9 @@ export default function OrdersPage() {
     try {
       setBulkUpdating(true);
 
-      const response = await fetch('/api/admin/orders', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/admin/orders", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderIds: selectedOrders,
           status: newStatus,
@@ -198,14 +242,14 @@ export default function OrdersPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to update orders');
+        throw new Error(result.error || "Failed to update orders");
       }
 
       // Refresh orders and clear selection
       await fetchOrders();
       setSelectedOrders([]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setBulkUpdating(false);
     }
@@ -214,16 +258,16 @@ export default function OrdersPage() {
   // Handle individual order selection
   const handleOrderSelect = (orderId: string, checked: boolean) => {
     if (checked) {
-      setSelectedOrders(prev => [...prev, orderId]);
+      setSelectedOrders((prev) => [...prev, orderId]);
     } else {
-      setSelectedOrders(prev => prev.filter(id => id !== orderId));
+      setSelectedOrders((prev) => prev.filter((id) => id !== orderId));
     }
   };
 
   // Handle select all
   const handleSelectAll = (checked: boolean) => {
     if (checked && ordersData) {
-      setSelectedOrders(ordersData.orders.map(order => order.id));
+      setSelectedOrders(ordersData.orders.map((order) => order.id));
     } else {
       setSelectedOrders([]);
     }
@@ -231,9 +275,9 @@ export default function OrdersPage() {
 
   // Format currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'MAD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "MAD",
       minimumFractionDigits: 2,
     }).format(amount);
   };
@@ -244,7 +288,9 @@ export default function OrdersPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
-            <p className="text-muted-foreground">Manage customer orders and fulfillment</p>
+            <p className="text-muted-foreground">
+              Manage customer orders and fulfillment
+            </p>
           </div>
         </div>
         <div className="flex items-center justify-center h-64">
@@ -261,11 +307,15 @@ export default function OrdersPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
           <p className="text-muted-foreground">
-            {ordersData ? `${ordersData.pagination.totalOrders} total orders` : 'Manage customer orders and fulfillment'}
+            {ordersData
+              ? `${ordersData.pagination.totalOrders} total orders`
+              : "Manage customer orders and fulfillment"}
           </p>
         </div>
         <Button onClick={fetchOrders} disabled={loading}>
-          <IconRefresh className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          <IconRefresh
+            className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+          />
           Refresh
         </Button>
       </div>
@@ -283,17 +333,23 @@ export default function OrdersPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Orders
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{ordersData.pagination.totalOrders}</div>
+              <div className="text-2xl font-bold">
+                {ordersData.pagination.totalOrders}
+              </div>
             </CardContent>
           </Card>
 
           {Object.entries(statusConfig).map(([status, config]) => (
             <Card key={status}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{config.label}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {config.label}
+                </CardTitle>
                 <config.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -306,7 +362,9 @@ export default function OrdersPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -381,7 +439,10 @@ export default function OrdersPage() {
               <TableRow>
                 <TableHead className="w-12">
                   <Checkbox
-                    checked={selectedOrders.length === ordersData.orders.length && ordersData.orders.length > 0}
+                    checked={
+                      selectedOrders.length === ordersData.orders.length &&
+                      ordersData.orders.length > 0
+                    }
                     onCheckedChange={handleSelectAll}
                   />
                 </TableHead>
@@ -404,18 +465,43 @@ export default function OrdersPage() {
                     <TableCell>
                       <Checkbox
                         checked={selectedOrders.includes(order.id)}
-                        onCheckedChange={(checked) => handleOrderSelect(order.id, !!checked)}
+                        onCheckedChange={(checked) =>
+                          handleOrderSelect(order.id, !!checked)
+                        }
                       />
                     </TableCell>
                     <TableCell className="font-mono text-sm">
-                      #{order.id.substring(0, 8)}
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="text-primary hover:underline"
+                      >
+                        #{order.id.toString().substring(0, 8)}
+                      </Link>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-medium">{order.customerName}</span>
-                        <span className="text-sm text-muted-foreground">{order.customerEmail}</span>
+                        {order.user?.id ? (
+                          <Link
+                            href={`/admin/customers/${order.user.id}`}
+                            className="font-medium text-primary hover:underline"
+                          >
+                            {order.customerName}
+                          </Link>
+                        ) : (
+                          <span className="font-medium">
+                            {order.customerName}
+                          </span>
+                        )}
+                        <span className="text-sm text-muted-foreground">
+                          {order.customerEmail}
+                        </span>
                         {order.isGuestOrder && (
-                          <Badge variant="secondary" className="text-xs w-fit mt-1">Guest</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="text-xs w-fit mt-1"
+                          >
+                            Guest
+                          </Badge>
                         )}
                       </div>
                     </TableCell>
@@ -430,7 +516,9 @@ export default function OrdersPage() {
                       {formatCurrency(order.total)}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(order.createdAt), {
+                        addSuffix: true,
+                      })}
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -446,16 +534,20 @@ export default function OrdersPage() {
                               View Details
                             </Link>
                           </DropdownMenuItem>
-                          {Object.entries(statusConfig).map(([status, config]) => (
-                            <DropdownMenuItem
-                              key={status}
-                              onClick={() => handleBulkStatusUpdate(status)}
-                              disabled={order.status === status}
-                            >
-                              <config.icon className="mr-2 h-4 w-4" />
-                              Mark as {config.label}
-                            </DropdownMenuItem>
-                          ))}
+                          {Object.entries(statusConfig).map(
+                            ([status, config]) => (
+                              <DropdownMenuItem
+                                key={status}
+                                onClick={() =>
+                                  handleOrderStatusUpdate(order.id, status)
+                                }
+                                disabled={order.status === status}
+                              >
+                                <config.icon className="mr-2 h-4 w-4" />
+                                Mark as {config.label}
+                              </DropdownMenuItem>
+                            ),
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -469,13 +561,14 @@ export default function OrdersPage() {
           {ordersData.pagination.totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-4 border-t">
               <div className="text-sm text-muted-foreground">
-                Page {ordersData.pagination.currentPage} of {ordersData.pagination.totalPages}
+                Page {ordersData.pagination.currentPage} of{" "}
+                {ordersData.pagination.totalPages}
               </div>
               <div className="flex items-center space-x-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage(prev => prev - 1)}
+                  onClick={() => setCurrentPage((prev) => prev - 1)}
                   disabled={!ordersData.pagination.hasPrev}
                 >
                   <IconChevronLeft className="h-4 w-4" />
@@ -484,7 +577,7 @@ export default function OrdersPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
                   disabled={!ordersData.pagination.hasNext}
                 >
                   Next
@@ -503,10 +596,9 @@ export default function OrdersPage() {
             <IconPackage className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No orders found</h3>
             <p className="text-muted-foreground text-center">
-              {search || statusFilter !== 'all'
-                ? 'Try adjusting your search criteria or filters.'
-                : 'Orders will appear here once customers start placing them.'
-              }
+              {search || statusFilter !== "all"
+                ? "Try adjusting your search criteria or filters."
+                : "Orders will appear here once customers start placing them."}
             </p>
           </CardContent>
         </Card>

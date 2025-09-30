@@ -158,8 +158,16 @@ export default function CustomerProfilePage() {
       setLoading(true);
       setError(null);
 
+      console.log(
+        "Fetching customer with ID:",
+        customerId,
+        "Type:",
+        typeof customerId,
+      );
       const response = await fetch(`/api/admin/customers/${customerId}`);
+      console.log("Customer API Response status:", response.status);
       const data = await response.json();
+      console.log("Customer API Response:", data);
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch customer");
@@ -592,7 +600,7 @@ export default function CustomerProfilePage() {
                     {customer.orders.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-mono">
-                          #{order.id.substring(0, 8)}
+                          #{order.id.toString().substring(0, 8)}
                         </TableCell>
                         <TableCell>
                           {format(new Date(order.createdAt), "MMM d, yyyy")}

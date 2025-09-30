@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
+import { NotificationBell } from "@/components/admin/NotificationBell";
 
 type User = {
   name?: string | null;
@@ -103,13 +104,14 @@ export function Sidebar({ user }: { user: User }) {
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center border-b px-6">
+          <div className="flex h-16 items-center justify-between border-b px-6">
             <Link
               href="/admin"
               className="flex items-center gap-2 font-semibold"
             >
               <span>Admin Panel</span>
             </Link>
+            <NotificationBell />
           </div>
 
           {/* Navigation */}

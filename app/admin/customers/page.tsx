@@ -1,16 +1,35 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { formatDistanceToNow } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   IconSearch,
   IconUsers,
@@ -24,8 +43,8 @@ import {
   IconEye,
   IconLoader2,
   IconAlertCircle,
-} from '@tabler/icons-react';
-import { formatCurrency } from '@/lib/utils';
+} from "@tabler/icons-react";
+import { formatCurrency } from "@/lib/utils";
 
 // Types
 interface Customer {
@@ -75,10 +94,10 @@ export default function CustomersPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Filter and search states
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('ALL');
-  const [sortBy, setSortBy] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("ALL");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
 
@@ -93,7 +112,7 @@ export default function CustomersPage() {
 
       const params = new URLSearchParams({
         page: currentPage.toString(),
-        limit: '10',
+        limit: "10",
         search,
         role: roleFilter,
         sortBy,
@@ -104,14 +123,14 @@ export default function CustomersPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch customers');
+        throw new Error(data.error || "Failed to fetch customers");
       }
 
       setCustomers(data.customers);
       setAnalytics(data.analytics);
       setPagination(data.pagination);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -131,7 +150,7 @@ export default function CustomersPage() {
   // Handle bulk selection
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedCustomers(customers.map(c => c.id));
+      setSelectedCustomers(customers.map((c) => c.id));
     } else {
       setSelectedCustomers([]);
     }
@@ -139,9 +158,9 @@ export default function CustomersPage() {
 
   const handleSelectCustomer = (customerId: string, checked: boolean) => {
     if (checked) {
-      setSelectedCustomers(prev => [...prev, customerId]);
+      setSelectedCustomers((prev) => [...prev, customerId]);
     } else {
-      setSelectedCustomers(prev => prev.filter(id => id !== customerId));
+      setSelectedCustomers((prev) => prev.filter((id) => id !== customerId));
     }
   };
 
@@ -151,9 +170,9 @@ export default function CustomersPage() {
 
     setBulkActionLoading(true);
     try {
-      const response = await fetch('/api/admin/customers', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/admin/customers", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerIds: selectedCustomers,
           action,
@@ -164,14 +183,14 @@ export default function CustomersPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Bulk action failed');
+        throw new Error(data.error || "Bulk action failed");
       }
 
       // Refresh data and clear selection
       await fetchCustomers();
       setSelectedCustomers([]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bulk action failed');
+      setError(err instanceof Error ? err.message : "Bulk action failed");
     } finally {
       setBulkActionLoading(false);
     }
@@ -180,19 +199,19 @@ export default function CustomersPage() {
   // Toggle sort order
   const handleSort = (column: string) => {
     if (sortBy === column) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(column);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
   };
 
   // Get role badge variant
   const getRoleBadge = (role: string) => {
     switch (role) {
-      case 'ADMIN':
+      case "ADMIN":
         return <Badge variant="destructive">Admin</Badge>;
-      case 'CLIENT':
+      case "CLIENT":
         return <Badge variant="secondary">Client</Badge>;
       default:
         return <Badge variant="outline">{role}</Badge>;
@@ -202,18 +221,18 @@ export default function CustomersPage() {
   // Get order status color
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING_CONFIRMATION':
-        return 'text-yellow-600';
-      case 'CONFIRMED':
-        return 'text-blue-600';
-      case 'SHIPPED':
-        return 'text-purple-600';
-      case 'DELIVERED':
-        return 'text-green-600';
-      case 'CANCELLED':
-        return 'text-red-600';
+      case "PENDING_CONFIRMATION":
+        return "text-yellow-600";
+      case "CONFIRMED":
+        return "text-blue-600";
+      case "SHIPPED":
+        return "text-purple-600";
+      case "DELIVERED":
+        return "text-green-600";
+      case "CANCELLED":
+        return "text-red-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -251,11 +270,15 @@ export default function CustomersPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Customers
+              </CardTitle>
               <IconUsers className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{analytics.totalCustomers}</div>
+              <div className="text-2xl font-bold">
+                {analytics.totalCustomers}
+              </div>
               <p className="text-xs text-muted-foreground">
                 +{analytics.recentRegistrations} this month
               </p>
@@ -264,7 +287,9 @@ export default function CustomersPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
               <IconCurrencyDollar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -279,7 +304,9 @@ export default function CustomersPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Avg Order Value
+              </CardTitle>
               <IconShoppingCart className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -291,7 +318,9 @@ export default function CustomersPage() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Avg Orders/Customer</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Avg Orders/Customer
+              </CardTitle>
               <IconUserPlus className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -340,8 +369,10 @@ export default function CustomersPage() {
               </p>
               <Select
                 onValueChange={(value) => {
-                  if (value === 'make-admin') handleBulkAction('updateRole', 'ADMIN');
-                  if (value === 'make-client') handleBulkAction('updateRole', 'CLIENT');
+                  if (value === "make-admin")
+                    handleBulkAction("updateRole", "ADMIN");
+                  if (value === "make-client")
+                    handleBulkAction("updateRole", "CLIENT");
                 }}
               >
                 <SelectTrigger className="w-[160px]">
@@ -393,78 +424,73 @@ export default function CustomersPage() {
                     </TableHead>
                     <TableHead
                       className="cursor-pointer"
-                      onClick={() => handleSort('name')}
+                      onClick={() => handleSort("name")}
                     >
                       <div className="flex items-center gap-1">
                         Name
-                        {sortBy === 'name' && (
-                          sortOrder === 'asc' ? (
+                        {sortBy === "name" &&
+                          (sortOrder === "asc" ? (
                             <IconSortAscending className="h-4 w-4" />
                           ) : (
                             <IconSortDescending className="h-4 w-4" />
-                          )
-                        )}
+                          ))}
                       </div>
                     </TableHead>
                     <TableHead
                       className="cursor-pointer"
-                      onClick={() => handleSort('email')}
+                      onClick={() => handleSort("email")}
                     >
                       <div className="flex items-center gap-1">
                         Email
-                        {sortBy === 'email' && (
-                          sortOrder === 'asc' ? (
+                        {sortBy === "email" &&
+                          (sortOrder === "asc" ? (
                             <IconSortAscending className="h-4 w-4" />
                           ) : (
                             <IconSortDescending className="h-4 w-4" />
-                          )
-                        )}
+                          ))}
                       </div>
                     </TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead
                       className="cursor-pointer"
-                      onClick={() => handleSort('totalSpent')}
+                      onClick={() => handleSort("totalSpent")}
                     >
                       <div className="flex items-center gap-1">
                         Total Spent
-                        {sortBy === 'totalSpent' && (
-                          sortOrder === 'asc' ? (
+                        {sortBy === "totalSpent" &&
+                          (sortOrder === "asc" ? (
                             <IconSortAscending className="h-4 w-4" />
                           ) : (
                             <IconSortDescending className="h-4 w-4" />
-                          )
-                        )}
+                          ))}
                       </div>
                     </TableHead>
                     <TableHead
                       className="cursor-pointer"
-                      onClick={() => handleSort('ordersCount')}
+                      onClick={() => handleSort("ordersCount")}
                     >
                       <div className="flex items-center gap-1">
                         Orders
-                        {sortBy === 'ordersCount' && (
-                          sortOrder === 'asc' ? (
+                        {sortBy === "ordersCount" &&
+                          (sortOrder === "asc" ? (
                             <IconSortAscending className="h-4 w-4" />
                           ) : (
                             <IconSortDescending className="h-4 w-4" />
-                          )
-                        )}
+                          ))}
                       </div>
                     </TableHead>
                     <TableHead
                       className="cursor-pointer"
-                      onClick={() => handleSort('createdAt')}
+                      onClick={() => handleSort("createdAt")}
                     >
                       <div className="flex items-center gap-1">
                         Joined
-                        {sortBy === 'createdAt' && (
-                          sortOrder === 'asc' ? (
+                        {sortBy === "createdAt" &&
+                          (sortOrder === "asc" ? (
                             <IconSortAscending className="h-4 w-4" />
                           ) : (
                             <IconSortDescending className="h-4 w-4" />
-                          )
-                        )}
+                          ))}
                       </div>
                     </TableHead>
                     <TableHead>Recent Orders</TableHead>
@@ -478,16 +504,20 @@ export default function CustomersPage() {
                         <Checkbox
                           checked={selectedCustomers.includes(customer.id)}
                           onCheckedChange={(checked) =>
-                            handleSelectCustomer(customer.id, checked as boolean)
+                            handleSelectCustomer(
+                              customer.id,
+                              checked as boolean,
+                            )
                           }
                         />
                       </TableCell>
                       <TableCell className="font-medium">
                         <div>
-                          <div>{customer.name || 'N/A'}</div>
+                          <div>{customer.name || "N/A"}</div>
                           {customer.shippingAddresses.length > 0 && (
                             <div className="text-xs text-muted-foreground">
-                              {customer.shippingAddresses[0].city}, {customer.shippingAddresses[0].country}
+                              {customer.shippingAddresses[0].city},{" "}
+                              {customer.shippingAddresses[0].country}
                             </div>
                           )}
                         </div>
@@ -508,10 +538,12 @@ export default function CustomersPage() {
                           {customer.orders.slice(0, 2).map((order) => (
                             <div key={order.id} className="text-xs">
                               <span className="font-mono">
-                                #{order.id.substring(0, 8)}
+                                #{order.id.toString().substring(0, 8)}
                               </span>
-                              <span className={`ml-2 ${getStatusColor(order.status)}`}>
-                                {order.status.replace('_', ' ')}
+                              <span
+                                className={`ml-2 ${getStatusColor(order.status)}`}
+                              >
+                                {order.status.replace("_", " ")}
                               </span>
                             </div>
                           ))}
@@ -540,9 +572,12 @@ export default function CustomersPage() {
               {pagination && pagination.totalPages > 1 && (
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-muted-foreground">
-                    Showing {((currentPage - 1) * pagination.limit) + 1} to{' '}
-                    {Math.min(currentPage * pagination.limit, pagination.totalCount)} of{' '}
-                    {pagination.totalCount} customers
+                    Showing {(currentPage - 1) * pagination.limit + 1} to{" "}
+                    {Math.min(
+                      currentPage * pagination.limit,
+                      pagination.totalCount,
+                    )}{" "}
+                    of {pagination.totalCount} customers
                   </p>
                   <div className="flex gap-2">
                     <Button

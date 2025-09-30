@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { notifyOrderStatusChange } from "@/lib/notifications";
 
 // Admin authorization check
 async function checkAdminAuth() {
@@ -30,13 +31,11 @@ export async function GET(
       return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = id;
+    // Convert string ID to integer
+    const orderId = parseInt(id, 10);
 
-    if (!orderId) {
-      return NextResponse.json(
-        { error: "Order ID is required" },
-        { status: 400 },
-      );
+    if (!orderId || isNaN(orderId)) {
+      return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
     }
 
     // Get order with all related data
@@ -48,7 +47,6 @@ export async function GET(
             id: true,
             name: true,
             email: true,
-            phone: true,
             role: true,
             createdAt: true,
             totalSpent: true,
@@ -77,17 +75,14 @@ export async function GET(
                 },
               },
             },
-            variant: {
+            productVariant: {
               select: {
                 id: true,
                 sku: true,
-                name: true,
                 price: true,
-                stock: true,
-                images: true,
-                variantOptions: {
+                selections: {
                   include: {
-                    variantOption: {
+                    option: {
                       include: {
                         variantType: true,
                       },
@@ -182,14 +177,12 @@ export async function PUT(
       return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = id;
+    // Convert string ID to integer
+    const orderId = parseInt(id, 10);
     const { status, notes, trackingNumber, shippingCost } = await req.json();
 
-    if (!orderId) {
-      return NextResponse.json(
-        { error: "Order ID is required" },
-        { status: 400 },
-      );
+    if (!orderId || isNaN(orderId)) {
+      return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
     }
 
     // Check if order exists
@@ -256,6 +249,27 @@ export async function PUT(
       },
     });
 
+    // Send admin notification for status change
+    if (status && status !== existingOrder.status) {
+      try {
+        await notifyOrderStatusChange({
+          id: updatedOrder.id,
+          customerName: updatedOrder.customerName,
+          oldStatus: existingOrder.status,
+          newStatus: status,
+        });
+        console.log(
+          `Admin notification sent for order ${updatedOrder.id} status change`,
+        );
+      } catch (notificationError) {
+        console.error(
+          "Failed to send status change notification:",
+          notificationError,
+        );
+        // Don't fail the order update if notification fails
+      }
+    }
+
     // In a full implementation, you might want to:
     // - Send email notifications for status changes
     // - Create audit log entries
@@ -291,13 +305,11 @@ export async function DELETE(
       return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const orderId = id;
+    // Convert string ID to integer
+    const orderId = parseInt(id, 10);
 
-    if (!orderId) {
-      return NextResponse.json(
-        { error: "Order ID is required" },
-        { status: 400 },
-      );
+    if (!orderId || isNaN(orderId)) {
+      return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
     }
 
     // Check if order exists and can be cancelled

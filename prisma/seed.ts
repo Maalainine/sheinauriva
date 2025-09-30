@@ -404,7 +404,141 @@ async function main() {
     );
   }
 
-  // 10. Create settings (optional)
+  // 10. Create guest orders (no userId)
+  if (tshirt && runningShoes) {
+    const guestOrders = [
+      {
+        userId: null, // Guest order
+        status: "PENDING" as const,
+        total: 79.98,
+        shippingCost: 8.0,
+        customerName: "Jane Smith",
+        customerEmail: "jane.smith@example.com",
+        customerPhone: "+1987654321",
+        shippingLine1: "456 Oak Avenue",
+        shippingCity: "Los Angeles",
+        shippingState: "CA",
+        shippingPostal: "90210",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      },
+      {
+        userId: null, // Guest order
+        status: "CONFIRMED" as const,
+        total: 129.99,
+        shippingCost: 10.0,
+        customerName: "Mike Johnson",
+        customerEmail: "mike.j@gmail.com",
+        customerPhone: "+1555000123",
+        shippingLine1: "789 Pine Street",
+        shippingLine2: "Unit 12",
+        shippingCity: "Chicago",
+        shippingState: "IL",
+        shippingPostal: "60601",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+      },
+      {
+        userId: null, // Guest order
+        status: "DELIVERED" as const,
+        total: 59.98,
+        shippingCost: 6.0,
+        customerName: "Sarah Williams",
+        customerEmail: "sarah.w@outlook.com",
+        customerPhone: "+1444555666",
+        shippingLine1: "321 Elm Drive",
+        shippingCity: "Miami",
+        shippingState: "FL",
+        shippingPostal: "33101",
+        shippingCountry: "USA",
+        createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+      },
+    ];
+
+    for (const orderData of guestOrders) {
+      const order = await prisma.order.create({
+        data: orderData,
+      });
+
+      // Add order items for guest orders
+      if (order.total > 100) {
+        // Running shoes order
+        await prisma.orderItem.create({
+          data: {
+            orderId: order.id,
+            productId: runningShoes.id,
+            quantity: 1,
+            price: 129.99,
+            productName: runningShoes.name,
+            productDetails: "Size: 9, Color: Black",
+          },
+        });
+      } else {
+        // T-shirt orders
+        await prisma.orderItem.create({
+          data: {
+            orderId: order.id,
+            productId: tshirt.id,
+            quantity: order.total > 50 ? 2 : 1,
+            price: 29.99,
+            productName: tshirt.name,
+            productDetails: `Size: ${order.total > 50 ? "M & L" : "M"}, Color: Blue`,
+          },
+        });
+      }
+    }
+
+    console.log(`🛍️  Created ${guestOrders.length} guest orders`);
+  }
+
+  // 11. Create more registered user orders for variety
+  const otherClients = await prisma.user.findMany({
+    where: {
+      role: "CLIENT",
+      email: { not: "client@example.com" },
+    },
+  });
+
+  if (otherClients.length > 0 && tshirt) {
+    for (const client of otherClients.slice(0, 2)) {
+      const order = await prisma.order.create({
+        data: {
+          userId: client.id,
+          status: Math.random() > 0.5 ? "PROCESSING" : "SHIPPED",
+          total: 34.99,
+          shippingCost: 5.0,
+          customerName: client.name || "Client User",
+          customerEmail: client.email,
+          customerPhone: "+1999888777",
+          shippingLine1: "123 Client Street",
+          shippingCity: "Portland",
+          shippingState: "OR",
+          shippingPostal: "97201",
+          shippingCountry: "USA",
+          createdAt: new Date(
+            Date.now() - Math.random() * 10 * 24 * 60 * 60 * 1000,
+          ),
+        },
+      });
+
+      await prisma.orderItem.create({
+        data: {
+          orderId: order.id,
+          productId: tshirt.id,
+          quantity: 1,
+          price: 29.99,
+          productName: tshirt.name,
+          productDetails: "Size: S, Color: Red",
+        },
+      });
+    }
+
+    console.log(
+      `👥 Created orders for ${otherClients.slice(0, 2).length} other registered clients`,
+    );
+  }
+
+  // 12. Create settings (optional)
   try {
     await prisma.settings.upsert({
       where: { id: "main" },

@@ -30,11 +30,12 @@ export async function GET(
       return NextResponse.json({ error: authCheck.error }, { status: 401 });
     }
 
-    const customerId = id;
+    // Convert string ID to integer
+    const customerId = parseInt(id, 10);
 
-    if (!customerId) {
+    if (!customerId || isNaN(customerId)) {
       return NextResponse.json(
-        { error: "Customer ID is required" },
+        { error: "Invalid customer ID" },
         { status: 400 },
       );
     }
@@ -50,15 +51,20 @@ export async function GET(
           include: {
             orderItems: {
               include: {
+                product: {
+                  select: {
+                    id: true,
+                    name: true,
+                    images: true,
+                  },
+                },
                 productVariant: {
-                  include: {
-                    product: {
-                      select: {
-                        id: true,
-                        name: true,
-                        images: true,
-                      },
-                    },
+                  select: {
+                    id: true,
+                    sku: true,
+                    name: true,
+                    price: true,
+                    images: true,
                   },
                 },
               },
@@ -115,7 +121,7 @@ export async function GET(
       ...customer.orders.slice(0, 10).map((order) => ({
         type: "order",
         date: order.createdAt,
-        description: `Order #${order.id.substring(0, 8)} - ${order.status}`,
+        description: `Order #${order.id.toString().substring(0, 8)} - ${order.status}`,
         amount: Number(order.total),
         orderId: order.id,
       })),

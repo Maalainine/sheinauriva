@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { notifyNewOrder } from "@/lib/notifications";
 
 const prisma = new PrismaClient();
 
@@ -162,6 +163,21 @@ export async function POST(request: Request) {
 
         return order;
       });
+
+      // Send admin notification for new order
+      try {
+        await notifyNewOrder({
+          id: result.id,
+          customerName: orderData.customer.name,
+          total: orderData.total,
+          itemCount: processedItems.length,
+          isGuestOrder: !userId,
+        });
+        console.log(`Admin notification sent for order ${result.id}`);
+      } catch (notificationError) {
+        console.error("Failed to send admin notification:", notificationError);
+        // Don't fail the order creation if notification fails
+      }
 
       return NextResponse.json({
         success: true,

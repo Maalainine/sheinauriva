@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Link from 'next/link';
-import { formatDistanceToNow, format } from 'date-fns';
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
+import { formatDistanceToNow, format } from "date-fns";
 import {
   IconArrowLeft,
   IconUser,
@@ -21,24 +21,24 @@ import {
   IconRefresh,
   IconDownload,
   IconCopy,
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 
 // UI Components
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -47,12 +47,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 
 // Types
 interface OrderDetails {
   id: string;
-  status: 'PENDING_CONFIRMATION' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+  status:
+    | "PENDING_CONFIRMATION"
+    | "CONFIRMED"
+    | "SHIPPED"
+    | "DELIVERED"
+    | "CANCELLED";
   total: number;
   customerName: string;
   customerEmail: string;
@@ -151,35 +156,47 @@ interface OrderDetails {
 
 // Status configuration
 const statusConfig = {
-  PENDING_CONFIRMATION: {
-    label: 'Pending Confirmation',
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  PENDING: {
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
     icon: IconClock,
-    description: 'Order received, awaiting confirmation'
+    description: "Order received, awaiting processing",
+  },
+  PROCESSING: {
+    label: "Processing",
+    color: "bg-orange-100 text-orange-800 border-orange-200",
+    icon: IconRefresh,
+    description: "Order is being processed",
+  },
+  PENDING_CONFIRMATION: {
+    label: "Pending Confirmation",
+    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
+    icon: IconClock,
+    description: "Order received, awaiting confirmation",
   },
   CONFIRMED: {
-    label: 'Confirmed',
-    color: 'bg-blue-100 text-blue-800 border-blue-200',
+    label: "Confirmed",
+    color: "bg-blue-100 text-blue-800 border-blue-200",
     icon: IconCheck,
-    description: 'Order confirmed, preparing for shipment'
+    description: "Order confirmed, preparing for shipment",
   },
   SHIPPED: {
-    label: 'Shipped',
-    color: 'bg-purple-100 text-purple-800 border-purple-200',
+    label: "Shipped",
+    color: "bg-purple-100 text-purple-800 border-purple-200",
     icon: IconTruck,
-    description: 'Order shipped, on the way to customer'
+    description: "Order shipped, on the way to customer",
   },
   DELIVERED: {
-    label: 'Delivered',
-    color: 'bg-green-100 text-green-800 border-green-200',
+    label: "Delivered",
+    color: "bg-green-100 text-green-800 border-green-200",
     icon: IconPackage,
-    description: 'Order successfully delivered'
+    description: "Order successfully delivered",
   },
   CANCELLED: {
-    label: 'Cancelled',
-    color: 'bg-red-100 text-red-800 border-red-200',
+    label: "Cancelled",
+    color: "bg-red-100 text-red-800 border-red-200",
     icon: IconX,
-    description: 'Order has been cancelled'
+    description: "Order has been cancelled",
   },
 };
 
@@ -196,9 +213,9 @@ export default function OrderDetailsPage() {
 
   // Status update state
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState('');
-  const [statusNotes, setStatusNotes] = useState('');
-  const [trackingNumber, setTrackingNumber] = useState('');
+  const [newStatus, setNewStatus] = useState("");
+  const [statusNotes, setStatusNotes] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
 
   // Fetch order details
   const fetchOrder = async () => {
@@ -210,15 +227,15 @@ export default function OrderDetailsPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to fetch order');
+        throw new Error(result.error || "Failed to fetch order");
       }
 
       setOrder(result.data);
       setNewStatus(result.data.status);
-      setTrackingNumber(result.data.trackingNumber || '');
-      setStatusNotes(result.data.notes || '');
+      setTrackingNumber(result.data.trackingNumber || "");
+      setStatusNotes(result.data.notes || "");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -232,8 +249,8 @@ export default function OrderDetailsPage() {
       setUpdating(true);
 
       const response = await fetch(`/api/admin/orders/${orderId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: newStatus,
           notes: statusNotes,
@@ -244,14 +261,14 @@ export default function OrderDetailsPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to update order');
+        throw new Error(result.error || "Failed to update order");
       }
 
       // Refresh order data
       await fetchOrder();
       setStatusDialogOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setUpdating(false);
     }
@@ -262,15 +279,15 @@ export default function OrderDetailsPage() {
     try {
       await navigator.clipboard.writeText(text);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   };
 
   // Format currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'MAD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "MAD",
       minimumFractionDigits: 2,
     }).format(amount);
   };
@@ -309,9 +326,7 @@ export default function OrderDetailsPage() {
         </div>
         <Alert variant="destructive">
           <IconAlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            {error || 'Order not found'}
-          </AlertDescription>
+          <AlertDescription>{error || "Order not found"}</AlertDescription>
         </Alert>
       </div>
     );
@@ -331,10 +346,13 @@ export default function OrderDetailsPage() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              Order #{order.id.substring(0, 8)}
+              Order #{order.id.toString().substring(0, 8)}
             </h1>
             <p className="text-muted-foreground">
-              Placed {formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })}
+              Placed{" "}
+              {formatDistanceToNow(new Date(order.createdAt), {
+                addSuffix: true,
+              })}
             </p>
           </div>
         </div>
@@ -356,7 +374,8 @@ export default function OrderDetailsPage() {
               <DialogHeader>
                 <DialogTitle>Update Order Status</DialogTitle>
                 <DialogDescription>
-                  Change the order status and add any relevant notes or tracking information.
+                  Change the order status and add any relevant notes or tracking
+                  information.
                 </DialogDescription>
               </DialogHeader>
 
@@ -380,7 +399,7 @@ export default function OrderDetailsPage() {
                   </Select>
                 </div>
 
-                {(newStatus === 'SHIPPED' || newStatus === 'DELIVERED') && (
+                {(newStatus === "SHIPPED" || newStatus === "DELIVERED") && (
                   <div>
                     <Label htmlFor="tracking">Tracking Number (Optional)</Label>
                     <Input
@@ -405,11 +424,14 @@ export default function OrderDetailsPage() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" onClick={() => setStatusDialogOpen(false)}>
+                <Button
+                  variant="outline"
+                  onClick={() => setStatusDialogOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button onClick={handleStatusUpdate} disabled={updating}>
-                  {updating ? 'Updating...' : 'Update Status'}
+                  {updating ? "Updating..." : "Update Status"}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -446,18 +468,18 @@ export default function OrderDetailsPage() {
                   <div>
                     <p className="text-sm font-medium">Order Placed</p>
                     <p className="text-xs text-muted-foreground">
-                      {format(new Date(order.createdAt), 'PPp')}
+                      {format(new Date(order.createdAt), "PPp")}
                     </p>
                   </div>
                 </div>
 
-                {order.status !== 'PENDING_CONFIRMATION' && (
+                {order.status !== "PENDING_CONFIRMATION" && (
                   <div className="flex items-start gap-3">
                     <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                     <div>
                       <p className="text-sm font-medium">Last Updated</p>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(order.updatedAt), 'PPp')}
+                        {format(new Date(order.updatedAt), "PPp")}
                       </p>
                     </div>
                   </div>
@@ -550,20 +572,34 @@ export default function OrderDetailsPage() {
                     <h4 className="font-medium mb-1">Customer Profile</h4>
                     <div className="space-y-2 text-sm text-muted-foreground">
                       <p>
-                        <span className="font-medium text-foreground">Total Spent:</span>{' '}
+                        <span className="font-medium text-foreground">
+                          Total Spent:
+                        </span>{" "}
                         {formatCurrency(order.customer.profile.totalSpent)}
                       </p>
                       <p>
-                        <span className="font-medium text-foreground">Total Orders:</span>{' '}
+                        <span className="font-medium text-foreground">
+                          Total Orders:
+                        </span>{" "}
                         {order.customer.profile.ordersCount}
                       </p>
                       <p>
-                        <span className="font-medium text-foreground">Member Since:</span>{' '}
-                        {format(new Date(order.customer.profile.memberSince), 'PP')}
+                        <span className="font-medium text-foreground">
+                          Member Since:
+                        </span>{" "}
+                        {format(
+                          new Date(order.customer.profile.memberSince),
+                          "PP",
+                        )}
                       </p>
                     </div>
                     {order.customer.id && (
-                      <Button variant="outline" size="sm" className="mt-2" asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2"
+                        asChild
+                      >
                         <Link href={`/admin/customers/${order.customer.id}`}>
                           View Customer Profile
                         </Link>
@@ -595,10 +631,14 @@ export default function OrderDetailsPage() {
             <CardContent>
               <div className="space-y-4">
                 {order.orderItems.map((item) => {
-                  const productImage = item.variant?.images[0] || item.product.images[0];
+                  const productImage =
+                    item.variant?.images[0] || item.product.images[0];
 
                   return (
-                    <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex gap-4 p-4 border rounded-lg"
+                    >
                       <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                         {productImage ? (
                           <Image
@@ -622,15 +662,22 @@ export default function OrderDetailsPage() {
                             {item.variant && (
                               <div className="flex flex-wrap gap-1 mt-1">
                                 {item.variant.variantOptions.map((option) => (
-                                  <Badge key={option.variantOption.id} variant="secondary" className="text-xs">
-                                    {option.variantOption.variantType.name}: {option.variantOption.value}
+                                  <Badge
+                                    key={option.variantOption.id}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {option.variantOption.variantType.name}:{" "}
+                                    {option.variantOption.value}
                                   </Badge>
                                 ))}
                               </div>
                             )}
                           </div>
                           <div className="text-right">
-                            <p className="font-medium">{formatCurrency(item.price)}</p>
+                            <p className="font-medium">
+                              {formatCurrency(item.price)}
+                            </p>
                             <p className="text-sm text-muted-foreground">
                               Qty: {item.quantity}
                             </p>
@@ -643,14 +690,17 @@ export default function OrderDetailsPage() {
                               <span>SKU: {item.variant.sku}</span>
                             )}
                             {item.product.category && (
-                              <span>Category: {item.product.category.name}</span>
+                              <span>
+                                Category: {item.product.category.name}
+                              </span>
                             )}
                             {item.product.brand && (
                               <span>Brand: {item.product.brand.name}</span>
                             )}
                           </div>
                           <div className="font-medium text-foreground">
-                            Subtotal: {formatCurrency(item.price * item.quantity)}
+                            Subtotal:{" "}
+                            {formatCurrency(item.price * item.quantity)}
                           </div>
                         </div>
                       </div>
