@@ -51,10 +51,18 @@ The initial migration (`20250930_initial_production_schema`) includes:
 
 Netlify will automatically run: `npm run build:netlify`
 
-This ensures:
-1. Prisma client is generated
-2. Database migrations are applied
-3. Application is built successfully
+This runs a custom deployment script (`scripts/deploy.js`) that:
+1. Generates Prisma client
+2. Handles migration conflicts gracefully (resolves existing schema conflicts)
+3. Applies any new migrations
+4. Builds the Next.js application
+
+### Migration Conflict Resolution
+
+The deployment script automatically handles the case where your production database already has the schema by:
+- First attempting normal migration deployment
+- If conflicts are detected (like "type already exists"), it marks the conflicting migration as resolved
+- Then continues with any remaining migrations
 
 ### Testing Deployment
 
