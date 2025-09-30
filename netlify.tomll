@@ -1,6 +1,6 @@
 [build]
   publish = ".next"
-  command = "npm run build"
+  command = "npm run build:netlify"
 
 [build.environment]
   NPM_FLAGS = "--production=false"
