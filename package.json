@@ -93,7 +93,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@netlify/plugin-nextjs": "^5.10.7",
     "@prisma/ppg-tunnel": "^0.4.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.7",
